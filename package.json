@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "polyglot": "babel-node ./src/polyglot.js"
+    "polyglot": "babel-node ./src/polyglot.js",
+    "lint": "eslint ./src ./tests",
+    "fix": "eslint --fix ./src ./tests"
   },
   "repository": {
     "type": "git",
