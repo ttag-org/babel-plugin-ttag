@@ -7,7 +7,8 @@
     "extract": "babel-node ./src/polyglot.js extract",
     "debug": "babel-node --debug --inspect --debug-brk ./src/polyglot.js extract",
     "lint": "eslint ./src ./tests",
-    "fix": "eslint --fix ./src ./tests"
+    "fix": "eslint --fix ./src ./tests",
+    "test": "NODE_PATH=./ mocha --compilers js:babel-core/register ./tests/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -32,9 +33,11 @@
     "@evo/eslint-config-uaprom": "1.0.7",
     "babel-cli": "^6.18.0",
     "babel-preset-es2015": "^6.18.0",
+    "chai": "3.5.0",
     "eslint": "2.13.1",
     "eslint-plugin-import": "1.16.0",
     "eslint-plugin-jsx-a11y": "1.5.5",
-    "eslint-plugin-react": "5.2.2"
+    "eslint-plugin-react": "5.2.2",
+    "mocha": "3.1.2"
   }
 }

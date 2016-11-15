@@ -1,1 +1,4 @@
-{"extends": "@evo/eslint-config-uaprom"}
+{
+  "env": {"mocha": true},
+  "extends": "@evo/eslint-config-uaprom"
+}

@@ -5,9 +5,9 @@ import * as babylon from 'babylon';
 import traverse from 'babel-traverse';
 import gettext from './extractors/gettext';
 
-const extractors = [gettext];
+const DEFAULT_EXTRACTORS = [gettext];
 
-export const extractPotEntries = (filename) => (fileContent) => {
+export const extractPotEntries = (filename, extractors) => (fileContent) => {
     const ast = babylon.parse(fileContent);
     const potEntries = [];
 
@@ -30,7 +30,7 @@ export const extractPotEntries = (filename) => (fileContent) => {
 
 function extractMessages$(filepath) {
     return readFileStr$(filepath)
-        .map(extractPotEntries(filepath));
+        .map(extractPotEntries(filepath, DEFAULT_EXTRACTORS));
 }
 
 export function extractFromFiles(filepaths) {
