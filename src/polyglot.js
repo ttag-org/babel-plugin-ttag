@@ -10,8 +10,6 @@ program
     .option('-o, --output <path>', 'path where to store pot files')
     .option('-l, --locale [locales ...]',
         'Sets one or more locales to process (based on config). If is not set then all locales will processed')
-    .action((filepaths, options) => {
-        extractFromFiles(filepaths, options);
-    });
+    .action(extractFromFiles);
 
 program.parse(process.argv);

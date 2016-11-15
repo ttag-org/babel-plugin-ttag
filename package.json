@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "polyglot": "babel-node ./src/polyglot.js",
+    "extract": "babel-node ./src/polyglot.js extract",
     "lint": "eslint ./src ./tests",
     "fix": "eslint --fix ./src ./tests"
   },
@@ -23,7 +23,9 @@
     "babel-traverse": "6.18.0",
     "babel-types": "6.18.0",
     "babylon": "6.13.1",
-    "commander": "2.9.0"
+    "commander": "2.9.0",
+    "gettext-parser": "1.2.0",
+    "rxjs": "5.0.0-rc.3"
   },
   "devDependencies": {
     "@evo/eslint-config-uaprom": "1.0.7",
