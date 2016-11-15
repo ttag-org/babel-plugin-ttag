@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "extract": "babel-node ./src/polyglot.js extract",
+    "debug": "babel-node --debug --inspect --debug-brk ./src/polyglot.js extract",
     "lint": "eslint ./src ./tests",
     "fix": "eslint --fix ./src ./tests"
   },

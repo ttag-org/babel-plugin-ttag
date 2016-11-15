@@ -20,6 +20,15 @@ export function buildPotData(translations) {
     return data;
 }
 
+
+export function applyReference(poEntry, node, filepath) {
+    if (!poEntry.comments) {
+        poEntry.comments = {};
+    }
+    poEntry.comments.reference = `${filepath}:${node.loc.start.line}`;
+    return poEntry;
+}
+
 export function makePotStr(data) {
     return gettextParser.po.compile(data);
 }

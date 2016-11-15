@@ -3,9 +3,10 @@ export const DEFAULT_HEADERS = {
     'plural-forms': 'nplurals=2; plural=(n!=1);',
 };
 
-export const SHORTCUTS = {
+export const ALIASES = {
     gt: 'gettext',
     nt: 'ngettext',
+    pt: 'pgettext',
 };
 
 export const FUNCTION_NAMES = {
