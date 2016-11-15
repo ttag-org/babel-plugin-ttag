@@ -1,23 +1,12 @@
 import Rx from 'rxjs/Rx';
-import { toArray, readFileStr$, getQuasiStr } from './utils';
+import { toArray, readFileStr$ } from './utils';
 import { buildPotData, makePotStr } from './potfile';
 import * as babylon from 'babylon';
-import * as t from 'babel-types';
 import traverse from 'babel-traverse';
-import { PO_PRIMITIVES } from './defaults';
-const { MSGID, MSGSTR } = PO_PRIMITIVES;
+import gettext from './extractors/gettext';
 const { Observable } = Rx;
 
-function gettextExtract(node) {
-    return {
-        [MSGID]: getQuasiStr(node),
-        [MSGSTR]: '',
-    };
-}
-
-function gettextMatch(node) {
-    return t.isTaggedTemplateExpression(node) && node.tag.name === 'gt';
-}
+const extractors = [gettext];
 
 export function extractPotEntries(fileContent) {
     const ast = babylon.parse(fileContent);
@@ -25,8 +14,9 @@ export function extractPotEntries(fileContent) {
 
     traverse(ast, {
         enter({ node }) {
-            if (gettextMatch(node)) {
-                potEntries.push(gettextExtract(node));
+            const extractor = extractors.find((ext) => ext.match(node));
+            if (extractor) {
+                potEntries.push(extractor.extract(node));
             }
         },
     });
