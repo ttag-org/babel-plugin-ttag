@@ -29,3 +29,5 @@ export const PO_PRIMITIVES = {
 export const DEFAULT_POT_FILENAME = 'traslations.po';
 
 export const DEFAULT_LOCALE = 'EN_US';
+
+export const DEFAULT_CONFIG_PATH = '.polyglot';

@@ -1,11 +1,15 @@
 import Rx from 'rxjs/Rx';
-import { toArray, readFileStr$ } from './utils';
-import { buildPotData, makePotStr, applyReference } from './potfile';
 import * as babylon from 'babylon';
 import traverse from 'babel-traverse';
-import gettext from './extractors/gettext';
 
-const DEFAULT_EXTRACTORS = [gettext];
+import { toArray, readFileStr$ } from './utils';
+import { buildPotData, makePotStr, applyReference } from './potfile';
+
+import Config from './config';
+import gettext from './extractors/gettext';
+import ngettext from './extractors/gettext';
+
+const DEFAULT_EXTRACTORS = [gettext, ngettext];
 
 export const extractPotEntries = (filename, extractors) => (fileContent) => {
     const ast = babylon.parse(fileContent);
@@ -33,7 +37,8 @@ function extractMessages$(filepath) {
         .map(extractPotEntries(filepath, DEFAULT_EXTRACTORS));
 }
 
-export function extractFromFiles(filepaths) {
+export function extractFromFiles(filepaths, options) {
+    const config = new Config(options);
     Rx.Observable.from(toArray(filepaths))
         .flatMap(extractMessages$)
         .map(buildPotData)
