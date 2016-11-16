@@ -24,6 +24,7 @@ export const FUNCTION_NAMES = {
 export const PO_PRIMITIVES = {
     MSGSTR: 'msgstr',
     MSGID: 'msgid',
+    MSGID_PLURAL: 'msgid_plural'
 };
 
 export const DEFAULT_POT_FILENAME = 'traslations.po';

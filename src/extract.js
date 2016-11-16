@@ -7,7 +7,7 @@ import { buildPotData, makePotStr, applyReference } from './potfile';
 
 import Config from './config';
 
-export const extractPotEntries = (filename, config) => (fileContent) => {
+export const extractPotEntries = (locale, filename, config) => (fileContent) => {
     const extractors = config.getExtractors();
     const ast = babylon.parse(fileContent);
     const potEntries = [];
@@ -20,7 +20,7 @@ export const extractPotEntries = (filename, config) => (fileContent) => {
                 return;
             }
 
-            let poEntry = extractor.extract(node);
+            let poEntry = extractor.extract(node, config, locale);
             poEntry = applyReference(poEntry, node, filename);
             potEntries.push(poEntry);
         },
@@ -29,16 +29,23 @@ export const extractPotEntries = (filename, config) => (fileContent) => {
     return potEntries;
 };
 
-const extractMessages$ = (config) => (filepath) => {
+const extractMessages$ = (locale, config) => (filepath) => {
     return readFileStr$(filepath)
-        .map(extractPotEntries(filepath, config));
+        .map(extractPotEntries(locale, filepath, config));
+};
+
+
+const extractForLocale$ = (filepaths, config) => (locale) => {
+    return Rx.Observable.from(toArray(filepaths))
+        .flatMap(extractMessages$(locale, config))
+        .map(buildPotData)
+        .map(makePotStr)
 };
 
 export function extractFromFiles(filepaths, options) {
     const config = new Config(options);
-    Rx.Observable.from(toArray(filepaths))
-        .flatMap(extractMessages$(config))
-        .map(buildPotData)
-        .map(makePotStr)
+    const locales = config.getLocales();
+    Rx.Observable.from(locales)
+        .flatMap(extractForLocale$(filepaths, config))
         .subscribe((output) => console.log(output.toString()));
 }

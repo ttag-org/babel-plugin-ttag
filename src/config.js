@@ -53,9 +53,10 @@ function validateConfig(config, schema) {
 }
 
 class Config {
-    constructor({ config }) {
+    constructor(options) {
+        this.options = options;
         // TODO: handle config validation errors and messages.
-        const configStr = fs.readFileSync(config || DEFAULT_CONFIG_PATH);
+        const configStr = fs.readFileSync(options.config || DEFAULT_CONFIG_PATH);
         this.config = JSON.parse(configStr);
         const [validationResult, errorsText] = validateConfig(this.config, configSchema);
         if (!validationResult) {
@@ -77,6 +78,20 @@ class Config {
     getExtractors() {
         // TODO: implement possibility to specify additional extractors in config;
         return DEFAULT_EXTRACTORS;
+    }
+
+    getNPlurals(locale) {
+        const headers = this.config.locales[locale].headers;
+        const nplurals = /nplurals ?= ?(\d)/.exec(headers['plural-forms'])[1];
+        return nplurals;
+    }
+
+    getLocales() {
+        return Object.keys(this.config.locales);
+    }
+
+    getOptions() {
+        return this.options;
     }
 }
 
