@@ -10,8 +10,8 @@ function extract(node) {
     };
 }
 
-function match(node) {
-    return t.isTaggedTemplateExpression(node) && node.tag.name === 'gt';
+function match(node, config) {
+    return t.isTaggedTemplateExpression(node) && node.tag.name === config.getAliasFor('gettext');
 }
 
 export default { match, extract };

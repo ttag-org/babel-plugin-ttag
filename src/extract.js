@@ -6,18 +6,15 @@ import { toArray, readFileStr$ } from './utils';
 import { buildPotData, makePotStr, applyReference } from './potfile';
 
 import Config from './config';
-import gettext from './extractors/gettext';
-import ngettext from './extractors/gettext';
 
-const DEFAULT_EXTRACTORS = [gettext, ngettext];
-
-export const extractPotEntries = (filename, extractors) => (fileContent) => {
+export const extractPotEntries = (filename, config) => (fileContent) => {
+    const extractors = config.getExtractors();
     const ast = babylon.parse(fileContent);
     const potEntries = [];
 
     traverse(ast, {
         enter({ node }) {
-            const extractor = extractors.find((ext) => ext.match(node));
+            const extractor = extractors.find((ext) => ext.match(node, config));
 
             if (!extractor) {
                 return;
@@ -32,15 +29,15 @@ export const extractPotEntries = (filename, extractors) => (fileContent) => {
     return potEntries;
 };
 
-function extractMessages$(filepath) {
+const extractMessages$ = (config) => (filepath) => {
     return readFileStr$(filepath)
-        .map(extractPotEntries(filepath, DEFAULT_EXTRACTORS));
-}
+        .map(extractPotEntries(filepath, config));
+};
 
 export function extractFromFiles(filepaths, options) {
     const config = new Config(options);
     Rx.Observable.from(toArray(filepaths))
-        .flatMap(extractMessages$)
+        .flatMap(extractMessages$(config))
         .map(buildPotData)
         .map(makePotStr)
         .subscribe((output) => console.log(output.toString()));
