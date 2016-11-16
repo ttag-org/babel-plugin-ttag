@@ -2,9 +2,6 @@ import program from 'commander';
 import { extractFromFiles } from './extract';
 
 program
-    .option('-с, --config <path>', 'path to config (.polyglot) is default');
-
-program
     .command('extract <filepaths ...>')
     .description('Extracts gettext messages and saves them to pot file')
     .option('-o, --output <path>', 'path where to store pot files')
