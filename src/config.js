@@ -6,36 +6,20 @@ import ngettext from './extractors/ngettext';
 
 const DEFAULT_EXTRACTORS = [gettext, ngettext];
 
-const localesSchema = {
-    additionalProperties: {
-        properties: {
-            headers: {
-                properties: {
-                    'content-type': { type: 'string' },
-                    'plural-forms': { type: 'string' },
-                },
-                additionalProperties: false,
-            },
-        },
-        required: ['headers'],
-        additionalProperties: false,
-    },
-};
-
 const configSchema = {
     title: 'Polyglot config schema',
     type: 'object',
     properties: {
-        locales: { ...localesSchema },
-        output: {
+        output: { type: 'string' },
+        headers: {
             properties: {
-                name: { type: 'string' },
+                'content-type': { type: 'string' },
+                'plural-forms': { type: 'string' },
             },
-            required: ['name'],
             additionalProperties: false,
         },
     },
-    required: ['output', 'locales'],
+    required: ['output', 'headers'],
     additionalProperties: false,
 };
 
@@ -80,18 +64,18 @@ class Config {
         return DEFAULT_EXTRACTORS;
     }
 
-    getNPlurals(locale) {
-        const headers = this.config.locales[locale].headers;
+    getNPlurals() {
+        const headers = this.config.headers;
         const nplurals = /nplurals ?= ?(\d)/.exec(headers['plural-forms'])[1];
         return nplurals;
     }
 
-    getLocales() {
-        return Object.keys(this.config.locales);
-    }
-
     getOptions() {
         return this.options;
+    }
+
+    getOutputFilepath() {
+        return this.config.output;
     }
 }
 

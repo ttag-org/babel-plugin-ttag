@@ -1,3 +1,6 @@
+import path from 'path';
+import * as fs from 'fs';
+import mkdirp from 'mkdirp';
 import Rx from 'rxjs/Rx';
 import * as babylon from 'babylon';
 import traverse from 'babel-traverse';
@@ -7,7 +10,7 @@ import { buildPotData, makePotStr, applyReference } from './potfile';
 
 import Config from './config';
 
-export const extractPotEntries = (locale, filename, config) => (fileContent) => {
+export const extractPotEntries = (filename, config) => (fileContent) => {
     const extractors = config.getExtractors();
     const ast = babylon.parse(fileContent);
     const potEntries = [];
@@ -20,7 +23,7 @@ export const extractPotEntries = (locale, filename, config) => (fileContent) => 
                 return;
             }
 
-            let poEntry = extractor.extract(node, config, locale);
+            let poEntry = extractor.extract(node, config);
             poEntry = applyReference(poEntry, node, filename);
             potEntries.push(poEntry);
         },
@@ -29,23 +32,31 @@ export const extractPotEntries = (locale, filename, config) => (fileContent) => 
     return potEntries;
 };
 
-const extractMessages$ = (locale, config) => (filepath) => {
-    return readFileStr$(filepath)
-        .map(extractPotEntries(locale, filepath, config));
-};
+const extractMessages$ = (config) => (filepath) => (
+    readFileStr$(filepath).map(extractPotEntries(filepath, config))
+);
 
-
-const extractForLocale$ = (filepaths, config) => (locale) => {
-    return Rx.Observable.from(toArray(filepaths))
-        .flatMap(extractMessages$(locale, config))
-        .map(buildPotData)
-        .map(makePotStr);
-};
+function saveToFile(output, config) {
+    const potStr = output.toString();
+    const filepath = config.getOutputFilepath();
+    const dirPath = path.dirname(filepath);
+    mkdirp.sync(dirPath);
+    fs.writeFileSync(filepath, potStr);
+    // eslint-disable-next-line
+    console.log(`Polyglot > File is ready '${filepath}'`);
+}
 
 export function extractFromFiles(filepaths, options) {
     const config = new Config(options);
-    const locales = config.getLocales();
-    Rx.Observable.from(locales)
-        .flatMap(extractForLocale$(filepaths, config))
-        .subscribe((output) => console.log(output.toString()));
+    Rx.Observable.from(toArray(filepaths))
+        .flatMap(extractMessages$(config))
+        .map(buildPotData)
+        .map(makePotStr)
+        .subscribe((output) => {
+            if (options.interactive) {
+                process.stdout.write(output);
+            } else {
+                saveToFile(output, config);
+            }
+        });
 }

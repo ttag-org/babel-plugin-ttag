@@ -3,8 +3,8 @@ import { getQuasiStr } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
-function extract(node, config, locale) {
-    const nplurals = config.getNPlurals(locale);
+function extract(node, config) {
+    const nplurals = config.getNPlurals();
     const nodeStr = getQuasiStr(node);
     const translate = {
         [MSGID]: nodeStr,

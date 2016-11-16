@@ -1,13 +1,7 @@
 {
-    "output": {
-        "name": "i18n/[locale]/[name]"
-    },
-	"locales": {
-		"EN_US": {
-			"headers": {
-				"content-type": "text/plain; charset=UTF-8",
-    			"plural-forms": "nplurals=2; plural=(n!=1);"
-			}
-		}
-	}
+    "output": "debug/translations.pot",
+    "headers": {
+        "content-type": "text/plain; charset=UTF-8",
+        "plural-forms": "nplurals=2; plural=(n!=1);"
+    }
 }

@@ -6,8 +6,7 @@ program
     .description('Extracts gettext messages and saves them to pot file')
     .option('-o, --output <path>', 'path where to store pot files')
     .option('-c, --config <path>', 'path to alternative config')
-    .option('-l, --locale [locales ...]',
-        'Sets one or more locales to process (based on config). If is not set then all locales will processed')
+    .option('-i, --interactive', 'Pass all results to stdout')
     .action(extractFromFiles);
 
 program.parse(process.argv);
