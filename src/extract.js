@@ -39,7 +39,7 @@ const extractForLocale$ = (filepaths, config) => (locale) => {
     return Rx.Observable.from(toArray(filepaths))
         .flatMap(extractMessages$(locale, config))
         .map(buildPotData)
-        .map(makePotStr)
+        .map(makePotStr);
 };
 
 export function extractFromFiles(filepaths, options) {
