@@ -1,3 +1,4 @@
+import fs from 'fs';
 import gettextParser from 'gettext-parser';
 import { DEFAULT_HEADERS } from './defaults';
 
@@ -31,4 +32,9 @@ export function applyReference(poEntry, node, filepath) {
 
 export function makePotStr(data) {
     return gettextParser.po.compile(data);
+}
+
+export function parserPoTranslations(filepath) {
+    const poRaw = fs.readFileSync(filepath);
+    return gettextParser.po.parse(poRaw.toString()).translations[''];
 }

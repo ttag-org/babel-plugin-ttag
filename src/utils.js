@@ -11,6 +11,14 @@ export function getQuasiStr(node) {
     return generate(node.quasi).code.replace(/^`|`$/g, '');
 }
 
+export function ast2Str(ast) {
+    return generate(ast).code;
+}
+
+export function strToQuasi(str) {
+    return `\`${str}\``;
+}
+
 const readFile$ = Observable.bindNodeCallback(fs.readFile);
 
 export const readFileStr$ = (filepath) => readFile$(filepath).map((data) => data.toString());

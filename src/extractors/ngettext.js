@@ -27,5 +27,9 @@ function match(path, config) {
         node.tag.callee.name === config.getAliasFor('ngettext'));
 }
 
-export default { match, extract };
+function resolve(path) {
+    return path;
+}
+
+export default { match, extract, resolve };
 

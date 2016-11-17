@@ -23,12 +23,8 @@ const configSchema = {
     additionalProperties: false,
 };
 
-class ConfigValidationError extends Error {
-}
-
-class ConfigError extends Error {
-}
-
+class ConfigValidationError extends Error {}
+class ConfigError extends Error {}
 
 function validateConfig(config, schema) {
     const ajv = new Ajv({ allErrors: true, verbose: true, v5: true });
