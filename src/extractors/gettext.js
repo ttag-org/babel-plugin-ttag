@@ -3,14 +3,16 @@ import { getQuasiStr } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 
-function extract(node) {
+function extract(path) {
+    const { node } = path;
     return {
         [MSGID]: getQuasiStr(node),
         [MSGSTR]: '',
     };
 }
 
-function match(node, config) {
+function match(path, config) {
+    const { node } = path;
     return t.isTaggedTemplateExpression(node) && node.tag.name === config.getAliasFor('gettext');
 }
 

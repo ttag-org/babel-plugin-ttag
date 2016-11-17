@@ -16,14 +16,15 @@ export const extractPotEntries = (filename, config) => (fileContent) => {
     const potEntries = [];
 
     traverse(ast, {
-        enter({ node }) {
-            const extractor = extractors.find((ext) => ext.match(node, config));
+        enter(nodePath) {
+            const { node } = nodePath;
+            const extractor = extractors.find((ext) => ext.match(nodePath, config));
 
             if (!extractor) {
                 return;
             }
 
-            let poEntry = extractor.extract(node, config);
+            let poEntry = extractor.extract(nodePath, config);
             poEntry = applyReference(poEntry, node, filename);
             potEntries.push(poEntry);
         },
