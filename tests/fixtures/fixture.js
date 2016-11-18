@@ -6,7 +6,7 @@ function test1() {
 
 function test2() {
 	let a = 5;
-	console.log(gt`simple string literal ${a}`);
+	console.log(gt`string literal with formatting ${a}`);
 }
 
 function test3() {

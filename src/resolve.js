@@ -5,7 +5,7 @@ import Config from './config';
 import { parserPoTranslations } from './potfile';
 import { toArray, readFileStr$, ast2Str } from './utils';
 
-const resolveForContent = (config, translations) => (fileContent) => {
+export const resolveForContent = (config, translations) => (fileContent) => {
     const extractors = config.getExtractors();
     const ast = babylon.parse(fileContent);
 

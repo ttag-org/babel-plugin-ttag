@@ -19,6 +19,11 @@ export function strToQuasi(str) {
     return `\`${str}\``;
 }
 
+export function unescapeUnicode(str) {
+    const r = /\\u([\d\w]{4})/gi;
+    return str.replace(r, (match, grp) => String.fromCharCode(parseInt(grp, 16)));
+}
+
 const readFile$ = Observable.bindNodeCallback(fs.readFile);
 
 export const readFileStr$ = (filepath) => readFile$(filepath).map((data) => data.toString());
