@@ -1,4 +1,4 @@
-import { ALIASES, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS } from './defaults';
+import { ALIASES, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS, POLYGLOT_LOCALE_ENV } from './defaults';
 import Ajv from 'ajv';
 import gettext from './extractors/gettext';
 import ngettext from './extractors/ngettext';
@@ -6,7 +6,6 @@ import ngettext from './extractors/ngettext';
 const DEFAULT_EXTRACTORS = [gettext, ngettext];
 
 const extractConfigSchema = {
-    title: 'Polyglot extract config schema',
     type: 'object',
     properties: {
         output: { type: 'string' },
@@ -21,10 +20,21 @@ const extractConfigSchema = {
     additionalProperties: false,
 };
 
+const resolveConfigSchema = {
+    type: 'object',
+    properties: {
+        locales: {
+            type: 'object',
+            additionalProperties: { type: 'string' },
+        },
+    },
+};
+
 const configSchema = {
     type: 'object',
     properties: {
         extract: extractConfigSchema,
+        resolve: resolveConfigSchema,
     },
     additionalProperties: false,
 };
@@ -71,6 +81,21 @@ class Config {
 
     getOutputFilepath() {
         return (this.config.extract && this.config.extract.output) || DEFAULT_POT_OUTPUT;
+    }
+
+    getCurrentLocale() {
+        const localeFromEnv = process.env[POLYGLOT_LOCALE_ENV];
+        if (localeFromEnv) {
+            return localeFromEnv;
+        }
+        // TODO: handle case if user wants to resolve without any locale in config;
+        const firstFromConfig = Object.keys(this.config.resolve.locales)[0];
+        return firstFromConfig;
+    }
+
+    getPoFilePath() {
+        const locale = this.getCurrentLocale();
+        return this.config.resolve.locales[locale];
     }
 }
 

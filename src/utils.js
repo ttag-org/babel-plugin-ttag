@@ -32,6 +32,10 @@ export function isExtractMode() {
     return process.env[POLYGLOT_MODE_ENV] === MODE.EXTRACT;
 }
 
+export function isResolveMode() {
+    return process.env[POLYGLOT_MODE_ENV] === MODE.RESOLVE;
+}
+
 export function rmDirSync(path) {
     execSync(`rm -rf ${path}`);
 }

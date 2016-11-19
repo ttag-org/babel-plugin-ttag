@@ -21,3 +21,7 @@ export const MODE = {
     EXTRACT: 'EXTRACT',
     RESOLVE: 'RESOLVE',
 };
+
+export const POLYGLOT_MODE_ENV = 'POLYGLOT_MODE';
+
+export const POLYGLOT_LOCALE_ENV = 'POLYGLOT_LOCALE';

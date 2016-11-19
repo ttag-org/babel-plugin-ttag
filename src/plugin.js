@@ -3,8 +3,9 @@ import path from 'path';
 import mkdirp from 'mkdirp';
 import Config from './config';
 import { extractPoEntry, hasTranslations } from './extract';
-import { isActiveMode, isExtractMode } from './utils';
-import { buildPotData, makePotStr } from './po-helpers';
+import { resolveTranslations } from './resolve';
+import { isActiveMode, isExtractMode, isResolveMode } from './utils';
+import { buildPotData, makePotStr, parserPoTranslations } from './po-helpers';
 
 export default function () {
     let configInst;
@@ -44,6 +45,13 @@ export default function () {
                 if (isExtractMode() && hasTranslations(nodePath, config)) {
                     const poEntry = extractPoEntry(nodePath, config, filename);
                     poEntry && potEntries.push(poEntry);
+                    return;
+                }
+
+                if (isResolveMode()) {
+                    const poFilePath = config.getPoFilePath();
+                    const translations = parserPoTranslations(poFilePath);
+                    resolveTranslations(nodePath, config, translations);
                 }
             },
         },
