@@ -1,13 +1,14 @@
 import fs from 'fs';
-import { DEFAULT_CONFIG_PATH, ALIASES } from './defaults';
+import { DEFAULT_CONFIG_PATH, ALIASES, 
+    DEFAULT_POT_OUTPUT } from './defaults';
 import Ajv from 'ajv';
 import gettext from './extractors/gettext';
 import ngettext from './extractors/ngettext';
 
 const DEFAULT_EXTRACTORS = [gettext, ngettext];
 
-const configSchema = {
-    title: 'Polyglot config schema',
+const extractConfigSchema = {
+    title: 'Polyglot extract config schema',
     type: 'object',
     properties: {
         output: { type: 'string' },
@@ -19,9 +20,16 @@ const configSchema = {
             additionalProperties: false,
         },
     },
-    required: ['output', 'headers'],
     additionalProperties: false,
 };
+
+const configSchema = {
+    type: 'object',
+    properties: {
+        extract: extractConfigSchema
+    },
+    additionalProperties: false,
+}
 
 class ConfigValidationError extends Error {}
 class ConfigError extends Error {}
@@ -33,11 +41,8 @@ function validateConfig(config, schema) {
 }
 
 class Config {
-    constructor(options) {
-        this.options = options;
-        // TODO: handle config validation errors and messages.
-        const configStr = fs.readFileSync(options.config || DEFAULT_CONFIG_PATH);
-        this.config = JSON.parse(configStr);
+    constructor(config = {}) {
+        this.config = config;
         const [validationResult, errorsText] = validateConfig(this.config, configSchema);
         if (!validationResult) {
             throw new ConfigValidationError(errorsText);
@@ -66,12 +71,8 @@ class Config {
         return nplurals;
     }
 
-    getOptions() {
-        return this.options;
-    }
-
     getOutputFilepath() {
-        return this.config.output;
+        return (this.config.extract && this.config.extract.output) || DEFAULT_POT_OUTPUT;
     }
 }
 

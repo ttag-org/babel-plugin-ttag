@@ -1,7 +1,6 @@
-import Rx from 'rxjs/Rx';
 import generate from 'babel-generator';
-import fs from 'fs';
-const { Observable } = Rx;
+import { MODE, POLYGLOT_MODE_ENV } from './defaults';
+import { execSync } from 'child_process';
 
 export function toArray(args) {
     return Array.isArray(args) ? args : [args];
@@ -24,6 +23,15 @@ export function unescapeUnicode(str) {
     return str.replace(r, (match, grp) => String.fromCharCode(parseInt(grp, 16)));
 }
 
-const readFile$ = Observable.bindNodeCallback(fs.readFile);
+export function isActiveMode() {
+    const mode = process.env[POLYGLOT_MODE_ENV];
+    return mode && mode.toString().toUpperCase() in MODE
+}
 
-export const readFileStr$ = (filepath) => readFile$(filepath).map((data) => data.toString());
+export function isExtractMode() {
+	return process.env[POLYGLOT_MODE_ENV] === MODE.EXTRACT;
+}
+
+export function rmDirSync(path) {
+	execSync(`rm -rf ${path}`);
+}

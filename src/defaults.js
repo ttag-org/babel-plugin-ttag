@@ -15,4 +15,9 @@ export const PO_PRIMITIVES = {
     MSGID_PLURAL: 'msgid_plural',
 };
 
-export const DEFAULT_CONFIG_PATH = '.polyglot';
+export const DEFAULT_POT_OUTPUT = 'polyglot_result.pot';
+
+export const MODE = {
+	EXTRACT: 'EXTRACT',
+	RESOLVE: 'RESOLVE',
+}
