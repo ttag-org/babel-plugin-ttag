@@ -1,4 +1,4 @@
-import { ALIASES, DEFAULT_POT_OUTPUT } from './defaults';
+import { ALIASES, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS } from './defaults';
 import Ajv from 'ajv';
 import gettext from './extractors/gettext';
 import ngettext from './extractors/ngettext';
@@ -64,7 +64,7 @@ class Config {
     }
 
     getNPlurals() {
-        const headers = this.config.headers;
+        const headers = (this.config.extract && this.config.extract.headers) || DEFAULT_HEADERS;
         const nplurals = /nplurals ?= ?(\d)/.exec(headers['plural-forms'])[1];
         return nplurals;
     }

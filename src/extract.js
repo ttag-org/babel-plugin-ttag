@@ -5,7 +5,7 @@ export function hasTranslations(nodePath, config) {
     return Boolean(extractors.find((ext) => ext.match(nodePath, config)));
 }
 
-export const tryFindPoEntry = (nodePath, config, filename) => {
+export const extractPoEntry = (nodePath, config, filename) => {
     const { node } = nodePath;
     const extractors = config.getExtractors();
     const extractor = extractors.find((ext) => ext.match(nodePath, config));

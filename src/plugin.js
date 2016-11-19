@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
 import Config from './config';
-import { tryFindPoEntry, hasTranslations } from './extract';
+import { extractPoEntry, hasTranslations } from './extract';
 import { isActiveMode, isExtractMode } from './utils';
 import { buildPotData, makePotStr } from './po-helpers';
 
@@ -45,7 +45,7 @@ export default function () {
                     return;
                 }
                 if (isExtractMode()) {
-                    const poEntry = tryFindPoEntry(nodePath, config, filename);
+                    const poEntry = extractPoEntry(nodePath, config, filename);
                     poEntry && potEntries.push(poEntry);
                 }
             },
