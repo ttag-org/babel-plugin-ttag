@@ -41,10 +41,7 @@ export default function () {
                 const config = getConfig(state.opts);
                 const filename = state.file.opts.filename;
 
-                if (! hasTranslations(nodePath, config)) {
-                    return;
-                }
-                if (isExtractMode()) {
+                if (isExtractMode() && hasTranslations(nodePath, config)) {
                     const poEntry = extractPoEntry(nodePath, config, filename);
                     poEntry && potEntries.push(poEntry);
                 }
