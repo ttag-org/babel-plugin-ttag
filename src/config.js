@@ -1,6 +1,4 @@
-import fs from 'fs';
-import { DEFAULT_CONFIG_PATH, ALIASES, 
-    DEFAULT_POT_OUTPUT } from './defaults';
+import { ALIASES, DEFAULT_POT_OUTPUT } from './defaults';
 import Ajv from 'ajv';
 import gettext from './extractors/gettext';
 import ngettext from './extractors/ngettext';
@@ -26,10 +24,10 @@ const extractConfigSchema = {
 const configSchema = {
     type: 'object',
     properties: {
-        extract: extractConfigSchema
+        extract: extractConfigSchema,
     },
     additionalProperties: false,
-}
+};
 
 class ConfigValidationError extends Error {}
 class ConfigError extends Error {}

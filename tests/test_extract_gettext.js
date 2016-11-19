@@ -42,6 +42,6 @@ describe('Extract gettext', () => {
     });
 
     after(() => {
-       process.env[POLYGLOT_MODE_ENV] = undefined; 
+        process.env[POLYGLOT_MODE_ENV] = undefined;
     });
 });

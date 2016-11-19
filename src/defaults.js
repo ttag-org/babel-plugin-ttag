@@ -18,6 +18,6 @@ export const PO_PRIMITIVES = {
 export const DEFAULT_POT_OUTPUT = 'polyglot_result.pot';
 
 export const MODE = {
-	EXTRACT: 'EXTRACT',
-	RESOLVE: 'RESOLVE',
-}
+    EXTRACT: 'EXTRACT',
+    RESOLVE: 'RESOLVE',
+};

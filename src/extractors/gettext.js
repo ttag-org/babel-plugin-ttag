@@ -32,7 +32,6 @@ function resolve(path, translates) {
     } else {
         path.replaceWith(t.stringLiteral(transStr));
     }
-
 }
 
 export default { match, extract, resolve };

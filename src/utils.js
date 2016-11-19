@@ -25,13 +25,13 @@ export function unescapeUnicode(str) {
 
 export function isActiveMode() {
     const mode = process.env[POLYGLOT_MODE_ENV];
-    return mode && mode.toString().toUpperCase() in MODE
+    return mode && mode.toString().toUpperCase() in MODE;
 }
 
 export function isExtractMode() {
-	return process.env[POLYGLOT_MODE_ENV] === MODE.EXTRACT;
+    return process.env[POLYGLOT_MODE_ENV] === MODE.EXTRACT;
 }
 
 export function rmDirSync(path) {
-	execSync(`rm -rf ${path}`);
+    execSync(`rm -rf ${path}`);
 }
