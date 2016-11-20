@@ -3,13 +3,10 @@ import * as babel from 'babel-core';
 import fs from 'fs';
 import polyglotPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
-import { MODE, POLYGLOT_MODE_ENV, POLYGLOT_LOCALE_ENV } from 'src/defaults';
 
 
 describe('Resolve gettext', () => {
     before(() => {
-        process.env[POLYGLOT_MODE_ENV] = MODE.RESOLVE;
-        process.env[POLYGLOT_LOCALE_ENV] = 'EN_US';
         rmDirSync('debug');
     });
 

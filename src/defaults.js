@@ -17,11 +17,3 @@ export const PO_PRIMITIVES = {
 
 export const DEFAULT_POT_OUTPUT = 'polyglot_result.pot';
 
-export const MODE = {
-    EXTRACT: 'EXTRACT',
-    RESOLVE: 'RESOLVE',
-};
-
-export const POLYGLOT_MODE_ENV = 'POLYGLOT_MODE';
-
-export const POLYGLOT_LOCALE_ENV = 'POLYGLOT_LOCALE';

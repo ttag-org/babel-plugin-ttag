@@ -4,7 +4,6 @@ import mkdirp from 'mkdirp';
 import Config from './config';
 import { extractPoEntry, hasTranslations } from './extract';
 import { resolveTranslations } from './resolve';
-import { isActiveMode, isExtractMode, isResolveMode } from './utils';
 import { buildPotData, makePotStr, parserPoTranslations } from './po-helpers';
 
 export default function () {
@@ -20,13 +19,13 @@ export default function () {
 
     return {
         post() {
-            if (! isActiveMode()) {
+            const config = getConfig();
+
+            if (! config.isActiveMode()) {
                 return;
             }
 
-            const config = getConfig();
-
-            if (isExtractMode() && potEntries.length) {
+            if (config.isExtractMode() && potEntries.length) {
                 const potStr = makePotStr(buildPotData(potEntries));
                 const filepath = config.getOutputFilepath();
                 const dirPath = path.dirname(filepath);
@@ -36,19 +35,20 @@ export default function () {
         },
         visitor: {
             TaggedTemplateExpression(nodePath, state) {
-                if (! isActiveMode()) {
+                const config = getConfig(state.opts);
+
+                if (! config.isActiveMode()) {
                     return;
                 }
-                const config = getConfig(state.opts);
+
                 const filename = state.file.opts.filename;
 
-                if (isExtractMode() && hasTranslations(nodePath, config)) {
+                if (config.isExtractMode() && hasTranslations(nodePath, config)) {
                     const poEntry = extractPoEntry(nodePath, config, filename);
                     poEntry && potEntries.push(poEntry);
-                    return;
                 }
 
-                if (isResolveMode()) {
+                if (config.isResolveMode()) {
                     const poFilePath = config.getPoFilePath();
                     const translations = parserPoTranslations(poFilePath);
                     resolveTranslations(nodePath, config, translations);

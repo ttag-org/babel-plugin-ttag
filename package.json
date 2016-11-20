@@ -2,11 +2,12 @@
   "name": "babel-plugin-polyglot",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/plugin.js",
   "scripts": {
     "lint": "eslint ./src ./tests",
     "fix": "eslint --fix --ignore-path=.eslintignore ./src ./tests",
-    "test": "NODE_PATH=./ mocha --compilers js:babel-core/register --recursive ./tests"
+    "test": "NODE_PATH=./ mocha --compilers js:babel-core/register --recursive ./tests",
+    "build": "babel src --out-dir dist "
   },
   "repository": {
     "type": "git",

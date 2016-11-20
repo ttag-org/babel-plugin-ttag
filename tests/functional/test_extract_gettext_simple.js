@@ -3,12 +3,10 @@ import * as babel from 'babel-core';
 import fs from 'fs';
 import polyglotPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
-import { MODE, POLYGLOT_MODE_ENV } from 'src/defaults';
 
 
 describe('Extract gettext', () => {
     before(() => {
-        process.env[POLYGLOT_MODE_ENV] = MODE.EXTRACT;
         rmDirSync('debug');
     });
 

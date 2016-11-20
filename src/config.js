@@ -97,6 +97,18 @@ class Config {
         const locale = this.getCurrentLocale();
         return this.config.resolve.locales[locale];
     }
+
+    isExtractMode() {
+        return Boolean(this.config.extract);
+    }
+
+    isResolveMode() {
+        return Boolean(this.config.resolve);
+    }
+
+    isActiveMode() {
+        return this.isExtractMode() || this.isResolveMode();
+    }
 }
 
 export default Config;
