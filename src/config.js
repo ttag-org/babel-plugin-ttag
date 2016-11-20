@@ -6,7 +6,7 @@ import ngettext from './extractors/ngettext';
 const DEFAULT_EXTRACTORS = [gettext, ngettext];
 
 const extractConfigSchema = {
-    type: 'object',
+    type: ['object', 'null'],
     properties: {
         output: { type: 'string' },
         headers: {
@@ -21,12 +21,17 @@ const extractConfigSchema = {
 };
 
 const resolveConfigSchema = {
-    type: 'object',
+    type: ['object', 'null'],
     properties: {
-        po: { type: 'string' },
+        locale: { type: 'string' },
     },
-    required: ['po'],
+    required: ['locale'],
     additionalProperties: false,
+};
+
+const localesSchema = {
+    type: 'object',
+    additionalProperties: { type: 'string' },
 };
 
 const configSchema = {
@@ -34,6 +39,7 @@ const configSchema = {
     properties: {
         extract: extractConfigSchema,
         resolve: resolveConfigSchema,
+        locales: localesSchema,
     },
     additionalProperties: false,
 };
@@ -83,7 +89,9 @@ class Config {
     }
 
     getPoFilePath() {
-        return this.config.resolve.po;
+        // TODO: handle locale is not found;
+        const locale = this.config.resolve.locale;
+        return this.config.locales[locale];
     }
 
     isExtractMode() {
