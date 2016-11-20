@@ -15,13 +15,7 @@ describe('Resolve gettext', () => {
         const expectedPath = 'tests/fixtures/expected_resolve_simple_gettext.js.src';
         const options = {
             presets: ['es2015'],
-            plugins: [[polyglotPlugin, {
-                resolve: {
-                    locales: {
-                        EN_US: pofile,
-                    },
-                },
-            }]],
+            plugins: [[polyglotPlugin, { resolve: { po: pofile } }]],
         };
         const input = 'console.log(gt`simple string literal`);';
         const result = babel.transform(input, options).code;
