@@ -19,4 +19,10 @@ test_resolve_gettext:
 test_resolve_default:
 	$(MOCHA_CMD) ./tests/functional/test_resolve_default.js
 
-test: test_extract_gettext test_extract_gettext_with_formatting test_extract_ngettext test_resolve_gettext test_resolve_default
+test_resolve_strip_polyglot_tags:
+	$(MOCHA_CMD) ./tests/functional/test_resolve_strip_polyglot_tags.js
+
+test: test_extract_gettext test_extract_gettext_with_formatting
+test: test_extract_ngettext test_resolve_gettext
+test: test_resolve_default
+test: test_resolve_strip_polyglot_tags

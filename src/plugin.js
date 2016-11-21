@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
 import Config from './config';
-import { extractPoEntry, hasTranslations } from './extract';
-import { resolveTranslations } from './resolve';
+import { extractPoEntry, hasPolyglotTags } from './extract';
+import { resolveTranslations, stripPolyglotTags } from './resolve';
 import { buildPotData, makePotStr, parserPoTranslations } from './po-helpers';
 
 export default function () {
@@ -21,10 +21,6 @@ export default function () {
         post() {
             const config = getConfig();
 
-            if (! config.isActiveMode()) {
-                return;
-            }
-
             if (config.isExtractMode() && potEntries.length) {
                 const potStr = makePotStr(buildPotData(potEntries));
                 const filepath = config.getOutputFilepath();
@@ -36,14 +32,13 @@ export default function () {
         visitor: {
             TaggedTemplateExpression(nodePath, state) {
                 const config = getConfig(state.opts);
+                const filename = state.file.opts.filename;
 
-                if (! config.isActiveMode()) {
+                if (!hasPolyglotTags(nodePath, config)) {
                     return;
                 }
 
-                const filename = state.file.opts.filename;
-
-                if (config.isExtractMode() && hasTranslations(nodePath, config)) {
+                if (config.isExtractMode()) {
                     const poEntry = extractPoEntry(nodePath, config, filename);
                     poEntry && potEntries.push(poEntry);
                 }
@@ -52,6 +47,8 @@ export default function () {
                     const poFilePath = config.getPoFilePath();
                     const translations = parserPoTranslations(poFilePath);
                     resolveTranslations(nodePath, config, translations);
+                } else {
+                    stripPolyglotTags(nodePath);
                 }
             },
         },

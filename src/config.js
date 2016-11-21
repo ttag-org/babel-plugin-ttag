@@ -101,10 +101,6 @@ class Config {
     isResolveMode() {
         return Boolean(this.config.resolve);
     }
-
-    isActiveMode() {
-        return this.isExtractMode() || this.isResolveMode();
-    }
 }
 
 export default Config;

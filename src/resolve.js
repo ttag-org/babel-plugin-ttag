@@ -3,7 +3,7 @@ import * as t from 'babel-types';
 import { PO_PRIMITIVES } from './defaults';
 const { MSGSTR } = PO_PRIMITIVES;
 
-function resolveDefault(nodePath) {
+export function stripPolyglotTags(nodePath) {
     const { node } = nodePath;
     const transStr = getQuasiStr(node);
 
@@ -32,7 +32,7 @@ export const resolveTranslations = (nodePath, config, translations) => {
         if (hasTranslations) {
             extractor.resolve(nodePath, transObject);
         } else {
-            resolveDefault(nodePath);
+            stripPolyglotTags(nodePath);
         }
     }
 };
