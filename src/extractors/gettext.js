@@ -20,7 +20,7 @@ function resolve(path, translates) {
     const hasExpressions = Boolean(node.quasi.expressions.length);
     const translationObj = translates[transStr];
 
-    if (translationObj && translationObj[MSGSTR]) {
+    if (translationObj && translationObj[MSGSTR] && translationObj[MSGSTR][0]) {
         transStr = translationObj[MSGSTR][0];
     }
 

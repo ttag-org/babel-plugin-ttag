@@ -8,3 +8,7 @@ msgstr ""
 #: tests/fixtures/fixture.js:4
 msgid "simple string literal"
 msgstr "simple string literal translated"
+
+#: tests/fixtures/fixture.js:5
+msgid "no translator notes"
+msgstr ""
