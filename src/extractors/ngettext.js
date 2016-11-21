@@ -3,8 +3,7 @@ import { getQuasiStr } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
-function extract(path, config) {
-    const { node } = path;
+function extract({ node }, config) {
     const nplurals = config.getNPlurals();
     const nodeStr = getQuasiStr(node);
     const translate = {
@@ -20,8 +19,7 @@ function extract(path, config) {
     return translate;
 }
 
-function match(path, config) {
-    const { node } = path;
+function match({ node }, config) {
     return (t.isTaggedTemplateExpression(node) &&
         node.tag.callee &&
         node.tag.callee.name === config.getAliasFor('ngettext'));

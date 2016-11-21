@@ -3,25 +3,22 @@ import { getQuasiStr, strToQuasi } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 
-function extract(path) {
-    const { node } = path;
+function extract({ node }) {
     return {
         [MSGID]: getQuasiStr(node),
         [MSGSTR]: '',
     };
 }
 
-function match(path, config) {
-    const { node } = path;
+function match({ node }, config) {
     return t.isTaggedTemplateExpression(node) && node.tag.name === config.getAliasFor('gettext');
 }
 
 function resolve(path, translates) {
     const { node } = path;
-    const msgid = getQuasiStr(node);
-    let transStr = msgid;
+    let transStr = getQuasiStr(node);
     const hasExpressions = Boolean(node.quasi.expressions.length);
-    const translationObj = translates[msgid];
+    const translationObj = translates[transStr];
 
     if (translationObj && translationObj[MSGSTR]) {
         transStr = translationObj[MSGSTR][0];
