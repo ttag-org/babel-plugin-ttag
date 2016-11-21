@@ -21,5 +21,4 @@ describe('Resolve default', () => {
         const expected = fs.readFileSync(expectedPath).toString();
         expect(result).to.eql(expected);
     });
-
 });
