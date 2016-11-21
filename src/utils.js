@@ -25,3 +25,7 @@ export function unescapeUnicode(str) {
 export function rmDirSync(path) {
     execSync(`rm -rf ${path}`);
 }
+
+export function hasExpressions(node) {
+    return Boolean(node.quasi.expressions.length);
+}

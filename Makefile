@@ -16,4 +16,7 @@ test_extract_ngettext:
 test_resolve_gettext:
 	$(MOCHA_CMD) ./tests/functional/test_resolve_gettext.js
 
-test: test_extract_gettext test_extract_gettext_with_formatting test_extract_ngettext test_resolve_gettext
+test_resolve_default:
+	$(MOCHA_CMD) ./tests/functional/test_resolve_default.js
+
+test: test_extract_gettext test_extract_gettext_with_formatting test_extract_ngettext test_resolve_gettext test_resolve_default
