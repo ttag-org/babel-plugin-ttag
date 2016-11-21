@@ -84,6 +84,12 @@ class Config {
         return nplurals;
     }
 
+    getPluralForm() {
+        const headers = (this.config.extract && this.config.extract.headers) || DEFAULT_HEADERS;
+        const pluralForm = /plural ?=?\(([\s\S]*)\);/.exec(headers['plural-forms'])[1];
+        return pluralForm;
+    }
+
     getOutputFilepath() {
         return (this.config.extract && this.config.extract.output) || DEFAULT_POT_OUTPUT;
     }

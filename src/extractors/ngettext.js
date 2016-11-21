@@ -1,6 +1,8 @@
 import * as t from 'babel-types';
 import { getQuasiStr } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
+import * as babylon from 'babylon';
+
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
 function extract({ node }, config) {
@@ -25,7 +27,19 @@ function match({ node }, config) {
         node.tag.callee.name === config.getAliasFor('ngettext'));
 }
 
-function resolve(path) {
+// function getRootScope(nodePath) {
+//     return nodePath.parent ? getRootScope(nodePath.parent) : nodePath;
+// }
+
+function resolve(path, translationObj, config) {
+    const { node } = path;
+    const pluralForm = config.getPluralForm();
+    // const id = path.scope.generateUidIdentifier('nt');
+    // const pluralFn = babylon.parse(`const nt = (n) => {
+    //     return ${pluralForm};
+    // }`);
+    const nPlurals = node.tag.arguments[0].name;
+
     return path;
 }
 

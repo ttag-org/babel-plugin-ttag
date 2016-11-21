@@ -30,7 +30,7 @@ export const resolveTranslations = (nodePath, config, translations) => {
     const extractor = extractors.find((ext) => ext.match(nodePath, config));
     if (extractor) {
         if (hasTranslations) {
-            extractor.resolve(nodePath, transObject);
+            extractor.resolve(nodePath, transObject, config);
         } else {
             stripPolyglotTags(nodePath);
         }

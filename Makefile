@@ -22,7 +22,11 @@ test_resolve_default:
 test_resolve_strip_polyglot_tags:
 	$(MOCHA_CMD) ./tests/functional/test_resolve_strip_polyglot_tags.js
 
+test_resolve_ngettext:
+	$(MOCHA_CMD) ./tests/functional/test_resolve_ngettext.js
+
 test: test_extract_gettext test_extract_gettext_with_formatting
 test: test_extract_ngettext test_resolve_gettext
 test: test_resolve_default
 test: test_resolve_strip_polyglot_tags
+test: test_resolve_ngettext
