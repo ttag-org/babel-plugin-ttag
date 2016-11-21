@@ -22,12 +22,11 @@ describe('Resolve ngettext (n is bound to scope)', () => {
     });
 
     it('should resolve proper plural form of n', () => {
-        // const expectedPath = 'tests/fixtures/expected_strip_polyglot_tags.js.src';
+        const expectedPath = 'tests/fixtures/expected_resolve_ngettext.js.src';
         const input = 'const n = 1; console.log(nt(n)`plural form with ${n} plurals`);';
         const result = babel.transform(input, options).code;
-        console.log(result);
-        // const expected = fs.readFileSync(expectedPath).toString();
-        // expect(result).to.eql(expected);
+        const expected = fs.readFileSync(expectedPath).toString();
+        expect(result).to.eql(expected);
     });
 });
 

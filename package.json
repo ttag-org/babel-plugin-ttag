@@ -6,7 +6,6 @@
   "scripts": {
     "lint": "eslint ./src ./tests",
     "fix": "eslint --fix --ignore-path=.eslintignore ./src ./tests",
-    "test": "NODE_PATH=./ mocha --compilers js:babel-core/register --recursive ./tests",
     "build": "babel src --out-dir dist "
   },
   "repository": {
@@ -22,6 +21,7 @@
   "dependencies": {
     "ajv": "4.9.0",
     "babel-generator": "6.18.0",
+    "babel-template": "6.16.0",
     "babel-types": "6.18.0",
     "gettext-parser": "1.2.0",
     "mkdirp": "0.5.1"

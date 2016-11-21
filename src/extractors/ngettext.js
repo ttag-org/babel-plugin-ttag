@@ -1,7 +1,7 @@
 import * as t from 'babel-types';
-import { getQuasiStr } from '../utils';
+import { getQuasiStr, strToQuasi } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
-import * as babylon from 'babylon';
+import template from 'babel-template';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
@@ -27,20 +27,32 @@ function match({ node }, config) {
         node.tag.callee.name === config.getAliasFor('ngettext'));
 }
 
-// function getRootScope(nodePath) {
-//     return nodePath.parent ? getRootScope(nodePath.parent) : nodePath;
-// }
-
-function resolve(path, translationObj, config) {
+function resolve(path, translationObj, config, state) {
     const { node } = path;
     const pluralForm = config.getPluralForm();
-    // const id = path.scope.generateUidIdentifier('nt');
-    // const pluralFn = babylon.parse(`const nt = (n) => {
-    //     return ${pluralForm};
-    // }`);
+    const uid = state.file.scope.generateUidIdentifier('ngettext');
+
+    const ref = template(`
+      function NGETTEXT(n, args) {
+        var res = ${pluralForm};
+        return args[(typeof res === 'boolean') ? (res && 1 || 0) : res];
+      }`);
+
+    state.file.path.unshiftContainer('body', ref({ NGETTEXT: uid }));
+
+    const args = translationObj[MSGSTR];
+    const resultFn = template('NGETTEXT(N, ARGS)');
     const nPlurals = node.tag.arguments[0].name;
 
-    return path;
+    return path.replaceWith(resultFn(
+        {
+            NGETTEXT: uid,
+            N: t.identifier(nPlurals),
+            ARGS: t.arrayExpression(args.map((l) => {
+                const tliteral = template(strToQuasi(l))();
+                return t.templateLiteral(tliteral.expression.quasis, tliteral.expression.expressions);
+            })),
+        }));
 }
 
 export default { match, extract, resolve };

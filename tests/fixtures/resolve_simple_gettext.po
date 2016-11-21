@@ -15,5 +15,5 @@ msgstr ""
 #: tests/fixtures/fixture.js:6
 msgid "plural form with ${ n } plurals"
 msgid_plural "plural form with ${ n } plurals"
-msgstr[0] "plural form with ${ n } plurals"
-msgstr[1] "plural form with ${ n } plural"
+msgstr[0] "plural form with ${ n } plural"
+msgstr[1] "plural form with ${ n } plurals"

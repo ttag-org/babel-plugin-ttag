@@ -23,14 +23,14 @@ function hasTranslatorTranslations(translationObject) {
     return translationObject[MSGSTR] && translationObject[MSGSTR].every((o) => o.length);
 }
 
-export const resolveTranslations = (nodePath, config, translations) => {
+export const resolveTranslations = (nodePath, config, translations, state) => {
     const transObject = getTranslationObject(nodePath, translations);
     const hasTranslations = transObject && hasTranslatorTranslations(transObject);
     const extractors = config.getExtractors();
     const extractor = extractors.find((ext) => ext.match(nodePath, config));
     if (extractor) {
         if (hasTranslations) {
-            extractor.resolve(nodePath, transObject, config);
+            extractor.resolve(nodePath, transObject, config, state);
         } else {
             stripPolyglotTags(nodePath);
         }

@@ -46,7 +46,7 @@ export default function () {
                 if (config.isResolveMode()) {
                     const poFilePath = config.getPoFilePath();
                     const translations = parserPoTranslations(poFilePath);
-                    resolveTranslations(nodePath, config, translations);
+                    resolveTranslations(nodePath, config, translations, state);
                 } else {
                     stripPolyglotTags(nodePath);
                 }
