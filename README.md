@@ -1,4 +1,5 @@
 # babel-polyglot-plugin [WIP]
+## project status - POC
 Solution for providing gettext like translations into your project.
 
 Plugin functions:
