@@ -17,7 +17,7 @@ describe('Extract ngettext', () => {
             presets: ['es2015'],
             plugins: [[polyglotPlugin, { extract: { output } }]],
         };
-        const input = 'console.log(nt(a)`${a} bananas`);';
+        const input = 'console.log(nt(a, `${a} bananas`)`${a} banana`);';
         babel.transform(input, options);
         const result = fs.readFileSync(output).toString();
         const expected = fs.readFileSync(expectedPath).toString();

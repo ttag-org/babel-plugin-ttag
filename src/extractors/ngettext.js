@@ -1,21 +1,30 @@
 import * as t from 'babel-types';
-import { getQuasiStr, strToQuasi } from '../utils';
+import { getQuasiStr, strToQuasi, ast2Str, quasiToStr } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import template from 'babel-template';
+import { ExtractError } from '../extract';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
 function extract({ node }, config) {
     const nplurals = config.getNPlurals();
     const nodeStr = getQuasiStr(node);
+    const ngettextName = config.getAliasFor('ngettext');
+    let [_, ...args] = node.tag.arguments;
+
+    if (args.length + 1 !== nplurals) {
+        throw new ExtractError(
+            `expected ${nplurals} plural forms for "${ngettextName}" func, but - received ${args.length}`);
+    }
+    args = [nodeStr].concat(args.map((arg) => quasiToStr(ast2Str(arg))));
     const translate = {
         [MSGID]: nodeStr,
-        [MSGID_PLURAL]: nodeStr,
+        [MSGID_PLURAL]: args[1],
         [MSGSTR]: [],
     };
 
     for (let i = 0; i < nplurals; i++) {
-        translate[MSGSTR][i] = '';
+        translate[MSGSTR][i] = args[i];
     }
 
     return translate;

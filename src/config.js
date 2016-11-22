@@ -81,7 +81,7 @@ class Config {
     getNPlurals() {
         const headers = (this.config.extract && this.config.extract.headers) || DEFAULT_HEADERS;
         const nplurals = /nplurals ?= ?(\d)/.exec(headers['plural-forms'])[1];
-        return nplurals;
+        return parseInt(nplurals);
     }
 
     getPluralForm() {

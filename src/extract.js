@@ -1,5 +1,12 @@
 import { applyReference } from './po-helpers';
 
+export class ExtractError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'ExtractError';
+    }
+}
+
 export function hasPolyglotTags(nodePath, config) {
     const extractors = config.getExtractors();
     return Boolean(extractors.find((ext) => ext.match(nodePath, config)));

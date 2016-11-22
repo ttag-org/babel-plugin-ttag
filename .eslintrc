@@ -1,5 +1,8 @@
 {
   "env": {"mocha": true},
+  "globals": {
+    "_": true
+  },
   "extends": "@evo/eslint-config-uaprom",
   "rules": {
     "no-unused-expressions": "off"

@@ -5,8 +5,12 @@ export function toArray(args) {
     return Array.isArray(args) ? args : [args];
 }
 
+export function quasiToStr(str) {
+    return str.replace(/^`|`$/g, '');
+}
+
 export function getQuasiStr(node) {
-    return generate(node.quasi).code.replace(/^`|`$/g, '');
+    return quasiToStr(generate(node.quasi).code);
 }
 
 export function ast2Str(ast) {
