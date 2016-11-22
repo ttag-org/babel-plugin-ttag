@@ -10,6 +10,7 @@ Key features:
 - no additional formatting syntax(no sprintf), only es6 tagged templates.
 - works with existing gettext utility (generates .pot files, resolves translations from .po).
 - possibility to precompile all translations into the browser bundles (no runtime resolving, all bundles are precompiled).
+- support for plurals and contexts.
 
 Installation
 ============
