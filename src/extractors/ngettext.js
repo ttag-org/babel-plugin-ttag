@@ -71,7 +71,9 @@ function resolve(path, translationObj, config, state) {
             N: t.identifier(nPlurals),
             ARGS: t.arrayExpression(args.map((l) => {
                 const tliteral = template(strToQuasi(l))();
-                return t.templateLiteral(tliteral.expression.quasis, tliteral.expression.expressions);
+                return t.templateLiteral(
+                    tliteral.expression.quasis,
+                    tliteral.expression.expressions);
             })),
         }));
 }
