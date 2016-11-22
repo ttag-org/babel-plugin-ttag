@@ -28,5 +28,16 @@ describe('Resolve ngettext (n is bound to scope)', () => {
         const expected = fs.readFileSync(expectedPath).toString();
         expect(result).to.eql(expected);
     });
+
+    it('should not include ngettext function multiple times', () => {
+        const expectedPath = 'tests/fixtures/expected_resolve_ngettext_multiple.js.src';
+        const input = `const n = 1;
+            console.log(nt(n)\`plural form with \${n} plurals\`);
+            console.log(nt(n)\`plural form with \${n} plurals\`);
+        `;
+        const result = babel.transform(input, options).code;
+        const expected = fs.readFileSync(expectedPath).toString();
+        expect(result).to.eql(expected);
+    });
 });
 
