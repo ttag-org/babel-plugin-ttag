@@ -39,5 +39,12 @@ describe('Resolve ngettext (n is bound to scope)', () => {
         const expected = fs.readFileSync(expectedPath).toString();
         expect(result).to.eql(expected);
     });
-});
 
+    it('should work when n is Literal', () => {
+        const expectedPath = 'tests/fixtures/expected_resolve_ngettext_n_is_literal.js.src';
+        const input = 'console.log(nt(1)`plural form with ${n} plurals`);';
+        const result = babel.transform(input, options).code;
+        const expected = fs.readFileSync(expectedPath).toString();
+        expect(result).to.eql(expected);
+    });
+});

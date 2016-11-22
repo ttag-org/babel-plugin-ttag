@@ -1,0 +1,8 @@
+"use strict";
+
+function _ngettext(n, args) {
+  var res = n != 1;
+  return args[typeof res === 'boolean' ? res && 1 || 0 : res];
+}
+
+console.log(_ngettext(1, ["plural form with " + n + " plural", "plural form with " + n + " plurals"]));

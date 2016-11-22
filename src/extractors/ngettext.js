@@ -46,7 +46,15 @@ function resolve(path, translationObj, config, state) {
 
     const args = translationObj[MSGSTR];
     const resultFn = template('NGETTEXT(N, ARGS)');
-    const nPlurals = node.tag.arguments[0].name;
+    const tagArg = node.tag.arguments[0];
+
+    let nPlurals = null;
+
+    if (tagArg.type === 'Identifier') {
+        nPlurals = tagArg.name;
+    } else {
+        nPlurals = tagArg.value;
+    }
 
     return path.replaceWith(resultFn(
         {
