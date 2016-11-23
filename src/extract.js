@@ -1,21 +1,13 @@
 import { applyReference } from './po-helpers';
 
-export class ExtractError extends Error {
-    constructor(message) {
-        super(message);
-        this.name = 'ExtractError';
-    }
-}
-
-export function hasPolyglotTags(nodePath, config) {
+export function getExtractor(nodePath, config) {
     const extractors = config.getExtractors();
-    return Boolean(extractors.find((ext) => ext.match(nodePath, config)));
+    return extractors.find((ext) => ext.match(nodePath, config));
 }
 
-export const extractPoEntry = (nodePath, config, filename) => {
+export const extractPoEntry = (extractor, nodePath, config, state) => {
     const { node } = nodePath;
-    const extractors = config.getExtractors();
-    const extractor = extractors.find((ext) => ext.match(nodePath, config));
+    const filename = state.file.opts.filename;
     const poEntry = extractor.extract(nodePath, config);
 
     if (filename !== 'unknown') {

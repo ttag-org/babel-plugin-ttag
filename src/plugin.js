@@ -2,8 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
 import Config from './config';
-import { extractPoEntry, hasPolyglotTags } from './extract';
-import { resolveTranslations, resolveDefault } from './resolve';
+import { extractPoEntry, getExtractor } from './extract';
 import { buildPotData, makePotStr, parserPoTranslations } from './po-helpers';
 
 export default function () {
@@ -19,23 +18,22 @@ export default function () {
 
     function processExpression(nodePath, state) {
         const config = getConfig(state.opts);
-        const filename = state.file.opts.filename;
-
-        if (!hasPolyglotTags(nodePath, config)) {
+        const extractor = getExtractor(nodePath, config);
+        if (!extractor) {
             return;
         }
 
         if (config.isExtractMode()) {
-            const poEntry = extractPoEntry(nodePath, config, filename);
+            const poEntry = extractPoEntry(extractor, nodePath, config, state);
             poEntry && potEntries.push(poEntry);
         }
 
         if (config.isResolveMode()) {
             const poFilePath = config.getPoFilePath();
             const translations = parserPoTranslations(poFilePath);
-            resolveTranslations(nodePath, config, translations, state);
+            extractor.resolve(nodePath, translations, config, state);
         } else {
-            resolveDefault(nodePath, config, state);
+            extractor.resolveDefault && extractor.resolveDefault(nodePath, config, state);
         }
     }
 
