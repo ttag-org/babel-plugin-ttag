@@ -1,7 +1,8 @@
 import * as t from 'babel-types';
-import { strToQuasi, getQuasiStr } from '../utils';
+import { strToQuasi, getQuasiStr, stripTag } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import template from 'babel-template';
+import { hasTranslations } from '../po-helpers';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
@@ -52,13 +53,22 @@ function getNgettextUID(state, config) {
 
 function resolve(path, translations, config, state) {
     /* eslint-disable no-underscore-dangle */
-    // TODO: handle when translations are not present (or not all translations are present)
-    // TODO: handle when the number of default arguments is not equal to nplurals
-    // TODO: handle when translation is not found at all.
     // TODO: handle when has no node argument.
 
     const { node } = path;
     const msgid = getMsgid(node);
+    const translationObj = translations[msgid];
+
+    if (!translationObj) {
+        stripTag(path);
+        return path;
+    }
+
+    if (!hasTranslations(translationObj)) {
+        stripTag(path);
+        return path;
+    }
+
     const args = translations[msgid][MSGSTR];
     const tagArg = node.tag.arguments[0];
     const nPlurals = tagArg.type === 'Identifier' ? tagArg.name : tagArg.value;

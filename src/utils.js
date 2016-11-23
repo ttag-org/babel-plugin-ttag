@@ -1,5 +1,6 @@
 import generate from 'babel-generator';
 import { execSync } from 'child_process';
+import * as t from 'babel-types';
 
 export function toArray(args) {
     return Array.isArray(args) ? args : [args];
@@ -32,4 +33,15 @@ export function rmDirSync(path) {
 
 export function hasExpressions(node) {
     return Boolean(node.quasi.expressions.length);
+}
+
+export function stripTag(nodePath) {
+    const { node } = nodePath;
+    const transStr = getQuasiStr(node);
+
+    if (hasExpressions(node)) {
+        nodePath.replaceWithSourceString(strToQuasi(transStr));
+    } else {
+        nodePath.replaceWith(t.stringLiteral(transStr));
+    }
 }

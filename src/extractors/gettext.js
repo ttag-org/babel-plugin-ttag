@@ -1,5 +1,5 @@
 import * as t from 'babel-types';
-import { getQuasiStr, strToQuasi, hasExpressions } from '../utils';
+import { getQuasiStr, strToQuasi, hasExpressions, stripTag } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 
@@ -15,14 +15,7 @@ function match({ node }, config) {
 }
 
 function resolveDefault(nodePath) {
-    const { node } = nodePath;
-    const transStr = getQuasiStr(node);
-
-    if (hasExpressions(node)) {
-        nodePath.replaceWithSourceString(strToQuasi(transStr));
-    } else {
-        nodePath.replaceWith(t.stringLiteral(transStr));
-    }
+    return stripTag(nodePath);
 }
 
 function resolve(path, translations) {

@@ -17,3 +17,15 @@ msgid "plural form with ${ n } plural"
 msgid_plural "plural form with ${ n } plurals"
 msgstr[0] "plural form with ${ n } plural"
 msgstr[1] "plural form with ${ n } plurals"
+
+#: tests/fixtures/fixture.js:7
+msgid "no translator notes plural"
+msgid_plural "no translator notes plural"
+msgstr[0] ""
+msgstr[1] ""
+
+#: tests/fixtures/fixture.js:7
+msgid "no translator notes plural formatted ${ a }"
+msgid_plural "no translator notes plural formatted ${ a }"
+msgstr[0] ""
+msgstr[1] ""

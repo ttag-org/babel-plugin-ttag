@@ -1,6 +1,6 @@
 import fs from 'fs';
 import gettextParser from 'gettext-parser';
-import { DEFAULT_HEADERS } from './defaults';
+import { DEFAULT_HEADERS, PO_PRIMITIVES } from './defaults';
 
 export function buildPotData(translations) {
     const data = {
@@ -37,4 +37,8 @@ export function makePotStr(data) {
 export function parserPoTranslations(filepath) {
     const poRaw = fs.readFileSync(filepath);
     return gettextParser.po.parse(poRaw.toString()).translations[''];
+}
+
+export function hasTranslations(translationObj) {
+    return translationObj[PO_PRIMITIVES.MSGSTR].reduce((r, t) => r && t.length, true);
 }
