@@ -3,9 +3,13 @@ import { getQuasiStr, strToQuasi, hasExpressions, stripTag } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 
+function getMsgid(node) {
+    return getQuasiStr(node);
+}
+
 function extract({ node }) {
     return {
-        [MSGID]: getQuasiStr(node),
+        [MSGID]: getMsgid(node),
         [MSGSTR]: '',
     };
 }
@@ -20,7 +24,7 @@ function resolveDefault(nodePath) {
 
 function resolve(path, translations) {
     const { node } = path;
-    const translationObj = translations[getQuasiStr(node)];
+    const translationObj = translations[getMsgid(node)];
     if (!translationObj) {
         resolveDefault(path);
         return;
