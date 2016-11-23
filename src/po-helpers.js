@@ -34,9 +34,16 @@ export function makePotStr(data) {
     return gettextParser.po.compile(data);
 }
 
-export function parserPoTranslations(filepath) {
+export function parsePoData(filepath) {
     const poRaw = fs.readFileSync(filepath);
-    return gettextParser.po.parse(poRaw.toString()).translations[''];
+    const parsedPo = gettextParser.po.parse(poRaw.toString());
+    const translations = parsedPo.translations[''];
+    const headers = parsedPo.headers;
+    return { translations, headers };
+}
+
+export function getPluralFunc(headers) {
+    return /plural ?=?\(([\s\S]*)\);/.exec(headers['plural-forms'])[1];
 }
 
 export function hasTranslations(translationObj) {

@@ -79,15 +79,10 @@ class Config {
     }
 
     getNPlurals() {
+        // TODO: move to po-helper
         const headers = (this.config.extract && this.config.extract.headers) || DEFAULT_HEADERS;
         const nplurals = /nplurals ?= ?(\d)/.exec(headers['plural-forms'])[1];
         return parseInt(nplurals, 10);
-    }
-
-    getPluralForm() {
-        const headers = (this.config.extract && this.config.extract.headers) || DEFAULT_HEADERS;
-        const pluralForm = /plural ?=?\(([\s\S]*)\);/.exec(headers['plural-forms'])[1];
-        return pluralForm;
     }
 
     getOutputFilepath() {

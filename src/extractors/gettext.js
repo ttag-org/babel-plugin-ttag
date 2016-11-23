@@ -22,7 +22,8 @@ function resolveDefault(nodePath) {
     return stripTag(nodePath);
 }
 
-function resolve(path, translations) {
+function resolve(path, poData) {
+    const { translations } = poData;
     const { node } = path;
     const translationObj = translations[getMsgid(node)];
     if (!translationObj) {

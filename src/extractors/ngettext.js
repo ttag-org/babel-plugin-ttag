@@ -2,7 +2,7 @@ import * as t from 'babel-types';
 import { strToQuasi, getQuasiStr, stripTag } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import template from 'babel-template';
-import { hasTranslations } from '../po-helpers';
+import { hasTranslations, getPluralFunc } from '../po-helpers';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
@@ -40,21 +40,21 @@ function ngettextTemplate(ngettext, pluralForm) {
           }`)({ NGETTEXT: ngettext });
 }
 
-function getNgettextUID(state, config) {
+function getNgettextUID(state, pluralFunc) {
     /* eslint-disable no-underscore-dangle */
     if (! state.file.__ngettextUid) {
         const uid = state.file.scope.generateUidIdentifier('ngettext');
         state.file.path.unshiftContainer('body',
-            ngettextTemplate(uid, config.getPluralForm()));
+            ngettextTemplate(uid, pluralFunc));
         state.file.__ngettextUid = uid;
     }
     return state.file.__ngettextUid;
 }
 
-function resolve(path, translations, config, state) {
+function resolve(path, poData, config, state) {
     /* eslint-disable no-underscore-dangle */
     // TODO: handle when has no node argument.
-
+    const { translations, headers } = poData;
     const { node } = path;
     const msgid = getMsgid(node);
     const translationObj = translations[msgid];
@@ -75,7 +75,7 @@ function resolve(path, translations, config, state) {
 
     return path.replaceWith(template('NGETTEXT(N, ARGS)')(
         {
-            NGETTEXT: getNgettextUID(state, config),
+            NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
             N: t.identifier(nPlurals),
             ARGS: t.arrayExpression(args.map((l) => {
                 const tliteral = template(strToQuasi(l))();

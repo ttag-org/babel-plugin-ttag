@@ -3,21 +3,17 @@ import path from 'path';
 import mkdirp from 'mkdirp';
 import Config from './config';
 import { extractPoEntry, getExtractor } from './extract';
-import { buildPotData, makePotStr, parserPoTranslations } from './po-helpers';
+import { buildPotData, makePotStr, parsePoData } from './po-helpers';
 
 export default function () {
-    let configInst;
+    let config;
     const potEntries = [];
 
-    function getConfig(rawConfg) {
-        if (!configInst) {
-            configInst = new Config(rawConfg);
-        }
-        return configInst;
-    }
-
     function processExpression(nodePath, state) {
-        const config = getConfig(state.opts);
+        if (!config) {
+            config = new Config(state.opts);
+        }
+
         const extractor = getExtractor(nodePath, config);
         if (!extractor) {
             return;
@@ -30,8 +26,8 @@ export default function () {
 
         if (config.isResolveMode()) {
             const poFilePath = config.getPoFilePath();
-            const translations = parserPoTranslations(poFilePath);
-            extractor.resolve(nodePath, translations, config, state);
+            const poData = parsePoData(poFilePath);
+            extractor.resolve(nodePath, poData, config, state);
         } else {
             extractor.resolveDefault && extractor.resolveDefault(nodePath, config, state);
         }
@@ -39,9 +35,7 @@ export default function () {
 
     return {
         post() {
-            const config = getConfig();
-
-            if (config.isExtractMode() && potEntries.length) {
+            if (config && config.isExtractMode() && potEntries.length) {
                 const potStr = makePotStr(buildPotData(potEntries));
                 const filepath = config.getOutputFilepath();
                 const dirPath = path.dirname(filepath);

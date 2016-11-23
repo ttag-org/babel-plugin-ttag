@@ -1,0 +1,8 @@
+"use strict";
+
+function _ngettext(n, args) {
+  var res = n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
+  return args[typeof res === 'boolean' ? res && 1 || 0 : res];
+}
+
+var n = 1;console.log(_ngettext(n, ["plural form with " + n + " plural", "plural form with " + n + " plurals", "plural form with " + n + " plurals"]));
