@@ -14,9 +14,29 @@ function match({ node }, config) {
     return t.isTaggedTemplateExpression(node) && node.tag.name === config.getAliasFor('gettext');
 }
 
-function resolve(path, translationObj) {
+function resolveDefault(nodePath) {
+    const { node } = nodePath;
+    const transStr = getQuasiStr(node);
+
+    if (hasExpressions(node)) {
+        nodePath.replaceWithSourceString(strToQuasi(transStr));
+    } else {
+        nodePath.replaceWith(t.stringLiteral(transStr));
+    }
+}
+
+function resolve(path, translations) {
     const { node } = path;
+    const translationObj = translations[getQuasiStr(node)];
+    if (!translationObj) {
+        resolveDefault(path);
+        return;
+    }
     const transStr = translationObj[MSGSTR][0];
+    if (!transStr.length) {
+        resolveDefault(path);
+        return;
+    }
 
     if (hasExpressions(node)) {
         path.replaceWithSourceString(strToQuasi(transStr));
@@ -25,4 +45,4 @@ function resolve(path, translationObj) {
     }
 }
 
-export default { match, extract, resolve };
+export default { match, extract, resolve, resolveDefault };

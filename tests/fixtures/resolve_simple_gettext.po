@@ -13,7 +13,7 @@ msgid "no translator notes"
 msgstr ""
 
 #: tests/fixtures/fixture.js:6
-msgid "plural form with ${ n } plurals"
+msgid "plural form with ${ n } plural"
 msgid_plural "plural form with ${ n } plurals"
 msgstr[0] "plural form with ${ n } plural"
 msgstr[1] "plural form with ${ n } plurals"

@@ -9,41 +9,48 @@ const enConfig = new Config();
 
 describe('ngettext extract', () => {
     it('should extract proper msgid ', () => {
-        const node = template('nt(n, `${n} bananas`)`${n} banana`')().expression;
+        const node = template('nt(n)`${n} banana`')().expression;
         const result = ngettext.extract({ node }, enConfig);
         expect(result[MSGID]).to.eql('${ n } banana');
     });
 
     it('should extract proper msgplural ', () => {
-        const node = template('nt(n, `${n} bananas`)`${n} banana`')().expression;
+        const node = template('nt(n)`${n} banana`')().expression;
         const result = ngettext.extract({ node }, enConfig);
-        expect(result[MSGID_PLURAL]).to.eql('${ n } bananas');
+        expect(result[MSGID_PLURAL]).to.eql('${ n } banana');
     });
 
     it('should extract proper msgstr', () => {
-        const node = template('nt(n, `${n} bananas`)`${n} banana`')().expression;
+        const node = template('nt(n)`${n} banana`')().expression;
         const result = ngettext.extract({ node }, enConfig);
         const msgStr = result[MSGSTR];
         expect(msgStr).to.have.property('length');
         expect(msgStr.length).to.eql(2);
-        expect(msgStr[0]).to.eql('${ n } banana');
-        expect(msgStr[1]).to.eql('${ n } bananas');
-    });
-
-    it('should throw if not enugh plural forms', () => {
-        const node = template('nt(n)`${n} banana`')().expression;
-        const func = () => ngettext.extract({ node }, enConfig);
-        expect(func).to.throw(/expected 2 plural forms for "nt" func, but - received 0/);
+        expect(msgStr[0]).to.eql('');
+        expect(msgStr[1]).to.eql('');
     });
 
     it('should extract proper structure without expressions', () => {
-        const node = template('nt(n, `bananas`)`banana`')().expression;
+        const node = template('nt(n)`banana`')().expression;
         const result = ngettext.extract({ node }, enConfig);
         const expected = {
             msgid: 'banana',
-            msgid_plural: 'bananas',
-            msgstr: ['banana', 'bananas'],
+            msgid_plural: 'banana',
+            msgstr: ['', ''],
         };
         expect(result).to.eql(expected);
+    });
+});
+
+describe('ngettext match', () => {
+    it('should match ngettext', () => {
+        const node = template('nt(n)`${n} banana`')().expression;
+        const result = ngettext.match({ node }, enConfig);
+        expect(result).to.be.true;
+    });
+    it('should not match ngettext', () => {
+        const node = template('ntt(n)`${n} banana`')().expression;
+        const result = ngettext.match({ node }, enConfig);
+        expect(result).to.be.false;
     });
 });

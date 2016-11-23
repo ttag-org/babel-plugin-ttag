@@ -3,7 +3,7 @@ import path from 'path';
 import mkdirp from 'mkdirp';
 import Config from './config';
 import { extractPoEntry, hasPolyglotTags } from './extract';
-import { resolveTranslations, stripPolyglotTags } from './resolve';
+import { resolveTranslations, resolveDefault } from './resolve';
 import { buildPotData, makePotStr, parserPoTranslations } from './po-helpers';
 
 export default function () {
@@ -15,6 +15,28 @@ export default function () {
             configInst = new Config(rawConfg);
         }
         return configInst;
+    }
+
+    function processExpression(nodePath, state) {
+        const config = getConfig(state.opts);
+        const filename = state.file.opts.filename;
+
+        if (!hasPolyglotTags(nodePath, config)) {
+            return;
+        }
+
+        if (config.isExtractMode()) {
+            const poEntry = extractPoEntry(nodePath, config, filename);
+            poEntry && potEntries.push(poEntry);
+        }
+
+        if (config.isResolveMode()) {
+            const poFilePath = config.getPoFilePath();
+            const translations = parserPoTranslations(poFilePath);
+            resolveTranslations(nodePath, config, translations, state);
+        } else {
+            resolveDefault(nodePath, config, state);
+        }
     }
 
     return {
@@ -30,27 +52,7 @@ export default function () {
             }
         },
         visitor: {
-            TaggedTemplateExpression(nodePath, state) {
-                const config = getConfig(state.opts);
-                const filename = state.file.opts.filename;
-
-                if (!hasPolyglotTags(nodePath, config)) {
-                    return;
-                }
-
-                if (config.isExtractMode()) {
-                    const poEntry = extractPoEntry(nodePath, config, filename);
-                    poEntry && potEntries.push(poEntry);
-                }
-
-                if (config.isResolveMode()) {
-                    const poFilePath = config.getPoFilePath();
-                    const translations = parserPoTranslations(poFilePath);
-                    resolveTranslations(nodePath, config, translations, state);
-                } else {
-                    stripPolyglotTags(nodePath);
-                }
-            },
+            TaggedTemplateExpression: processExpression,
         },
     };
 }
