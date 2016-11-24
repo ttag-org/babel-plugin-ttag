@@ -1,4 +1,5 @@
 import { applyReference } from './po-helpers';
+import path from 'path';
 
 export function getExtractor(nodePath, config) {
     const extractors = config.getExtractors();
@@ -11,7 +12,8 @@ export const extractPoEntry = (extractor, nodePath, config, state) => {
     const poEntry = extractor.extract(nodePath, config);
 
     if (filename !== 'unknown') {
-        return applyReference(poEntry, node, filename);
+        const base = `${process.cwd()}${path.sep}`;
+        return applyReference(poEntry, node, filename.replace(base, ''));
     }
     return poEntry;
 };
