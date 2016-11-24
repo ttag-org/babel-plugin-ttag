@@ -64,13 +64,11 @@ class Config {
 
     getAliasFor(funcName) {
         // TODO: implement possibility to overwrite or add aliases in config;
-        const aliases = ALIASES;
-        for (const k of Object.keys(aliases)) {
-            if (aliases[k] === funcName) {
-                return k;
-            }
+        const alias = ALIASES[funcName];
+        if (!alias) {
+            throw new ConfigError(`Alias for function ${funcName} was not found ${JSON.stringify(aliases)}`);
         }
-        throw new ConfigError(`Alias for function ${funcName} was not found ${JSON.stringify(aliases)}`);
+        return alias;
     }
 
     getExtractors() {
