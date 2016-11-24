@@ -1,7 +1,7 @@
 import * as t from 'babel-types';
 import { stripTag, template2Msgid, msgid2Orig } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
-import template from 'babel-template';
+import tpl from 'babel-template';
 import { hasTranslations, getPluralFunc } from '../po-helpers';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
@@ -29,7 +29,7 @@ function match({ node }, config) {
 }
 
 function ngettextTemplate(ngettext, pluralForm) {
-    return template(`
+    return tpl(`
           function NGETTEXT(n, args) {
             var res = ${pluralForm};
             return args[(typeof res === 'boolean') ? (res && 1 || 0) : res];
@@ -65,16 +65,14 @@ function resolve(path, poData, config, state) {
     const nPlurals = tagArg.type === 'Identifier' ? tagArg.name : tagArg.value;
     const exprs = node.quasi.expressions.map(({ name }) => name);
 
-    return path.replaceWith(template('NGETTEXT(N, ARGS)')(
-        {
-            NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
-            N: t.identifier(nPlurals),
-            ARGS: t.arrayExpression(args.map((l) => {
-                const { expression: { quasis, expressions } } = template(msgid2Orig(l, exprs))();
-                return t.templateLiteral(quasis, expressions);
-            })),
-        }));
+    return path.replaceWith(tpl('NGETTEXT(N, ARGS)')({
+        NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
+        N: t.identifier(nPlurals),
+        ARGS: t.arrayExpression(args.map((l) => {
+            const { expression: { quasis, expressions } } = tpl(msgid2Orig(l, exprs))();
+            return t.templateLiteral(quasis, expressions);
+        })),
+    }));
 }
 
 export default { match, extract, resolve };
-
