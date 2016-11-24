@@ -66,7 +66,7 @@ class Config {
         // TODO: implement possibility to overwrite or add aliases in config;
         const alias = ALIASES[funcName];
         if (!alias) {
-            throw new ConfigError(`Alias for function ${funcName} was not found ${JSON.stringify(aliases)}`);
+            throw new ConfigError(`Alias for function ${funcName} was not found ${JSON.stringify(ALIASES)}`);
         }
         return alias;
     }
