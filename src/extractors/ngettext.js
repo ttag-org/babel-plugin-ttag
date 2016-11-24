@@ -55,12 +55,7 @@ function resolve(path, poData, config, state) {
     const msgid = template2Msgid(node);
     const translationObj = translations[msgid];
 
-    if (!translationObj) {
-        stripTag(path);
-        return path;
-    }
-
-    if (!hasTranslations(translationObj)) {
+    if (!translationObj || translationObj && !hasTranslations(translationObj)) {
         stripTag(path);
         return path;
     }
@@ -69,15 +64,14 @@ function resolve(path, poData, config, state) {
     const tagArg = node.tag.arguments[0];
     const nPlurals = tagArg.type === 'Identifier' ? tagArg.name : tagArg.value;
     const exprs = node.quasi.expressions.map(({ name }) => name);
+
     return path.replaceWith(template('NGETTEXT(N, ARGS)')(
         {
             NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
             N: t.identifier(nPlurals),
             ARGS: t.arrayExpression(args.map((l) => {
-                const tliteral = template(msgid2Orig(l, exprs))();
-                return t.templateLiteral(
-                    tliteral.expression.quasis,
-                    tliteral.expression.expressions);
+                const { expression: { quasis, expressions } } = template(msgid2Orig(l, exprs))();
+                return t.templateLiteral(quasis, expressions);
             })),
         }));
 }
