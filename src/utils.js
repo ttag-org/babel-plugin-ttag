@@ -47,13 +47,18 @@ export function stripTag(nodePath) {
 }
 
 // TODO: move this to polyglot.js lib
-const msgid = (str, expr) => str.reduce((s, l, i) => s + l + (expr[i] && `\${ ${i} }` || ''), '');
+const getMsgid = (str, exprs) => str.reduce((s, l, i) => s + l + (exprs[i] && `\${ ${i} }` || ''), '');
+
+
+export const msgid2Orig = (msgid, exprs) => {
+    return strToQuasi(exprs.reduce((r, expr, i) => r.replace(`\${ ${i} }`, `\${ ${expr} }`), msgid));
+};
 
 export function template2Msgid(node) {
     const strs = node.quasi.quasis.map(({ value: { raw } }) => raw);
     const exprs = node.quasi.expressions || [];
     if (exprs.length) {
-        return msgid(strs, exprs);
+        return getMsgid(strs, exprs);
     }
     return node.quasi.quasis[0].value.raw;
 }

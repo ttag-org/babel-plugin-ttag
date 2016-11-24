@@ -17,10 +17,10 @@ msgid "no translator notes"
 msgstr ""
 
 #: tests/fixtures/fixture.js:6
-msgid "plural form with ${ n } plural"
-msgid_plural "plural form with ${ n } plurals"
-msgstr[0] "plural form with ${ n } plural"
-msgstr[1] "plural form with ${ n } plurals"
+msgid "plural form with ${ 0 } plural"
+msgid_plural "plural form with ${ 0 } plurals"
+msgstr[0] "plural form with ${ 0 } plural"
+msgstr[1] "plural form with ${ 0 } plurals"
 
 #: tests/fixtures/fixture.js:7
 msgid "no translator notes plural"
@@ -29,7 +29,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: tests/fixtures/fixture.js:7
-msgid "no translator notes plural formatted ${ a }"
-msgid_plural "no translator notes plural formatted ${ a }"
+msgid "no translator notes plural formatted ${ 0 }"
+msgid_plural "no translator notes plural formatted ${ 0 }"
 msgstr[0] ""
 msgstr[1] ""

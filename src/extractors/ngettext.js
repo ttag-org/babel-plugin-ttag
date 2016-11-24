@@ -1,18 +1,14 @@
 import * as t from 'babel-types';
-import { strToQuasi, getQuasiStr, stripTag } from '../utils';
+import { stripTag, template2Msgid, msgid2Orig } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import template from 'babel-template';
 import { hasTranslations, getPluralFunc } from '../po-helpers';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
-function getMsgid(node) {
-    return getQuasiStr(node);
-}
-
 function extract({ node }, config) {
     const nplurals = config.getNPlurals();
-    const nodeStr = getMsgid(node);
+    const nodeStr = template2Msgid(node);
     const translate = {
         [MSGID]: nodeStr,
         [MSGID_PLURAL]: nodeStr,
@@ -56,7 +52,7 @@ function resolve(path, poData, config, state) {
     // TODO: handle when has no node argument.
     const { translations, headers } = poData;
     const { node } = path;
-    const msgid = getMsgid(node);
+    const msgid = template2Msgid(node);
     const translationObj = translations[msgid];
 
     if (!translationObj) {
@@ -72,13 +68,13 @@ function resolve(path, poData, config, state) {
     const args = translations[msgid][MSGSTR];
     const tagArg = node.tag.arguments[0];
     const nPlurals = tagArg.type === 'Identifier' ? tagArg.name : tagArg.value;
-
+    const exprs = node.quasi.expressions.map(({ name }) => name);
     return path.replaceWith(template('NGETTEXT(N, ARGS)')(
         {
             NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
             N: t.identifier(nPlurals),
             ARGS: t.arrayExpression(args.map((l) => {
-                const tliteral = template(strToQuasi(l))();
+                const tliteral = template(msgid2Orig(l, exprs))();
                 return t.templateLiteral(
                     tliteral.expression.quasis,
                     tliteral.expression.expressions);
