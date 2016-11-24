@@ -8,6 +8,10 @@ msgstr ""
 msgid "simple string literal"
 msgstr "simple string literal translated"
 
+#: tests/fixtures/fixture.js:10
+msgid "${ 0 } simple string ${ 1 } literal with formatting"
+msgstr "{ 0 } simple string ${ 1 } literal with formatting [translated]"
+
 #: tests/fixtures/fixture.js:5
 msgid "no translator notes"
 msgstr ""

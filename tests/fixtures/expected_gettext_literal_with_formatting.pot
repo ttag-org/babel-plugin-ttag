@@ -3,5 +3,5 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
-msgid "literal with formatting ${ a }"
+msgid "literal with formatting ${ 0 }"
 msgstr ""

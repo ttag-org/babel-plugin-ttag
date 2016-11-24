@@ -1,15 +1,11 @@
 import * as t from 'babel-types';
-import { getQuasiStr, strToQuasi, hasExpressions, stripTag } from '../utils';
+import { template2Msgid, strToQuasi, hasExpressions, stripTag } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 
-function getMsgid(node) {
-    return getQuasiStr(node);
-}
-
 function extract({ node }) {
     return {
-        [MSGID]: getMsgid(node),
+        [MSGID]: template2Msgid(node),
         [MSGSTR]: '',
     };
 }
@@ -25,7 +21,7 @@ function resolveDefault(nodePath) {
 function resolve(path, poData) {
     const { translations } = poData;
     const { node } = path;
-    const translationObj = translations[getMsgid(node)];
+    const translationObj = translations[template2Msgid(node)];
     if (!translationObj) {
         resolveDefault(path);
         return;

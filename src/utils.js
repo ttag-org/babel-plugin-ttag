@@ -45,3 +45,15 @@ export function stripTag(nodePath) {
         nodePath.replaceWith(t.stringLiteral(transStr));
     }
 }
+
+// TODO: move this to polyglot.js lib
+const msgid = (str, expr) => str.reduce((s, l, i) => s + l + (expr[i] && `\${ ${i} }` || ''), '');
+
+export function template2Msgid(node) {
+    const strs = node.quasi.quasis.map(({ value: { raw } }) => raw);
+    const exprs = node.quasi.expressions || [];
+    if (exprs.length) {
+        return msgid(strs, exprs);
+    }
+    return node.quasi.quasis[0].value.raw;
+}

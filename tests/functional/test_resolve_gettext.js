@@ -29,6 +29,14 @@ describe('Resolve gettext', () => {
         expect(result).to.eql(expected);
     });
 
+    it('should resolve gettext literal (with formatting)', () => {
+        const expectedPath = 'tests/fixtures/expected_resolve_gettext_with_formatting.js.src';
+        const input = 'console.log(t`${ a } simple string ${ b } literal with formatting`);';
+        const result = babel.transform(input, options).code;
+        const expected = fs.readFileSync(expectedPath).toString();
+        expect(result).to.eql(expected);
+    });
+
     it('should resolve original string if no translation is found', () => {
         const expectedPath = 'tests/fixtures/expected_no_translation.js.src';
         const input = 'console.log(t`simple string literal without translation`);';
