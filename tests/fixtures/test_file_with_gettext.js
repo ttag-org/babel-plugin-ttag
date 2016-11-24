@@ -1,4 +1,4 @@
 /* eslint-disable */
 function test() {
-    return gt`test`;
+    return t`test`;
 }

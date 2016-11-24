@@ -12,7 +12,7 @@ describe('Resolve default', () => {
 
     it('should strip polyglot tags in any case (without resolve config)', () => {
         const expectedPath = 'tests/fixtures/expected_strip_polyglot_tags.js.src';
-        const input = 'console.log(gt`simple string literal`);';
+        const input = 'console.log(t`simple string literal`);';
         const customOpts = {
             presets: ['es2015'],
             plugins: [[polyglotPlugin, {}]],

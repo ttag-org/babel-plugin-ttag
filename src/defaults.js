@@ -4,7 +4,7 @@ export const DEFAULT_HEADERS = {
 };
 
 export const ALIASES = {
-    gettext: 'gt',
+    gettext: 't',
     ngettext: 'nt',
 };
 

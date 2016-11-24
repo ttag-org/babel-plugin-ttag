@@ -17,7 +17,7 @@ describe('Extract gettext', () => {
             presets: ['es2015'],
             plugins: [[polyglotPlugin, { extract: { output } }]],
         };
-        const input = 'console.log(gt`simple string literal`);';
+        const input = 'console.log(t`simple string literal`);';
         babel.transform(input, options);
         const result = fs.readFileSync(output).toString();
         const expected = fs.readFileSync(expectedPath).toString();
