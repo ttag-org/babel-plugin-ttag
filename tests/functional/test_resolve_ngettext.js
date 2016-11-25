@@ -71,4 +71,10 @@ describe('Resolve ngettext', () => {
         const expected = fs.readFileSync(expectedPath).toString();
         expect(result).to.eql(expected);
     });
+
+    it('should throw if has invalid expressions', () => {
+        const input = 'console.log(nt(n)`some random string ${ n + 1 }`);';
+        const func = () => babel.transform(input, options).code;
+        expect(func).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
+    });
 });

@@ -65,6 +65,7 @@ function resolve(path, poData, config, state) {
     const msgid = template2Msgid(node);
     const translationObj = translations[msgid];
 
+    validateExpresssions(node.quasi.expressions);
     if (!translationObj || translationObj && !hasTranslations(translationObj)) {
         config.unresolvedAction(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
         stripTag(path);

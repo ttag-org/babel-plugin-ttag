@@ -33,7 +33,7 @@ function resolve(path, poData, config) {
     const { node } = path;
     const msgid = template2Msgid(node);
     const translationObj = translations[template2Msgid(node)];
-
+    validateExpresssions(node.quasi.expressions);
     if (!translationObj) {
         config.unresolvedAction(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
         resolveDefault(path);
