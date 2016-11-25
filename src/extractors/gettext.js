@@ -12,8 +12,13 @@ function validateExpresssions(expressions) {
     });
 }
 
-function extract({ node }) {
+const validate = (fn) => (path, ...args) => {
+    const { node } = path;
     validateExpresssions(node.quasi.expressions);
+    return fn(path, ...args);
+};
+
+function extract({ node }) {
     return {
         [MSGID]: template2Msgid(node),
         [MSGSTR]: '',
@@ -33,7 +38,7 @@ function resolve(path, poData, config) {
     const { node } = path;
     const msgid = template2Msgid(node);
     const translationObj = translations[template2Msgid(node)];
-    validateExpresssions(node.quasi.expressions);
+
     if (!translationObj) {
         config.unresolvedAction(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
         resolveDefault(path);
@@ -53,4 +58,4 @@ function resolve(path, poData, config) {
     }
 }
 
-export default { match, extract, resolve, resolveDefault };
+export default { match, extract: validate(extract), resolve: validate(resolve), resolveDefault };
