@@ -27,7 +27,11 @@ export default function () {
         if (config.isResolveMode()) {
             const poFilePath = config.getPoFilePath();
             const poData = parsePoData(poFilePath);
-            extractor.resolve(nodePath, poData, config, state);
+            try {
+                extractor.resolve(nodePath, poData, config, state);
+            } catch (err) {
+                throw nodePath.buildCodeFrameError(err.message);
+            }
         } else {
             extractor.resolveDefault && extractor.resolveDefault(nodePath, config, state);
         }

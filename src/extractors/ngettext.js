@@ -56,6 +56,7 @@ function resolve(path, poData, config, state) {
     const translationObj = translations[msgid];
 
     if (!translationObj || translationObj && !hasTranslations(translationObj)) {
+        config.unresolvedAction(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
         stripTag(path);
         return path;
     }

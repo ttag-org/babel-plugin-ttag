@@ -1,4 +1,6 @@
-import { ALIASES, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS } from './defaults';
+import { ALIASES, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS,
+    UNRESOLVED_ACTION } from './defaults';
+const { FAIL, WARN, SKIP } = UNRESOLVED_ACTION;
 import Ajv from 'ajv';
 import gettext from './extractors/gettext';
 import ngettext from './extractors/ngettext';
@@ -24,6 +26,7 @@ const resolveConfigSchema = {
     type: ['object', 'null'],
     properties: {
         locale: { type: 'string' },
+        unresolved: { enum: [FAIL, WARN, SKIP] },
     },
     required: ['locale'],
     additionalProperties: false,
@@ -99,6 +102,28 @@ class Config {
 
     isResolveMode() {
         return Boolean(this.config.resolve);
+    }
+
+    unresolvedAction(msg) {
+        /* eslint-disable no-console */
+        if (! this.isResolveMode()) {
+            return;
+        }
+        const message = `[Polyglot]: ${msg}`;
+        const mode = this.config.resolve.unresolved || SKIP;
+        switch (mode) {
+            case FAIL:
+                throw new Error(message);
+            case SKIP:
+                break;
+            case WARN:
+                // TODO: use logger that can log to console or file or stdout
+                console.warn(message);
+                break;
+            default:
+                // TODO: use logger that can log to console or file or stdout
+                console.warn(message);
+        }
     }
 }
 

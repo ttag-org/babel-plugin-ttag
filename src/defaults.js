@@ -14,5 +14,11 @@ export const PO_PRIMITIVES = {
     MSGID_PLURAL: 'msgid_plural',
 };
 
+export const UNRESOLVED_ACTION = {
+    FAIL: 'fail',
+    WARN: 'warn',
+    SKIP: 'skip',
+};
+
 export const DEFAULT_POT_OUTPUT = 'polyglot_result.pot';
 

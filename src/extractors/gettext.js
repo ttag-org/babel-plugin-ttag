@@ -18,16 +18,20 @@ function resolveDefault(nodePath) {
     return stripTag(nodePath);
 }
 
-function resolve(path, poData) {
+function resolve(path, poData, config) {
     const { translations } = poData;
     const { node } = path;
+    const msgid = template2Msgid(node);
     const translationObj = translations[template2Msgid(node)];
+
     if (!translationObj) {
+        config.unresolvedAction(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
         resolveDefault(path);
         return;
     }
     const transStr = translationObj[MSGSTR][0];
     if (!transStr.length) {
+        config.unresolvedAction(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
         resolveDefault(path);
         return;
     }
