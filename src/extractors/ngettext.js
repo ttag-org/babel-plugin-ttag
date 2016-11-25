@@ -15,8 +15,15 @@ function validateExpresssions(expressions) {
     });
 }
 
+function validateNPlural(exp) {
+    if (!t.isIdentifier(exp) && !t.isNumericLiteral(exp)) {
+        throw new Error(`${exp.type} '${ast2Str(exp)}' can not be used as plural number argument`);
+    }
+}
+
 function extract({ node }, config) {
     validateExpresssions(node.quasi.expressions);
+    validateNPlural(node.tag.arguments[0]);
     const nplurals = config.getNPlurals();
     const nodeStr = template2Msgid(node);
     const translate = {
@@ -62,10 +69,13 @@ function resolve(path, poData, config, state) {
     // TODO: handle when has no node argument.
     const { translations, headers } = poData;
     const { node } = path;
+
+    validateExpresssions(node.quasi.expressions);
+    validateNPlural(node.tag.arguments[0]);
+
     const msgid = template2Msgid(node);
     const translationObj = translations[msgid];
 
-    validateExpresssions(node.quasi.expressions);
     if (!translationObj || translationObj && !hasTranslations(translationObj)) {
         config.unresolvedAction(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
         stripTag(path);

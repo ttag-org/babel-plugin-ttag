@@ -64,5 +64,5 @@ export function template2Msgid(node) {
 }
 
 export function isValidQuasiExpression(expr) {
-    return expr.type === 'Identifier' || expr.type === 'Literal';
+    return t.isIdentifier(expr) || t.isLiteral(expr) || t.isNumericLiteral(expr);
 }

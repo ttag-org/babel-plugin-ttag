@@ -77,4 +77,10 @@ describe('Resolve ngettext', () => {
         const func = () => babel.transform(input, options).code;
         expect(func).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
     });
+
+    it('should throw if invalid plural argument format', () => {
+        const input = 'console.log(nt(n + 1)`some random string`);';
+        const func = () => babel.transform(input, options).code;
+        expect(func).to.throw('BinaryExpression \'n + 1\' can not be used as plural number argument');
+    });
 });

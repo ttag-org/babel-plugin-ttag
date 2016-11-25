@@ -30,6 +30,12 @@ describe('gettext extract', () => {
         expect(result).to.eql(expected);
     });
 
+    it('should not throw if numeric literal', () => {
+        const node = template('t`banana ${ 1 }`')().expression;
+        const fn = () => gettext.extract({ node }, enConfig);
+        expect(fn).to.not.throw();
+    });
+
     it('should throw if has invalid expressions', () => {
         const node = template('t`banana ${ n + 1}`')().expression;
         const fn = () => gettext.extract({ node }, enConfig);

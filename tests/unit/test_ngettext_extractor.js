@@ -46,6 +46,12 @@ describe('ngettext extract', () => {
         const fn = () => ngettext.extract({ node }, enConfig);
         expect(fn).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
     });
+
+    it('should throw if plural number is invalid', () => {
+        const node = template('nt(n + 1)`banana`')().expression;
+        const fn = () => ngettext.extract({ node }, enConfig);
+        expect(fn).to.throw('BinaryExpression \'n + 1\' can not be used as plural number argument');
+    });
 });
 
 describe('ngettext match', () => {
