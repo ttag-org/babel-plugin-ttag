@@ -20,8 +20,13 @@ export default function () {
         }
 
         if (config.isExtractMode()) {
-            const poEntry = extractPoEntry(extractor, nodePath, config, state);
-            poEntry && potEntries.push(poEntry);
+            try {
+                const poEntry = extractPoEntry(extractor, nodePath, config, state);
+                poEntry && potEntries.push(poEntry);
+            } catch (err) {
+                // TODO: handle specific instances of errors
+                throw nodePath.buildCodeFrameError(err.message);
+            }
         }
 
         if (config.isResolveMode()) {
@@ -30,6 +35,7 @@ export default function () {
             try {
                 extractor.resolve(nodePath, poData, config, state);
             } catch (err) {
+                // TODO: handle specific instances of errors
                 throw nodePath.buildCodeFrameError(err.message);
             }
         } else {

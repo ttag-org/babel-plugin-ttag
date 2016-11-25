@@ -1,9 +1,19 @@
 import * as t from 'babel-types';
-import { template2Msgid, strToQuasi, hasExpressions, stripTag } from '../utils';
+import { template2Msgid, strToQuasi, hasExpressions, stripTag,
+    isValidQuasiExpression, ast2Str } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 
+function validateExpresssions(expressions) {
+    expressions.forEach((exp) => {
+        if (!isValidQuasiExpression(exp)) {
+            throw new Error(`You can not use ${exp.type} '\${${ast2Str(exp)}}' in localized strings`);
+        }
+    });
+}
+
 function extract({ node }) {
+    validateExpresssions(node.quasi.expressions);
     return {
         [MSGID]: template2Msgid(node),
         [MSGSTR]: '',

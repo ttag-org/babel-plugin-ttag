@@ -62,3 +62,7 @@ export function template2Msgid(node) {
     }
     return node.quasi.quasis[0].value.raw;
 }
+
+export function isValidQuasiExpression(expr) {
+    return expr.type === 'Identifier' || expr.type === 'Literal';
+}

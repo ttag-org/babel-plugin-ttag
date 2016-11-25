@@ -40,6 +40,12 @@ describe('ngettext extract', () => {
         };
         expect(result).to.eql(expected);
     });
+
+    it('should throw if has invalid expressions', () => {
+        const node = template('nt(n)`banana ${ n + 1}`')().expression;
+        const fn = () => ngettext.extract({ node }, enConfig);
+        expect(fn).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
+    });
 });
 
 describe('ngettext match', () => {

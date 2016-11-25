@@ -104,12 +104,11 @@ class Config {
         return Boolean(this.config.resolve);
     }
 
-    unresolvedAction(msg) {
+    unresolvedAction(message) {
         /* eslint-disable no-console */
         if (! this.isResolveMode()) {
             return;
         }
-        const message = `[Polyglot]: ${msg}`;
         const mode = this.config.resolve.unresolved || SKIP;
         switch (mode) {
             case FAIL:

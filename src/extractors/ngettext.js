@@ -1,12 +1,22 @@
 import * as t from 'babel-types';
-import { stripTag, template2Msgid, msgid2Orig } from '../utils';
+import { stripTag, template2Msgid, msgid2Orig,
+    isValidQuasiExpression, ast2Str } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import tpl from 'babel-template';
 import { hasTranslations, getPluralFunc } from '../po-helpers';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
+function validateExpresssions(expressions) {
+    expressions.forEach((exp) => {
+        if (!isValidQuasiExpression(exp)) {
+            throw new Error(`You can not use ${exp.type} '\${${ast2Str(exp)}}' in localized strings`);
+        }
+    });
+}
+
 function extract({ node }, config) {
+    validateExpresssions(node.quasi.expressions);
     const nplurals = config.getNPlurals();
     const nodeStr = template2Msgid(node);
     const translate = {

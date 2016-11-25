@@ -4,6 +4,11 @@ import fs from 'fs';
 import polyglotPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
+const output = 'debug/translations.pot';
+const options = {
+    presets: ['es2015'],
+    plugins: [[polyglotPlugin, { extract: { output } }]],
+};
 
 describe('Extract gettext', () => {
     before(() => {
@@ -11,17 +16,18 @@ describe('Extract gettext', () => {
     });
 
     it('should extract gettext literal with formatting', () => {
-        const output = 'debug/translations.pot';
         const expectedPath = 'tests/fixtures/expected_gettext_literal_with_formatting.pot';
-        const options = {
-            presets: ['es2015'],
-            plugins: [[polyglotPlugin, { extract: { output } }]],
-        };
         const input = 'console.log(t`literal with formatting ${a}`);';
         babel.transform(input, options);
         const result = fs.readFileSync(output).toString();
         const expected = fs.readFileSync(expectedPath).toString();
         expect(result).to.eql(expected);
+    });
+
+    it('should throw if has invalid expressions', () => {
+        const input = 't`banana ${ n + 1}`';
+        const fn = () => babel.transform(input, options).code;
+        expect(fn).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
     });
 });
 
