@@ -103,9 +103,6 @@ function resolve(path, poData, config, state) {
         const orig = msgid2Orig(pluralFn(tagArg.value, args), exprs);
         return path.replaceWith(tpl(orig)());
     }
-
-    stripTag(path);
-    return path;
 }
 
 export default { match, extract: validate(extract), resolve: validate(resolve), resolveDefault };
