@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getNPlurals, getPluralFunc } from 'src/po-helpers';
+import { getNPlurals, getPluralFunc, makePluralFunc } from 'src/po-helpers';
 
 
 describe('po-helpers getNPlurals', () => {
@@ -30,5 +30,12 @@ describe('po-helpers getPluralFunc', () => {
         const expected = '(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)';
         const headers = { 'plural-forms': uk };
         expect(getPluralFunc(headers)).to.eql(expected);
+    });
+});
+
+describe('po-helpers makePluralFunc', () => {
+    it('should return proper plural func', () => {
+        const fn = makePluralFunc('n!=1');
+        expect(fn(1, ['banana', 'bananas'])).to.eql('banana');
     });
 });

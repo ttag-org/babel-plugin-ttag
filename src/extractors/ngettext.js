@@ -3,7 +3,8 @@ import { stripTag, template2Msgid, msgid2Orig,
     isValidQuasiExpression, ast2Str } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import tpl from 'babel-template';
-import { hasTranslations, getPluralFunc, getNPlurals } from '../po-helpers';
+import { hasTranslations, getPluralFunc, getNPlurals, pluralFnBody,
+    makePluralFunc } from '../po-helpers';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
@@ -29,7 +30,7 @@ const validate = (fn) => (path, ...args) => {
 };
 
 function ngettextTemplate(ngettext, pluralForm) {
-    return tpl(`function NGETTEXT(n, args) { return args[0 + (${pluralForm})]; }`)({ NGETTEXT: ngettext });
+    return tpl(`function NGETTEXT(n, args) { ${pluralFnBody(pluralForm)} }`)({ NGETTEXT: ngettext });
 }
 
 function getNgettextUID(state, pluralFunc) {
@@ -84,17 +85,27 @@ function resolve(path, poData, config, state) {
 
     const args = translations[msgid][MSGSTR];
     const tagArg = node.tag.arguments[0];
-    const nPlurals = tagArg.type === 'Identifier' ? tagArg.name : tagArg.value;
     const exprs = node.quasi.expressions.map(({ name }) => name);
 
-    return path.replaceWith(tpl('NGETTEXT(N, ARGS)')({
-        NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
-        N: t.identifier(nPlurals),
-        ARGS: t.arrayExpression(args.map((l) => {
-            const { expression: { quasis, expressions } } = tpl(msgid2Orig(l, exprs))();
-            return t.templateLiteral(quasis, expressions);
-        })),
-    }));
+    if (t.isIdentifier(tagArg)) {
+        return path.replaceWith(tpl('NGETTEXT(N, ARGS)')({
+            NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
+            N: t.identifier(tagArg.name),
+            ARGS: t.arrayExpression(args.map((l) => {
+                const { expression: { quasis, expressions } } = tpl(msgid2Orig(l, exprs))();
+                return t.templateLiteral(quasis, expressions);
+            })),
+        }));
+    }
+
+    if (t.isLiteral(tagArg)) {
+        const pluralFn = makePluralFunc(getPluralFunc(headers));
+        const orig = msgid2Orig(pluralFn(tagArg.value, args), exprs);
+        return path.replaceWith(tpl(orig)());
+    }
+
+    stripTag(path);
+    return path;
 }
 
 export default { match, extract: validate(extract), resolve: validate(resolve), resolveDefault };

@@ -54,3 +54,18 @@ export function getNPlurals(headers) {
 export function hasTranslations(translationObj) {
     return translationObj[PO_PRIMITIVES.MSGSTR].reduce((r, t) => r && t.length, true);
 }
+
+export function pluralFnBody(pluralStr) {
+    return `return args[+ (${pluralStr})];`;
+}
+
+const fnCache = {};
+export function makePluralFunc(pluralStr) {
+    /* eslint-disable no-new-func */
+    let fn = fnCache[pluralStr];
+    if (!fn) {
+        fn = new Function('n', 'args', pluralFnBody(pluralStr));
+        fnCache[pluralStr] = fn;
+    }
+    return fn;
+}

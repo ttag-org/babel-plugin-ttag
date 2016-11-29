@@ -41,10 +41,15 @@ describe('Resolve ngettext', () => {
     });
 
     it('should work when n is Literal', () => {
-        const expected = '_ngettext(1, ["plural form with " + n + " plural", "plural form with " + n + " plurals"])';
+        const expected = 'console.log("plural form with " + n + " plural")';
         const input = 'console.log(nt(1)`plural form with ${n} plural`);';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(expected);
+
+        const expected2 = 'console.log("plural form with " + n + " plurals")';
+        const input2 = 'console.log(nt(2)`plural form with ${n} plural`);';
+        const result2 = babel.transform(input2, options).code;
+        expect(result2).to.contain(expected2);
     });
 
     it('should resolve original string if no translator notes', () => {
