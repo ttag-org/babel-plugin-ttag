@@ -3,7 +3,7 @@ import { stripTag, template2Msgid, msgid2Orig,
     isValidQuasiExpression, ast2Str } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import tpl from 'babel-template';
-import { hasTranslations, getPluralFunc } from '../po-helpers';
+import { hasTranslations, getPluralFunc, getNPlurals } from '../po-helpers';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
@@ -48,7 +48,7 @@ function getNgettextUID(state, pluralFunc) {
 }
 
 function extract({ node }, config) {
-    const nplurals = config.getNPlurals();
+    const nplurals = getNPlurals(config.getHeaders());
     const nodeStr = template2Msgid(node);
     const translate = {
         [MSGID]: nodeStr,

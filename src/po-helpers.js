@@ -43,7 +43,12 @@ export function parsePoData(filepath) {
 }
 
 export function getPluralFunc(headers) {
-    return /plural ?=?\(([\s\S]*)\);/.exec(headers['plural-forms'])[1];
+    return /\splural ?=?([\s\S]*);/.exec(headers['plural-forms'])[1];
+}
+
+export function getNPlurals(headers) {
+    const nplurals = /nplurals ?= ?(\d)/.exec(headers['plural-forms'])[1];
+    return parseInt(nplurals, 10);
 }
 
 export function hasTranslations(translationObj) {
