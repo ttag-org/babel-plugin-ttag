@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import * as babel from 'babel-core';
-import fs from 'fs';
 import polyglotPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
@@ -16,18 +15,18 @@ const options = {
     }]],
 };
 
-describe('Resolve ngettext', () => {
+describe('Test po resolve', () => {
     before(() => {
         rmDirSync('debug');
     });
 
     it('should resolve proper plural form of n', () => {
-        const expectedPath = 'tests/fixtures/expected_po_resolve.js.src';
+        const expected = 'n % 10 == 1 && n % 100 != 11 ? 0 : ' +
+            'n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2';
         const input = 'const n = 1; ' +
             'console.log(nt(n)`plural form with ${n} plural`);';
         const result = babel.transform(input, options).code;
-        const expected = fs.readFileSync(expectedPath).toString();
-        expect(result).to.eql(expected);
+        expect(result).to.contain(expected);
     });
 });
 

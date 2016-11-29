@@ -3,6 +3,8 @@ import * as babel from 'babel-core';
 import fs from 'fs';
 import polyglotPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
+import mkdirp from 'mkdirp';
+import childProcess from 'child_process';
 
 const pofile = 'tests/fixtures/resolve_simple_gettext.po';
 
@@ -22,30 +24,27 @@ describe('Resolve ngettext', () => {
     });
 
     it('should resolve proper plural form of n', () => {
-        const expectedPath = 'tests/fixtures/expected_resolve_ngettext.js.src';
+        const expected = '_ngettext(n, ' +
+            '["plural form with " + n + " plural", "plural form with " + n + " plurals"])';
         const input = 'const n = 1; ' +
             'console.log(nt(n)`plural form with ${n} plural`);';
         const result = babel.transform(input, options).code;
-        const expected = fs.readFileSync(expectedPath).toString();
-        expect(result).to.eql(expected);
+        expect(result).to.contain(expected);
     });
 
     it('should not include ngettext function multiple times', () => {
-        const expectedPath = 'tests/fixtures/expected_resolve_ngettext_multiple.js.src';
         const input = 'const n = 1;\n' +
             'console.log(nt(n)`plural form with ${n} plural`);\n' +
             'console.log(nt(n)`plural form with ${n} plural`);';
         const result = babel.transform(input, options).code;
-        const expected = fs.readFileSync(expectedPath).toString();
-        expect(result).to.eql(expected);
+        expect(result.match(/_ngettext/g).length).to.eql(3);
     });
 
     it('should work when n is Literal', () => {
-        const expectedPath = 'tests/fixtures/expected_resolve_ngettext_n_is_literal.js.src';
+        const expected = '_ngettext(1, ["plural form with " + n + " plural", "plural form with " + n + " plurals"])';
         const input = 'console.log(nt(1)`plural form with ${n} plural`);';
         const result = babel.transform(input, options).code;
-        const expected = fs.readFileSync(expectedPath).toString();
-        expect(result).to.eql(expected);
+        expect(result).to.contain(expected);
     });
 
     it('should resolve original string if no translator notes', () => {
@@ -82,5 +81,18 @@ describe('Resolve ngettext', () => {
         const input = 'console.log(nt(n + 1)`some random string`);';
         const func = () => babel.transform(input, options).code;
         expect(func).to.throw('BinaryExpression \'n + 1\' can not be used as plural number argument');
+    });
+
+    it('should use proper plural form', () => {
+        mkdirp('debug');
+        const resultPath = 'debug/ngettext_result.js';
+        const input = 'const a = parseInt(process.env.TEST_A, 10);\n' +
+            'process.stdout.write(nt(a)`plural form with ${ a } plural`);';
+        const result = babel.transform(input, options).code;
+        fs.writeFileSync(resultPath, result, { mode: 0o777 });
+        const { stdout: stdout1 } = childProcess.spawnSync(process.argv[0], [resultPath], { env: { TEST_A: 1 } });
+        expect(stdout1.toString()).to.eql('plural form with 1 plural');
+        const { stdout: stdout2 } = childProcess.spawnSync(process.argv[0], [resultPath], { env: { TEST_A: 2 } });
+        expect(stdout2.toString()).to.eql('plural form with 2 plurals');
     });
 });

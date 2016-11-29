@@ -29,11 +29,7 @@ const validate = (fn) => (path, ...args) => {
 };
 
 function ngettextTemplate(ngettext, pluralForm) {
-    return tpl(`
-          function NGETTEXT(n, args) {
-            var res = ${pluralForm};
-            return args[(typeof res === 'boolean') ? (res && 1 || 0) : res];
-          }`)({ NGETTEXT: ngettext });
+    return tpl(`function NGETTEXT(n, args) { return args[0 + (${pluralForm})]; }`)({ NGETTEXT: ngettext });
 }
 
 function getNgettextUID(state, pluralFunc) {
