@@ -69,8 +69,11 @@ function match({ node }, config) {
         node.tag.callee.name === config.getAliasFor('ngettext'));
 }
 
+function resolveDefault(nodePath) {
+    return stripTag(nodePath);
+}
+
 function resolve(path, poData, config, state) {
-    /* eslint-disable no-underscore-dangle */
     // TODO: handle when has no node argument.
     const { translations, headers } = poData;
     const { node } = path;
@@ -98,4 +101,4 @@ function resolve(path, poData, config, state) {
     }));
 }
 
-export default { match, extract: validate(extract), resolve: validate(resolve) };
+export default { match, extract: validate(extract), resolve: validate(resolve), resolveDefault };

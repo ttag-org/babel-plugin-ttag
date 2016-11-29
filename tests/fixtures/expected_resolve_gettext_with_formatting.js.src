@@ -1,3 +1,3 @@
 "use strict";
 
-console.log("{ 0 } simple string " + 1 + " literal with formatting [translated]");
+console.log(a + " simple string " + b + " literal with formatting [translated]");

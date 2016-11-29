@@ -1,5 +1,5 @@
 import * as t from 'babel-types';
-import { template2Msgid, strToQuasi, hasExpressions, stripTag,
+import { template2Msgid, msgid2Orig, hasExpressions, stripTag,
     isValidQuasiExpression, ast2Str } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
@@ -52,7 +52,8 @@ function resolve(path, poData, config) {
     }
 
     if (hasExpressions(node)) {
-        path.replaceWithSourceString(strToQuasi(transStr));
+        const exprs = node.quasi.expressions.map(({ name }) => name);
+        path.replaceWithSourceString(msgid2Orig(transStr, exprs));
     } else {
         path.replaceWith(t.stringLiteral(transStr));
     }
