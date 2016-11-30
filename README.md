@@ -50,7 +50,7 @@ console.log(nt(n)`Mike has ${n} banana`);
 ```
 
 Output in .po files:
-```
+```po
 #: src/PluralDemo.js:18
 msgid "Mike has ${n} banana"
 msgid_plural "Mike has ${n} banana"
