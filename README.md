@@ -1,4 +1,4 @@
-# babel-polyglot-plugin [WIP]
+# babel-plugin-c-3po [WIP]
 ## project status - POC
 Solution for providing gettext like translations into your project. Uses es6 native template syntax.
 
@@ -48,7 +48,7 @@ gettext example
 Here is how you code will look like while using this plugin:
 
 ```javascript
-import { t } from 'polyglot';
+import { t } from 'c-3po';
 const name = 'Mike';
 console.log(t`Hello ${name}`);
 ```
@@ -66,7 +66,7 @@ Here is how you can handle plural forms:
 > This function has something similar with standart ngettext but behaves a little bit different. It assumes that you have only one form in your sources and other forms will be added in .po files. This is because different languages has different number of plural forms, and there are cases when your default language is not english, so it doesn't make sense to specify 2 plural forms at all.
 
 ```javascript
-import { nt } from 'polyglot';
+import { nt } from 'c-3po';
 const name = 'Mike';
 const n = 5;
 console.log(nt(n)`Mike has ${n} banana`);
@@ -87,7 +87,7 @@ There are no additional setup for making this plugin work inside jsx. (just add 
 
 ```javascript
 import React from 'react';
-import { t, nt } from './polyglot';
+import { t, nt } from 'c-3po';
 
 class PluralDemo extends React.Component {
     constructor(props) {
