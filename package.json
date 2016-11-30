@@ -1,5 +1,5 @@
 {
-  "name": "babel-plugin-polyglot",
+  "name": "babel-plugin-c-3po",
   "version": "0.0.1",
   "description": "",
   "main": "dist/plugin.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AlexMost/babel-plugin-polyglot.git"
+    "url": "git+https://github.com/AlexMost/babel-plugin-c-3po.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AlexMost/babel-plugin-polyglot/issues"
+    "url": "https://github.com/AlexMost/babel-plugin-c-3po/issues"
   },
-  "homepage": "https://github.com/AlexMost/babel-plugin-polyglot#readme",
+  "homepage": "https://github.com/AlexMost/babel-plugin-c-3po#readme",
   "dependencies": {
     "ajv": "4.9.0",
     "babel-generator": "6.18.0",
