@@ -58,7 +58,10 @@ msgstr[0] ""
 msgstr[1] ""
 ```
 
-Usage with react.js library:
+Use case with jsx (react):
+==========================
+There are no additional setup for making this plugin work inside jsx. (just add babel-plugin-react plugin to your .babelrc)
+
 ```javascript
 import React from 'react';
 import { t, nt } from './polyglot';
