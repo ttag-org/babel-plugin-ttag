@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-c-3po",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "dist/plugin.js",
   "keywords": ["gettext", "translations", "babel-plugin", "i18n"],
@@ -8,7 +8,7 @@
     "lint": "eslint ./src ./tests",
     "fix": "eslint --fix --ignore-path=.eslintignore ./src ./tests",
     "build": "babel src --out-dir dist ",
-    "prepublish": "npm run build"
+    "prepublish": "npm run lint && make test && npm run build"
   },
   "repository": {
     "type": "git",
