@@ -20,8 +20,8 @@ Installation
 
 `npm install babel-polyglot-plugin`
 
-Example
-=======
+gettext example
+===============
 Here is how you code will look like while using this plugin:
 
 ```javascript
@@ -31,13 +31,31 @@ console.log(t`Hello ${name}`);
 ```
 So you can see that you can use native es6 template formatting. To make your string translatable, all you need to do is to place 't' tag.
 
+Translator will see this inside .po files:
+```po
+#: src/page.js:8
+msgid "Hello ${ 0 }"
+msgstr ""
+```
+Plural example
+==============
 Here is how you can handle plural forms:
+> This function has something similar with standart ngettext but behaves a little bit different. It assumes that you have only one form in your sources and other forms will be added in .po files. This is because different languages has different number of plural forms, and there are cases when your default language is not english, so it doesn't make sense to specify 2 plural forms at all.
 
 ```javascript
 import { nt } from 'polyglot';
 const name = 'Mike';
 const n = 5;
-console.log(nt(n)`Mike has ${n} bananas`);
+console.log(nt(n)`Mike has ${n} banana`);
+```
+
+Output in .po files:
+```
+#: src/PluralDemo.js:18
+msgid "Mike has ${n} banana"
+msgid_plural "Mike has ${n} banana"
+msgstr[0] ""
+msgstr[1] ""
 ```
 
 Usage with react.js library:
