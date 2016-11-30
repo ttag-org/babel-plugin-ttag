@@ -20,6 +20,29 @@ Installation
 
 `npm install babel-polyglot-plugin`
 
+
+Configuration
+=============
+Here is the configuration object that you can specify in plugin options inside *.babelrc*:
+
+```javascript
+{
+  // Specifies where to save extracted gettext entries (.pot) file
+  // Plugin will be extracting gettext entries if '*extract*' property is present.
+  extract: { output: 'dist/translations.pot' }, 
+  
+  // Specifies Which locale will be resolved currently (must be one of which is stored in 'locales' property)
+  // Plugin will be resolving translations from .po file if '*resolve*' property is present.
+  resolve: { locale: 'en-us' },
+  
+  // Map with locales and appropriate .po files with translations.
+  locales: {
+      'en-us': 'i18n/en.po',
+      'ua': 'i18n/ua.po',
+  }
+}
+```
+
 gettext example
 ===============
 Here is how you code will look like while using this plugin:
@@ -88,28 +111,6 @@ class PluralDemo extends React.Component {
 }
 
 export default PluralDemo;
-```
-
-Configuration
-=============
-Here is the configuration object that you can specify in plugin options inside *.babelrc*:
-
-```javascript
-{
-  // Specifies where to save extracted gettext entries (.pot) file
-  // Plugin will be extracting gettext entries if '*extract*' property is present.
-  extract: { output: 'dist/translations.pot' }, 
-  
-  // Specifies Which locale will be resolved currently (must be one of which is stored in 'locales' property)
-  // Plugin will be resolving translations from .po file if '*resolve*' property is present.
-  resolve: { locale: 'en-us' },
-  
-  // Map with locales and appropriate .po files with translations.
-  locales: {
-      'en-us': 'i18n/en.po',
-      'ua': 'i18n/ua.po',
-  }
-}
 ```
 
 Contribution
