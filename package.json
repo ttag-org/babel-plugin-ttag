@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-c-3po",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "",
   "main": "dist/plugin.js",
   "keywords": ["gettext", "translations", "babel-plugin", "i18n"],
