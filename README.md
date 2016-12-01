@@ -18,7 +18,7 @@ Here is the demo project (webpack setup). - https://github.com/AlexMost/polyglot
 Installation
 ============
 
-`npm install babel-polyglot-plugin`
+`npm install --save-dev babel-plugin-c-3po && npm install --save c-3po`
 
 
 Configuration
