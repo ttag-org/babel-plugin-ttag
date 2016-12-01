@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import ngettext from 'src/extractors/ngettext';
+import ngettext from 'src/extractors/tag-ngettext';
 import template from 'babel-template';
 import { PO_PRIMITIVES } from 'src/defaults';
 import Config from 'src/config';

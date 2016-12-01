@@ -2,8 +2,8 @@ import { ALIASES, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS,
     UNRESOLVED_ACTION } from './defaults';
 const { FAIL, WARN, SKIP } = UNRESOLVED_ACTION;
 import Ajv from 'ajv';
-import gettext from './extractors/gettext';
-import ngettext from './extractors/ngettext';
+import gettext from './extractors/tag-gettext';
+import ngettext from './extractors/tag-ngettext';
 
 const DEFAULT_EXTRACTORS = [gettext, ngettext];
 

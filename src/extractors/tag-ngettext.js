@@ -36,7 +36,7 @@ function ngettextTemplate(ngettext, pluralForm) {
 function getNgettextUID(state, pluralFunc) {
     /* eslint-disable no-underscore-dangle */
     if (! state.file.__ngettextUid) {
-        const uid = state.file.scope.generateUidIdentifier('ngettext');
+        const uid = state.file.scope.generateUidIdentifier('tag_ngettext');
         state.file.path.unshiftContainer('body',
             ngettextTemplate(uid, pluralFunc));
         state.file.__ngettextUid = uid;
@@ -63,7 +63,7 @@ function extract({ node }, config) {
 function match({ node }, config) {
     return (t.isTaggedTemplateExpression(node) &&
         node.tag.callee &&
-        node.tag.callee.name === config.getAliasFor('ngettext'));
+        node.tag.callee.name === config.getAliasFor('tag-ngettext'));
 }
 
 function resolveDefault(nodePath) {

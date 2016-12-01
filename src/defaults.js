@@ -4,8 +4,8 @@ export const DEFAULT_HEADERS = {
 };
 
 export const ALIASES = {
-    gettext: 't',
-    ngettext: 'nt',
+    'tag-gettext': 't',
+    'tag-ngettext': 'nt',
 };
 
 export const PO_PRIMITIVES = {

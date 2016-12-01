@@ -26,7 +26,7 @@ function extract({ node }) {
 }
 
 function match({ node }, config) {
-    return t.isTaggedTemplateExpression(node) && node.tag.name === config.getAliasFor('gettext');
+    return t.isTaggedTemplateExpression(node) && node.tag.name === config.getAliasFor('tag-gettext');
 }
 
 function resolveDefault(nodePath) {

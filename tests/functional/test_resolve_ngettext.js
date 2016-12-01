@@ -37,7 +37,7 @@ describe('Resolve ngettext', () => {
             'console.log(nt(n)`plural form with ${n} plural`);\n' +
             'console.log(nt(n)`plural form with ${n} plural`);';
         const result = babel.transform(input, options).code;
-        expect(result.match(/_ngettext/g).length).to.eql(3);
+        expect(result.match(/_tag_ngettext/g).length).to.eql(3);
     });
 
     it('should work when n is Literal', () => {
