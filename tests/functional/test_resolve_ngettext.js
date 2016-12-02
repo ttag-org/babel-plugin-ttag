@@ -53,27 +53,21 @@ describe('Resolve ngettext', () => {
     });
 
     it('should resolve original string if no translator notes', () => {
-        const expectedPath = 'tests/fixtures/expected_no_translator_notes_ngettext.js.src';
         const input = 'console.log(nt(n)`no translator notes plural`);';
         const result = babel.transform(input, options).code;
-        const expected = fs.readFileSync(expectedPath).toString();
-        expect(result).to.eql(expected);
+        expect(result).to.contain('console.log("no translator notes plural");');
     });
 
     it('should resolve original formatted string if no translator notes', () => {
-        const expectedPath = 'tests/fixtures/expected_resolve_no_translation_formatted_ngettext.js.src';
         const input = 'console.log(nt(n)`no translator notes plural formatted ${ a }`);';
         const result = babel.transform(input, options).code;
-        const expected = fs.readFileSync(expectedPath).toString();
-        expect(result).to.eql(expected);
+        expect(result).to.contain('console.log("no translator notes plural formatted " + a);');
     });
 
     it('should resolve original formatted string if msgid is not found in po', () => {
-        const expectedPath = 'tests/fixtures/expected_no_msgid_for_ngettext.js.src';
         const input = 'console.log(nt(5)`some random string ${a}`);';
         const result = babel.transform(input, options).code;
-        const expected = fs.readFileSync(expectedPath).toString();
-        expect(result).to.eql(expected);
+        expect(result).to.contain('console.log("some random string " + a);');
     });
 
     it('should throw if has invalid expressions', () => {
