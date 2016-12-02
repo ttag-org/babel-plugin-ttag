@@ -18,7 +18,7 @@ const options = {
     }]],
 };
 
-describe('Resolve ngettext', () => {
+describe('Resolve tag-ngettext', () => {
     before(() => {
         rmDirSync('debug');
     });

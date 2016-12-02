@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import * as babel from 'babel-core';
-import fs from 'fs';
 import polyglotPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
@@ -9,7 +8,7 @@ const options = {
     plugins: [[polyglotPlugin, {}]],
 };
 
-describe('Resolve ngettext default', () => {
+describe('Resolve tag-ngettext default', () => {
     before(() => {
         rmDirSync('debug');
     });

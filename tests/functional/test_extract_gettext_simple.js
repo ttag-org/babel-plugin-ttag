@@ -5,7 +5,7 @@ import polyglotPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
 
-describe('Extract gettext', () => {
+describe('Extract tag-gettext', () => {
     before(() => {
         rmDirSync('debug');
     });

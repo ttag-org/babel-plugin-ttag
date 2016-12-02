@@ -10,7 +10,7 @@ const options = {
     plugins: [[polyglotPlugin, { extract: { output } }]],
 };
 
-describe('Extract gettext', () => {
+describe('Extract tag-gettext', () => {
     before(() => {
         rmDirSync('debug');
     });

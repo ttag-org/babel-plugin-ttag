@@ -15,7 +15,7 @@ const options = {
     }]],
 };
 
-describe('Resolve gettext', () => {
+describe('Resolve tag-gettext', () => {
     before(() => {
         rmDirSync('debug');
     });

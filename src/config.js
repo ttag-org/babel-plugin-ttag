@@ -4,8 +4,9 @@ const { FAIL, WARN, SKIP } = UNRESOLVED_ACTION;
 import Ajv from 'ajv';
 import gettext from './extractors/tag-gettext';
 import ngettext from './extractors/tag-ngettext';
+import fnGettext from './extractors/fn-gettext';
 
-const DEFAULT_EXTRACTORS = [gettext, ngettext];
+const DEFAULT_EXTRACTORS = [gettext, ngettext, fnGettext];
 
 const extractConfigSchema = {
     type: ['object', 'null'],

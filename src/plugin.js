@@ -55,6 +55,7 @@ export default function () {
         },
         visitor: {
             TaggedTemplateExpression: processExpression,
+            CallExpression: processExpression,
         },
     };
 }

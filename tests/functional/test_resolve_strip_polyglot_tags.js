@@ -1,6 +1,5 @@
 import { expect } from 'chai';
 import * as babel from 'babel-core';
-import fs from 'fs';
 import polyglotPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 

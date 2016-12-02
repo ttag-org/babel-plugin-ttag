@@ -23,12 +23,12 @@ describe('Unresolved', () => {
         rmDirSync('debug');
     });
 
-    it('should throw for gettext', () => {
+    it('should throw for tag-gettext', () => {
         const input = 'console.log(t`random string`);';
         const fun = () => babel.transform(input, options).code;
         expect(fun).to.throw('No translation for "random string" in "tests/fixtures/resolve_simple_gettext.po" file');
     });
-    it('should throw for ngettext', () => {
+    it('should throw for tag-ngettext', () => {
         const input = 'console.log(nt(n)`random string`);';
         const fun = () => babel.transform(input, options).code;
         expect(fun).to.throw('No translation for "random string" in "tests/fixtures/resolve_simple_gettext.po" file');
