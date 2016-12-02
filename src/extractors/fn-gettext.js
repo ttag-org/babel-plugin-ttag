@@ -4,21 +4,22 @@ import { template2Msgid, msgid2Orig, hasExpressions, stripTag,
 import { PO_PRIMITIVES } from '../defaults';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 
-function validateExpresssions(expressions) {
-    expressions.forEach((exp) => {
-        if (!isValidQuasiExpression(exp)) {
-            throw new Error(`You can not use ${exp.type} '\${${ast2Str(exp)}}' in localized strings`);
-        }
-    });
+function validateArgument(arg, config) {
+    if (!t.isLiteral(arg)) {
+        const fn = config.getAliasFor('fn-gettext');
+        throw new Error(`You can not use ${arg.type} '${ast2Str(arg)}' as an argument to ${fn}`);
+    }
 }
 
 const validate = (fn) => (path, ...args) => {
+    validateArgument(path.node.arguments[0], args[0]);
     return fn(path, ...args);
 };
 
 function extract({ node }) {
+    const { value: msgid } = node.arguments[0];
     return {
-        [MSGID]: template2Msgid(node),
+        [MSGID]: msgid,
         [MSGSTR]: '',
     };
 }
