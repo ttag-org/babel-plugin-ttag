@@ -21,5 +21,7 @@ export const UNRESOLVED_ACTION = {
     SKIP: 'skip',
 };
 
+export const DISABLE_COMMENT = 'disable c-3po';
+
 export const DEFAULT_POT_OUTPUT = 'polyglot_result.pot';
 

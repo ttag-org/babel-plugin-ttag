@@ -43,6 +43,9 @@ test_unresolved:
 test_po_resolve:
 	$(MOCHA_CMD) ./tests/functional/test_po_resolve.js
 
+test_disabled_scope:
+	$(MOCHA_CMD) ./tests/functional/test_disabled_scope.js
+
 test_unit:
 	$(MOCHA_CMD) ./tests/unit/**/*.js
 
@@ -59,6 +62,7 @@ test_fun: test_resolve_ngettext_default
 test_fun: test_po_resolve
 test_fun: test_unresolved
 test_fun: test_resolve_fn_gettext
+test_fun: test_disabled_scope
 
 test: test_fun
 test: test_unit

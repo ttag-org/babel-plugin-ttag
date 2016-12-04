@@ -112,6 +112,18 @@ class PluralDemo extends React.Component {
 
 export default PluralDemo;
 ```
+Disabling some code parts
+=========================
+If for some reason you need to disable c-3po plugin transformation for some code block
+you can use special comment globally to disable the whole file or inside some code block (function):
+```javascript
+/* disable c-3po */
+
+// or
+function test() {
+    /* disable c-3po */
+}
+```
 
 Contribution
 ============

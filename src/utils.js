@@ -1,6 +1,9 @@
 import generate from 'babel-generator';
 import { execSync } from 'child_process';
 import * as t from 'babel-types';
+import { DISABLE_COMMENT } from './defaults';
+
+const disableRegExp = new RegExp(`\\b${DISABLE_COMMENT}\\b`);
 
 export function toArray(args) {
     return Array.isArray(args) ? args : [args];
@@ -65,4 +68,28 @@ export function template2Msgid(node) {
 
 export function isValidQuasiExpression(expr) {
     return t.isIdentifier(expr) || t.isLiteral(expr) || t.isNumericLiteral(expr);
+}
+
+export function isInDisabledScope(node, disabledScopes) {
+    let scope = node.scope;
+    while (scope) {
+        if (disabledScopes.has(scope.uid)) {
+            return true;
+        }
+        scope = scope.parent;
+    }
+    return false;
+}
+
+export function hasDisablingComment(node) {
+    const { leadingComments } = node.body[0];
+    if (! leadingComments) {
+        return false;
+    }
+    for (const { value } of leadingComments) {
+        if (value.match(disableRegExp)) {
+            return true;
+        }
+    }
+    return false;
 }

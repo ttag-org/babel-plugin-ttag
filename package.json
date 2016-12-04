@@ -6,7 +6,7 @@
   "keywords": ["gettext", "translations", "babel-plugin", "i18n"],
   "scripts": {
     "lint": "eslint ./src ./tests",
-    "fix": "eslint --fix --ignore-path=.eslintignore ./src ./tests",
+    "fix": "eslint --fix ./src ./tests",
     "build": "babel src --out-dir dist",
     "prepublish": "npm run lint && make test && npm run build"
   },

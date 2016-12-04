@@ -4,12 +4,18 @@ import mkdirp from 'mkdirp';
 import Config from './config';
 import { extractPoEntry, getExtractor } from './extract';
 import { buildPotData, makePotStr, parsePoData } from './po-helpers';
+import { hasDisablingComment, isInDisabledScope } from './utils';
 
 export default function () {
     let config;
+    let disabledScopes = new Set();
     const potEntries = [];
 
     function processExpression(nodePath, state) {
+        if (isInDisabledScope(nodePath, disabledScopes)) {
+            return;
+        }
+
         if (!config) {
             config = new Config(state.opts);
         }
@@ -56,6 +62,17 @@ export default function () {
         visitor: {
             TaggedTemplateExpression: processExpression,
             CallExpression: processExpression,
+            Program: (nodePath) => {
+                disabledScopes = new Set();
+                if (hasDisablingComment(nodePath.node)) {
+                    disabledScopes.add(nodePath.scope.uid);
+                }
+            },
+            BlockStatement: (nodePath) => {
+                if (hasDisablingComment(nodePath.node)) {
+                    disabledScopes.add(nodePath.scope.uid);
+                }
+            },
         },
     };
 }
