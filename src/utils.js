@@ -85,13 +85,14 @@ export function hasDisablingComment(node) {
     if (!node.body || !node.body.length) {
         return false;
     }
-    const { leadingComments } = node.body[0];
-    if (! leadingComments) {
-        return false;
-    }
-    for (const { value } of leadingComments) {
-        if (value.match(disableRegExp)) {
-            return true;
+    for (const { leadingComments } of node.body) {
+        if (!leadingComments) {
+            continue;
+        }
+        for (const {value} of leadingComments) {
+            if (value.match(disableRegExp)) {
+                return true;
+            }
         }
     }
     return false;
