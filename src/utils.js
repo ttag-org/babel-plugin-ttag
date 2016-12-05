@@ -89,7 +89,7 @@ export function hasDisablingComment(node) {
         if (!leadingComments) {
             continue;
         }
-        for (const {value} of leadingComments) {
+        for (const { value } of leadingComments) {
             if (value.match(disableRegExp)) {
                 return true;
             }
