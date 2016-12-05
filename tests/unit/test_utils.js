@@ -56,4 +56,8 @@ describe('utils hasDisablingComment', () => {
         const nodeMock = { body: [{ leadingComments: [{ value: `   ${DISABLE_COMMENT}2 ` }] }] };
         expect(hasDisablingComment(nodeMock)).to.be.false;
     });
+    it('should return false if node.body has no nodes', () => {
+        const nodeMock = { body: [] };
+        expect(hasDisablingComment(nodeMock)).to.be.false;
+    });
 });

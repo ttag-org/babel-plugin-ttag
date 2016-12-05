@@ -82,6 +82,9 @@ export function isInDisabledScope(node, disabledScopes) {
 }
 
 export function hasDisablingComment(node) {
+    if (!node.body || !node.body.length) {
+        return false;
+    }
     const { leadingComments } = node.body[0];
     if (! leadingComments) {
         return false;
