@@ -10,6 +10,7 @@ export default function () {
     let config;
     let disabledScopes = new Set();
     const potEntries = [];
+    let poData = null;
 
     function processExpression(nodePath, state) {
         if (isInDisabledScope(nodePath, disabledScopes)) {
@@ -37,7 +38,11 @@ export default function () {
 
         if (config.isResolveMode()) {
             const poFilePath = config.getPoFilePath();
-            const poData = parsePoData(poFilePath);
+
+            if (!poData) {
+                poData = parsePoData(poFilePath);
+            }
+
             try {
                 extractor.resolve(nodePath, poData, config, state);
             } catch (err) {
