@@ -75,17 +75,19 @@ function logAction(message, level = SKIP) {
 }
 
 class Config {
-    constructor(config = {}) {
+    constructor(config = {}, aliases = {}) {
         this.config = config;
         const [validationResult, errorsText] = validateConfig(this.config, configSchema);
         if (!validationResult) {
             throw new ConfigValidationError(errorsText);
         }
+        this.aliases = aliases;
     }
 
     getAliasFor(funcName) {
         // TODO: implement possibility to overwrite or add aliases in config;
-        const alias = ALIASES[funcName];
+        const defaultAlias = ALIASES[funcName];
+        const alias = this.aliases[funcName] || defaultAlias;
         if (!alias) {
             throw new ConfigError(`Alias for function ${funcName} was not found ${JSON.stringify(ALIASES)}`);
         }

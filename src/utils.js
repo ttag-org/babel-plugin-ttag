@@ -1,7 +1,7 @@
 import generate from 'babel-generator';
 import { execSync } from 'child_process';
 import * as t from 'babel-types';
-import { DISABLE_COMMENT } from './defaults';
+import { DISABLE_COMMENT, C3POID } from './defaults';
 
 const disableRegExp = new RegExp(`\\b${DISABLE_COMMENT}\\b`);
 
@@ -96,4 +96,12 @@ export function hasDisablingComment(node) {
         }
     }
     return false;
+}
+
+export function isC3poImport(node) {
+    return node.source.value === C3POID;
+}
+
+export function hasImportSpecifier(node) {
+    return node.specifiers && node.specifiers.some(({ type }) => type === 'ImportSpecifier');
 }
