@@ -7,6 +7,11 @@ import { buildPotData, makePotStr, parsePoData } from './po-helpers';
 import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
 import { ALIASES } from './defaults';
 
+const reverseAliases = {};
+for (const key of Object.keys(ALIASES)) {
+    reverseAliases[ALIASES[key]] = key;
+}
+
 export default function () {
     let config;
     let disabledScopes = new Set();
@@ -85,13 +90,10 @@ export default function () {
             ImportDeclaration: (nodePath) => {
                 const { node } = nodePath;
                 if (isC3poImport(node) && hasImportSpecifier(node)) {
-                    node.specifiers.filter((s) => s.type === 'ImportSpecifier')
-                    .forEach(({ imported, local }) => {
-                        const fnName = Object.keys(ALIASES).find((funcName) => ALIASES[funcName] === imported.name);
-                        if (fnName) {
-                            aliases[fnName] = local.name;
-                        }
-                    });
+                    node.specifiers
+                    .filter((s) => s.type === 'ImportSpecifier')
+                    .filter(({ imported: { name } }) => reverseAliases[name])
+                    .forEach(({ imported, local }) => aliases[reverseAliases[imported.name]] = local.name);
                 }
             },
         },
