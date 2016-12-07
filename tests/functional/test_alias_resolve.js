@@ -35,7 +35,6 @@ describe('Resolve tag-gettext', () => {
         console.log(ungettext(n)\`plural form with \${ n } plural\`);
         `;
         const result = babel.transform(input, options).code;
-        console.log(result);
         expect(result).to.contain("console.log(_tag_ngettext(n, ['plural form with ' + n + " +
             "' plural', 'plural form with ' + n + ' plurals']));");
     });

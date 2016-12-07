@@ -74,14 +74,15 @@ function logAction(message, level = SKIP) {
     }
 }
 
+// TODO: rename to context.
 class Config {
-    constructor(config = {}, aliases = {}) {
+    constructor(config = {}) {
         this.config = config;
         const [validationResult, errorsText] = validateConfig(this.config, configSchema);
         if (!validationResult) {
             throw new ConfigValidationError(errorsText);
         }
-        this.aliases = aliases;
+        this.aliases = {};
     }
 
     getAliasFor(funcName) {
@@ -92,6 +93,10 @@ class Config {
             throw new ConfigError(`Alias for function ${funcName} was not found ${JSON.stringify(ALIASES)}`);
         }
         return alias;
+    }
+
+    setAliases(aliases) {
+        this.aliases = aliases;
     }
 
     getExtractors() {

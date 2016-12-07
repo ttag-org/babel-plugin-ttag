@@ -20,8 +20,9 @@ export default function () {
         }
 
         if (!config) {
-            config = new Config(state.opts, aliases);
+            config = new Config(state.opts);
         }
+        config.setAliases(aliases);
 
         const extractor = getExtractor(nodePath, config);
         if (!extractor) {
