@@ -57,6 +57,23 @@ function validateConfig(config, schema) {
     return [isValid, ajv.errorsText(), ajv.errors];
 }
 
+function logAction(message, level = SKIP) {
+    /* eslint-disable no-console */
+    switch (level) {
+        case FAIL:
+            throw new Error(message);
+        case SKIP:
+            break;
+        case WARN:
+            // TODO: use logger that can log to console or file or stdout
+            console.warn(message);
+            break;
+        default:
+            // TODO: use logger that can log to console or file or stdout
+            console.warn(message);
+    }
+}
+
 class Config {
     constructor(config = {}) {
         this.config = config;
@@ -103,24 +120,10 @@ class Config {
     }
 
     noTranslationOnResolve(message) {
-        /* eslint-disable no-console */
         if (! this.isResolveMode()) {
             return;
         }
-        const mode = this.config.resolve.unresolved || SKIP;
-        switch (mode) {
-            case FAIL:
-                throw new Error(message);
-            case SKIP:
-                break;
-            case WARN:
-                // TODO: use logger that can log to console or file or stdout
-                console.warn(message);
-                break;
-            default:
-                // TODO: use logger that can log to console or file or stdout
-                console.warn(message);
-        }
+        logAction(message, this.config.resolve.unresolved);
     }
 }
 
