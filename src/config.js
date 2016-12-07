@@ -102,7 +102,7 @@ class Config {
         return Boolean(this.config.resolve);
     }
 
-    unresolvedAction(message) {
+    noTranslationOnResolve(message) {
         /* eslint-disable no-console */
         if (! this.isResolveMode()) {
             return;

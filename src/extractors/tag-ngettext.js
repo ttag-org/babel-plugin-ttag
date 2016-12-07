@@ -77,8 +77,14 @@ function resolve(path, poData, config, state) {
     const msgid = template2Msgid(node);
     const translationObj = translations[msgid];
 
-    if (!translationObj || translationObj && !hasTranslations(translationObj)) {
-        config.unresolvedAction(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
+    if (!translationObj) {
+        config.noTranslationOnResolve(`No "${msgid}" in "${config.getPoFilePath()}" file`);
+        stripTag(path);
+        return path;
+    }
+
+    if (!hasTranslations(translationObj)) {
+        config.noTranslationOnResolve(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
         stripTag(path);
         return path;
     }
