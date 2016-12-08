@@ -9,12 +9,13 @@ function validateArgument(arg) {
     }
 }
 
-const validate = (fn) => (path, ...args) => {
+const validate = (path) => {
     validateArgument(path.node.arguments[0]);
-    return fn(path, ...args);
 };
 
-function extract({ node }) {
+function extract(path, config) {
+    const { node } = path;
+    validate(path, config);
     const { value: msgid } = node.arguments[0];
     return {
         [MSGID]: msgid,
@@ -34,6 +35,7 @@ function resolveDefault(nodePath) {
 }
 
 function resolve(path, poData, config) {
+    validate(path, config);
     const { translations } = poData;
     const { node } = path;
     const { value: msgid } = node.arguments[0];
@@ -55,4 +57,4 @@ function resolve(path, poData, config) {
     path.replaceWith(t.stringLiteral(transStr));
 }
 
-export default { match, extract: validate(extract), resolve: validate(resolve), resolveDefault };
+export default { match, extract, resolve, resolveDefault };

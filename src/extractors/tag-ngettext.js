@@ -22,11 +22,10 @@ function validateNPlural(exp) {
     }
 }
 
-const validate = (fn) => (path, ...args) => {
+const validate = (path) => {
     const { node } = path;
     validateExpresssions(node.quasi.expressions);
     validateNPlural(node.tag.arguments[0]);
-    return fn(path, ...args);
 };
 
 function ngettextTemplate(ngettext, pluralForm) {
@@ -44,7 +43,9 @@ function getNgettextUID(state, pluralFunc) {
     return state.file.__ngettextUid;
 }
 
-function extract({ node }, config) {
+function extract(path, config) {
+    const { node } = path;
+    validate(path, config);
     const nplurals = getNPlurals(config.getHeaders());
     const nodeStr = template2Msgid(node);
     const translate = {
@@ -72,6 +73,7 @@ function resolveDefault(nodePath) {
 
 function resolve(path, poData, config, state) {
     // TODO: handle when has no node argument.
+    validate(path, config);
     const { translations, headers } = poData;
     const { node } = path;
     const msgid = template2Msgid(node);
@@ -112,4 +114,4 @@ function resolve(path, poData, config, state) {
     return path;
 }
 
-export default { match, extract: validate(extract), resolve: validate(resolve), resolveDefault };
+export default { match, extract, resolve, resolveDefault };

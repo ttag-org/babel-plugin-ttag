@@ -12,13 +12,14 @@ function validateExpresssions(expressions) {
     });
 }
 
-const validate = (fn) => (path, ...args) => {
+const validate = (path) => {
     const { node } = path;
     validateExpresssions(node.quasi.expressions);
-    return fn(path, ...args);
 };
 
-function extract({ node }) {
+function extract(path, config) {
+    const { node } = path;
+    validate(path, config);
     return {
         [MSGID]: template2Msgid(node),
         [MSGSTR]: '',
@@ -34,6 +35,7 @@ function resolveDefault(nodePath) {
 }
 
 function resolve(path, poData, config) {
+    validate(path, config);
     const { translations } = poData;
     const { node } = path;
     const msgid = template2Msgid(node);
@@ -59,4 +61,4 @@ function resolve(path, poData, config) {
     }
 }
 
-export default { match, extract: validate(extract), resolve: validate(resolve), resolveDefault };
+export default { match, extract, resolve, resolveDefault };
