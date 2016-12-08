@@ -93,7 +93,9 @@ export default function () {
                     node.specifiers
                     .filter((s) => s.type === 'ImportSpecifier')
                     .filter(({ imported: { name } }) => reverseAliases[name])
-                    .forEach(({ imported, local }) => aliases[reverseAliases[imported.name]] = local.name);
+                    .forEach(({ imported, local }) => {
+                        aliases[reverseAliases[imported.name]] = local.name;
+                    });
                 }
             },
         },
