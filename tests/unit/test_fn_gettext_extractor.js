@@ -3,6 +3,7 @@ import gettext from 'src/extractors/fn-gettext';
 import template from 'babel-template';
 import { PO_PRIMITIVES } from 'src/defaults';
 import Config from 'src/config';
+import { extractPoEntry } from 'src/extract';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 
 const enConfig = new Config();
@@ -22,7 +23,8 @@ describe('fn-gettext extract', () => {
 
     it('should throw if has invalid argument', () => {
         const node = template('gettext(fn())')().expression;
-        const fn = () => gettext.extract({ node }, enConfig);
+        const mockState = { file: { opts: { filename: 'test' } } };
+        const fn = () => extractPoEntry(gettext, { node }, enConfig, mockState);
         expect(fn).to.throw('You can not use CallExpression \'fn()\' as an argument to gettext');
     });
 });

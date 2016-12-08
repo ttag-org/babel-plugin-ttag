@@ -2,12 +2,14 @@ import * as t from 'babel-types';
 import { template2Msgid, msgid2Orig, hasExpressions, stripTag,
     isValidQuasiExpression, ast2Str } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
+import { ValidationError } from '../errors';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
+const NAME = 'tag-gettext';
 
 function validateExpresssions(expressions) {
     expressions.forEach((exp) => {
         if (!isValidQuasiExpression(exp)) {
-            throw new Error(`You can not use ${exp.type} '\${${ast2Str(exp)}}' in localized strings`);
+            throw new ValidationError(`You can not use ${exp.type} '\${${ast2Str(exp)}}' in localized strings`);
         }
     });
 }
@@ -17,9 +19,8 @@ const validate = (path) => {
     validateExpresssions(node.quasi.expressions);
 };
 
-function extract(path, config) {
+function extract(path) {
     const { node } = path;
-    validate(path, config);
     return {
         [MSGID]: template2Msgid(node),
         [MSGSTR]: '',
@@ -27,7 +28,7 @@ function extract(path, config) {
 }
 
 function match({ node }, config) {
-    return t.isTaggedTemplateExpression(node) && node.tag.name === config.getAliasFor('tag-gettext');
+    return t.isTaggedTemplateExpression(node) && node.tag.name === config.getAliasFor(NAME);
 }
 
 function resolveDefault(nodePath) {
@@ -61,4 +62,4 @@ function resolve(path, poData, config) {
     }
 }
 
-export default { match, extract, resolve, resolveDefault };
+export default { match, extract, resolve, resolveDefault, validate, name: NAME };

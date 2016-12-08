@@ -5,6 +5,7 @@ import Ajv from 'ajv';
 import gettext from './extractors/tag-gettext';
 import ngettext from './extractors/tag-ngettext';
 import fnGettext from './extractors/fn-gettext';
+import { ConfigValidationError, ConfigError } from './errors';
 
 const DEFAULT_EXTRACTORS = [gettext, ngettext, fnGettext];
 
@@ -38,18 +39,27 @@ const localesSchema = {
     additionalProperties: { type: 'string' },
 };
 
+const extractorsSchema = {
+    type: 'object',
+    additionalProperties: {
+        type: 'object',
+        properties: {
+            invalidFormat: { enum: [FAIL, WARN, SKIP] },
+        },
+        additionalProperties: false,
+    },
+};
+
 const configSchema = {
     type: 'object',
     properties: {
         extract: extractConfigSchema,
         resolve: resolveConfigSchema,
         locales: localesSchema,
+        extractors: extractorsSchema,
     },
     additionalProperties: false,
 };
-
-class ConfigValidationError extends Error {}
-class ConfigError extends Error {}
 
 function validateConfig(config, schema) {
     const ajv = new Ajv({ allErrors: true, verbose: true, v5: true });
@@ -131,6 +141,14 @@ class Config {
             return;
         }
         logAction(message, this.config.resolve.unresolved);
+    }
+
+    validationFailureAction(funcName, message) {
+        const level = (
+            this.config.extractors &&
+            this.config.extractors[funcName] &&
+            this.config.extractors[funcName].invalidFormat) || FAIL;
+        logAction(message, level);
     }
 }
 

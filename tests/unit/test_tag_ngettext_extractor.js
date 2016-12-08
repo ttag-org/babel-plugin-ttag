@@ -3,11 +3,12 @@ import ngettext from 'src/extractors/tag-ngettext';
 import template from 'babel-template';
 import { PO_PRIMITIVES } from 'src/defaults';
 import Config from 'src/config';
+import { extractPoEntry } from 'src/extract';
 const { MSGID, MSGID_PLURAL, MSGSTR } = PO_PRIMITIVES;
 
 const enConfig = new Config();
 
-describe('ngettext extract', () => {
+describe('tag-ngettext extract', () => {
     it('should extract proper msgid ', () => {
         const node = template('nt(n)`${n} banana`')().expression;
         const result = ngettext.extract({ node }, enConfig);
@@ -43,18 +44,20 @@ describe('ngettext extract', () => {
 
     it('should throw if has invalid expressions', () => {
         const node = template('nt(n)`banana ${ n + 1}`')().expression;
-        const fn = () => ngettext.extract({ node }, enConfig);
+        const mockState = { file: { opts: { filename: 'test' } } };
+        const fn = () => extractPoEntry(ngettext, { node }, enConfig, mockState);
         expect(fn).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
     });
 
     it('should throw if plural number is invalid', () => {
         const node = template('nt(n + 1)`banana`')().expression;
-        const fn = () => ngettext.extract({ node }, enConfig);
+        const mockState = { file: { opts: { filename: 'test' } } };
+        const fn = () => extractPoEntry(ngettext, { node }, enConfig, mockState);
         expect(fn).to.throw('BinaryExpression \'n + 1\' can not be used as plural number argument');
     });
 });
 
-describe('ngettext match', () => {
+describe('tag-ngettext match', () => {
     it('should match ngettext', () => {
         const node = template('nt(n)`${n} banana`')().expression;
         const result = ngettext.match({ node }, enConfig);

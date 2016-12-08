@@ -4,10 +4,11 @@ import template from 'babel-template';
 import { PO_PRIMITIVES } from 'src/defaults';
 import Config from 'src/config';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
+import { extractPoEntry } from 'src/extract';
 
 const enConfig = new Config();
 
-describe('gettext extract', () => {
+describe('tag-gettext extract', () => {
     it('should extract proper msgid ', () => {
         const node = template('t`${n} banana`')().expression;
         const result = gettext.extract({ node }, enConfig);
@@ -32,18 +33,20 @@ describe('gettext extract', () => {
 
     it('should not throw if numeric literal', () => {
         const node = template('t`banana ${ 1 }`')().expression;
-        const fn = () => gettext.extract({ node }, enConfig);
+        const mockState = { file: { opts: { filename: 'unknown' } } };
+        const fn = () => extractPoEntry(gettext, { node }, enConfig, mockState);
         expect(fn).to.not.throw();
     });
 
     it('should throw if has invalid expressions', () => {
         const node = template('t`banana ${ n + 1}`')().expression;
-        const fn = () => gettext.extract({ node }, enConfig);
+        const mockState = { file: { opts: { filename: 'test' } } };
+        const fn = () => extractPoEntry(gettext, { node }, enConfig, mockState);
         expect(fn).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
     });
 });
 
-describe('gettext match', () => {
+describe('tag-gettext match', () => {
     it('should match gettext', () => {
         const node = template('t`${n} banana`')().expression;
         const result = gettext.match({ node }, enConfig);

@@ -2,23 +2,25 @@ import * as t from 'babel-types';
 import { stripTag, template2Msgid, msgid2Orig,
     isValidQuasiExpression, ast2Str } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
+import { ValidationError } from '../errors';
 import tpl from 'babel-template';
 import { hasTranslations, getPluralFunc, getNPlurals, pluralFnBody,
     makePluralFunc } from '../po-helpers';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
+const NAME = 'tag-ngettext';
 
 function validateExpresssions(expressions) {
     expressions.forEach((exp) => {
         if (!isValidQuasiExpression(exp)) {
-            throw new Error(`You can not use ${exp.type} '\${${ast2Str(exp)}}' in localized strings`);
+            throw new ValidationError(`You can not use ${exp.type} '\${${ast2Str(exp)}}' in localized strings`);
         }
     });
 }
 
 function validateNPlural(exp) {
     if (!t.isIdentifier(exp) && !t.isNumericLiteral(exp)) {
-        throw new Error(`${exp.type} '${ast2Str(exp)}' can not be used as plural number argument`);
+        throw new ValidationError(`${exp.type} '${ast2Str(exp)}' can not be used as plural number argument`);
     }
 }
 
@@ -45,7 +47,6 @@ function getNgettextUID(state, pluralFunc) {
 
 function extract(path, config) {
     const { node } = path;
-    validate(path, config);
     const nplurals = getNPlurals(config.getHeaders());
     const nodeStr = template2Msgid(node);
     const translate = {
@@ -64,7 +65,7 @@ function extract(path, config) {
 function match({ node }, config) {
     return (t.isTaggedTemplateExpression(node) &&
         node.tag.callee &&
-        node.tag.callee.name === config.getAliasFor('tag-ngettext'));
+        node.tag.callee.name === config.getAliasFor(NAME));
 }
 
 function resolveDefault(nodePath) {
@@ -114,4 +115,4 @@ function resolve(path, poData, config, state) {
     return path;
 }
 
-export default { match, extract, resolve, resolveDefault };
+export default { match, extract, resolve, resolveDefault, validate, name: NAME };
