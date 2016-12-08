@@ -37,6 +37,9 @@ test_resolve_ngettext_default:
 test_resolve_fn_gettext:
 	$(MOCHA_CMD) ./tests/functional/test_resolve_fn_gettext.js
 
+test_alias_resolve:
+	$(MOCHA_CMD) ./tests/functional/test_alias_resolve.js
+
 test_unresolved:
 	$(MOCHA_CMD) ./tests/functional/test_unresolved.js
 
@@ -62,6 +65,7 @@ test_fun: test_resolve_ngettext_default
 test_fun: test_po_resolve
 test_fun: test_unresolved
 test_fun: test_resolve_fn_gettext
+test_fun: test_alias_resolve
 test_fun: test_disabled_scope
 
 test: test_fun

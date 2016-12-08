@@ -74,6 +74,7 @@ function logAction(message, level = SKIP) {
     }
 }
 
+// TODO: rename to context.
 class Config {
     constructor(config = {}) {
         this.config = config;
@@ -81,15 +82,21 @@ class Config {
         if (!validationResult) {
             throw new ConfigValidationError(errorsText);
         }
+        this.aliases = {};
     }
 
     getAliasFor(funcName) {
         // TODO: implement possibility to overwrite or add aliases in config;
-        const alias = ALIASES[funcName];
+        const defaultAlias = ALIASES[funcName];
+        const alias = this.aliases[funcName] || defaultAlias;
         if (!alias) {
             throw new ConfigError(`Alias for function ${funcName} was not found ${JSON.stringify(ALIASES)}`);
         }
         return alias;
+    }
+
+    setAliases(aliases) {
+        this.aliases = aliases;
     }
 
     getExtractors() {
