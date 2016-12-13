@@ -1,6 +1,7 @@
 import * as t from 'babel-types';
-import { template2Msgid, msgid2Orig, hasExpressions, stripTag,
-    isValidQuasiExpression, ast2Str } from '../utils';
+import dedent from 'dedent';
+import { template2Msgid, msgid2Orig, hasExpressions,
+    isValidQuasiExpression, ast2Str, getQuasiStr, strToQuasi } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import { ValidationError, NoTranslationError } from '../errors';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
@@ -19,10 +20,11 @@ const validate = (path) => {
     validateExpresssions(node.quasi.expressions);
 };
 
-function extract(path) {
+function extract(path, config) {
     const { node } = path;
+    const msgid = config.isDedent() ? dedent(template2Msgid(node)) : template2Msgid(node);
     return {
-        [MSGID]: template2Msgid(node),
+        [MSGID]: msgid,
         [MSGSTR]: '',
     };
 }
@@ -31,16 +33,29 @@ function match({ node }, config) {
     return t.isTaggedTemplateExpression(node) && node.tag.name === config.getAliasFor(NAME);
 }
 
+function resolveDefault(nodePath, config) {
+    const { node } = nodePath;
+    const transStr = config.isDedent() ? dedent(getQuasiStr(node)) : getQuasiStr(node);
+    if (hasExpressions(node)) {
+        nodePath.replaceWithSourceString(strToQuasi(transStr));
+    } else {
+        nodePath.replaceWith(t.stringLiteral(transStr));
+    }
+    return nodePath;
+}
+
 function resolve(path, poData, config) {
     const { translations } = poData;
     const { node } = path;
-    const msgid = template2Msgid(node);
-    const translationObj = translations[template2Msgid(node)];
+    const msgid = config.isDedent() ? dedent(template2Msgid(node)) : template2Msgid(node);
+    const translationObj = translations[msgid];
 
     if (!translationObj) {
         throw new NoTranslationError(`No "${msgid}" in "${config.getPoFilePath()}" file`);
     }
+
     const transStr = translationObj[MSGSTR][0];
+
     if (!transStr.length) {
         throw new NoTranslationError(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
     }
@@ -53,4 +68,4 @@ function resolve(path, poData, config) {
     }
 }
 
-export default { match, extract, resolve, resolveDefault: stripTag, validate, name: NAME };
+export default { match, extract, resolve, resolveDefault, validate, name: NAME };

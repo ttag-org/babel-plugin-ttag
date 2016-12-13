@@ -57,6 +57,7 @@ const configSchema = {
         resolve: resolveConfigSchema,
         locales: localesSchema,
         extractors: extractorsSchema,
+        dedent: { type: 'boolean' },
     },
     additionalProperties: false,
 };
@@ -149,6 +150,13 @@ class Config {
             this.config.extractors[funcName] &&
             this.config.extractors[funcName].invalidFormat) || FAIL;
         logAction(message, level);
+    }
+
+    isDedent() {
+        if (this.config.dedent === undefined) {
+            return true;
+        }
+        return this.config.dedent;
     }
 }
 

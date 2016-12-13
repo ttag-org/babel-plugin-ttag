@@ -44,6 +44,17 @@ describe('tag-gettext extract', () => {
         const fn = () => extractPoEntry(gettext, { node }, enConfig, mockState);
         expect(fn).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
     });
+
+    it('should dedent extracted text', () => {
+        const node = template(`t\`
+            first
+            second
+            third
+            \``)().expression;
+        const expected = 'first\nsecond\nthird';
+        const result = gettext.extract({ node }, enConfig);
+        expect(result[MSGID]).to.eql(expected);
+    });
 });
 
 describe('tag-gettext match', () => {

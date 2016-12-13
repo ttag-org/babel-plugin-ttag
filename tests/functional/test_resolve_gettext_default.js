@@ -23,4 +23,13 @@ describe('Resolve tag-gettext default', () => {
         const result = babel.transform(input, options).code;
         expect(result).to.contain('console.log("simple string literal without translation " + a);');
     });
+
+    it('should strip indent', () => {
+        const input = `console.log(t\`
+            no
+            translator
+            notes\`);`;
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain('console.log("no\\ntranslator\\nnotes");');
+    });
 });

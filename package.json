@@ -3,7 +3,12 @@
   "version": "0.0.15",
   "description": "",
   "main": "dist/plugin.js",
-  "keywords": ["gettext", "translations", "babel-plugin", "i18n"],
+  "keywords": [
+    "gettext",
+    "translations",
+    "babel-plugin",
+    "i18n"
+  ],
   "scripts": {
     "lint": "eslint ./src ./tests",
     "fix": "eslint --fix ./src ./tests",
@@ -25,6 +30,7 @@
     "babel-generator": "6.18.0",
     "babel-template": "6.16.0",
     "babel-types": "6.18.0",
+    "dedent": "0.6.0",
     "gettext-parser": "1.2.0",
     "mkdirp": "0.5.1"
   },

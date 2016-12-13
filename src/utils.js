@@ -49,7 +49,7 @@ export function stripTag(nodePath) {
     }
 }
 
-// TODO: move this to polyglot.js lib
+// TODO: move this to c-3po.js lib
 const getMsgid = (str, exprs) => str.reduce((s, l, i) => s + l + (exprs[i] && `\${ ${i} }` || ''), '');
 
 

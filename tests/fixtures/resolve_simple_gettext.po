@@ -33,3 +33,10 @@ msgid "no translator notes plural formatted ${ 0 }"
 msgid_plural "no translator notes plural formatted ${ 0 }"
 msgstr[0] ""
 msgstr[1] ""
+
+#: tests/fixtures/fixture.js:8
+msgid ""
+"first line\n"
+"second line\n"
+"third line"
+msgstr "translation"

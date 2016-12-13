@@ -62,4 +62,13 @@ describe('Resolve tag-gettext', () => {
         const func = () => babel.transform(input, options).code;
         expect(func).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
     });
+
+    it('should resolve with indent', () => {
+        const input = `console.log(t\`
+            first line
+            second line
+            third line\`);`;
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain('console.log("translation");');
+    });
 });
