@@ -16,9 +16,9 @@ const options = {
         },
         extractors: {
             'fn-gettext': {
-                invalidFormat: 'skip'
-            }
-        }
+                invalidFormat: 'skip',
+            },
+        },
     }]],
 };
 
