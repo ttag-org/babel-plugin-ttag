@@ -37,6 +37,9 @@ test_resolve_ngettext_default:
 test_resolve_fn_gettext:
 	$(MOCHA_CMD) ./tests/functional/test_resolve_fn_gettext.js
 
+test_resolve_when_validation_fails:
+	$(MOCHA_CMD) ./tests/functional/test_resolve_when_validation_fails.js
+
 test_alias_resolve:
 	$(MOCHA_CMD) ./tests/functional/test_alias_resolve.js
 
@@ -67,6 +70,7 @@ test_fun: test_unresolved
 test_fun: test_resolve_fn_gettext
 test_fun: test_alias_resolve
 test_fun: test_disabled_scope
+test_fun: test_resolve_when_validation_fails
 
 test: test_fun
 test: test_unit
