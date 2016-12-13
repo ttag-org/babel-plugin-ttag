@@ -10,12 +10,12 @@ export function getExtractor(nodePath, config) {
 export const extractPoEntry = (extractor, nodePath, config, state) => {
     try {
         extractor.validate(nodePath, config);
-    } catch (e) {
-        if (e instanceof ValidationError) {
-            config.validationFailureAction(extractor.name, e.message);
+    } catch (err) {
+        if (err instanceof ValidationError) {
+            config.validationFailureAction(extractor.name, err.message);
             return null;
         }
-        throw e;
+        throw err;
     }
     const { node } = nodePath;
     const filename = state.file.opts.filename;

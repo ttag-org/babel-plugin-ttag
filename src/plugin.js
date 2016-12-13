@@ -3,6 +3,7 @@ import path from 'path';
 import mkdirp from 'mkdirp';
 import Config from './config';
 import { extractPoEntry, getExtractor } from './extract';
+import { resolveEntries } from './resolve';
 import { buildPotData, makePotStr, parsePoData } from './po-helpers';
 import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
 import { ALIASES } from './defaults';
@@ -52,7 +53,7 @@ export default function () {
             }
 
             try {
-                extractor.resolve(nodePath, poData, config, state);
+                resolveEntries(extractor, nodePath, poData, config, state);
             } catch (err) {
                 // TODO: handle specific instances of errors
                 throw nodePath.buildCodeFrameError(err.message);

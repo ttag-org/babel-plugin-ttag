@@ -1,6 +1,6 @@
 import * as t from 'babel-types';
 import { ast2Str } from '../utils';
-import { ValidationError } from '../errors';
+import { ValidationError, NoTranslationError } from '../errors';
 import { PO_PRIMITIVES } from '../defaults';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 const NAME = 'fn-gettext';
@@ -36,23 +36,18 @@ function resolveDefault(nodePath) {
 }
 
 function resolve(path, poData, config) {
-    validate(path, config);
     const { translations } = poData;
     const { node } = path;
     const { value: msgid } = node.arguments[0];
     const translationObj = translations[msgid];
 
     if (!translationObj) {
-        config.noTranslationOnResolve(`No "${msgid}" in "${config.getPoFilePath()}" file`);
-        resolveDefault(path);
-        return;
+        throw new NoTranslationError(`No "${msgid}" in "${config.getPoFilePath()}" file`);
     }
 
     const transStr = translationObj[MSGSTR][0];
     if (!transStr.length) {
-        config.noTranslationOnResolve(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
-        resolveDefault(path);
-        return;
+        throw new NoTranslationError(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
     }
 
     path.replaceWith(t.stringLiteral(transStr));

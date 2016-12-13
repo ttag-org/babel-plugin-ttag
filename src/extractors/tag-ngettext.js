@@ -2,7 +2,7 @@ import * as t from 'babel-types';
 import { stripTag, template2Msgid, msgid2Orig,
     isValidQuasiExpression, ast2Str } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
-import { ValidationError } from '../errors';
+import { ValidationError, NoTranslationError } from '../errors';
 import tpl from 'babel-template';
 import { hasTranslations, getPluralFunc, getNPlurals, pluralFnBody,
     makePluralFunc } from '../po-helpers';
@@ -68,28 +68,19 @@ function match({ node }, config) {
         node.tag.callee.name === config.getAliasFor(NAME));
 }
 
-function resolveDefault(nodePath) {
-    return stripTag(nodePath);
-}
-
 function resolve(path, poData, config, state) {
     // TODO: handle when has no node argument.
-    validate(path, config);
     const { translations, headers } = poData;
     const { node } = path;
     const msgid = template2Msgid(node);
     const translationObj = translations[msgid];
 
     if (!translationObj) {
-        config.noTranslationOnResolve(`No "${msgid}" in "${config.getPoFilePath()}" file`);
-        stripTag(path);
-        return path;
+        throw new NoTranslationError(`No "${msgid}" in "${config.getPoFilePath()}" file`);
     }
 
     if (!hasTranslations(translationObj)) {
-        config.noTranslationOnResolve(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
-        stripTag(path);
-        return path;
+        throw new NoTranslationError(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
     }
 
     const args = translations[msgid][MSGSTR];
@@ -115,4 +106,4 @@ function resolve(path, poData, config, state) {
     return path;
 }
 
-export default { match, extract, resolve, resolveDefault, validate, name: NAME };
+export default { match, extract, resolve, resolveDefault: stripTag, validate, name: NAME };

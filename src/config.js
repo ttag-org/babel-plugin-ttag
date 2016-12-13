@@ -136,7 +136,7 @@ class Config {
         return Boolean(this.config.resolve);
     }
 
-    noTranslationOnResolve(message) {
+    noTranslationAction(message) {
         if (! this.isResolveMode()) {
             return;
         }
