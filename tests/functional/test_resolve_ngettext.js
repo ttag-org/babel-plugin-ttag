@@ -94,4 +94,14 @@ describe('Resolve tag-ngettext', () => {
         const { stdout: stdout2 } = childProcess.spawnSync(process.argv[0], [resultPath], { env: { TEST_A: 2 } });
         expect(stdout2.toString()).to.eql('plural form with 2 plurals');
     });
+
+    it('should resolve with indent', () => {
+        const input = `console.log(nt(n)\`
+            first line plural
+            second line plural
+            third line plural\`);`;
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain('translation plural');
+        expect(result).to.contain('translation plurals');
+    });
 });

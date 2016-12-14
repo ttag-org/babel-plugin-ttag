@@ -84,7 +84,7 @@ function resolve(path, poData, config, state) {
     // TODO: handle when has no node argument.
     const { translations, headers } = poData;
     const { node } = path;
-    const msgid = template2Msgid(node);
+    const msgid = config.isDedent() ? dedent(template2Msgid(node)) : template2Msgid(node);
     const translationObj = translations[msgid];
 
     if (!translationObj) {
