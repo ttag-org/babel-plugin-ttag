@@ -62,6 +62,17 @@ describe('tag-ngettext extract', () => {
         const fn = () => extractPoEntry(ngettext, { node }, enConfig, mockState);
         expect(fn).to.throw('BinaryExpression \'n + 1\' can not be used as plural number argument');
     });
+
+    it('should dedent extracted text', () => {
+        const node = template(`nt(n)\`
+            first
+            second
+            third
+            \``)().expression;
+        const expected = 'first\nsecond\nthird';
+        const result = ngettext.extract({ node }, enConfig);
+        expect(result[MSGID]).to.eql(expected);
+    });
 });
 
 describe('tag-ngettext match', () => {

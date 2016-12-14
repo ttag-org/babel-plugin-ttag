@@ -6,6 +6,7 @@ import { ValidationError, NoTranslationError } from '../errors';
 import tpl from 'babel-template';
 import { hasTranslations, getPluralFunc, getNPlurals, pluralFnBody,
     makePluralFunc } from '../po-helpers';
+import dedent from 'dedent';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 const NAME = 'tag-ngettext';
@@ -48,10 +49,10 @@ function getNgettextUID(state, pluralFunc) {
 function extract(path, config) {
     const { node } = path;
     const nplurals = getNPlurals(config.getHeaders());
-    const nodeStr = template2Msgid(node);
+    const msgid = config.isDedent() ? dedent(template2Msgid(node)) : template2Msgid(node);
     const translate = {
-        [MSGID]: nodeStr,
-        [MSGID_PLURAL]: nodeStr,
+        [MSGID]: msgid,
+        [MSGID_PLURAL]: msgid,
         [MSGSTR]: [],
     };
 
