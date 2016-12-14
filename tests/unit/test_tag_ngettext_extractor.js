@@ -49,6 +49,13 @@ describe('tag-ngettext extract', () => {
         expect(fn).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
     });
 
+    it('should not throw if member expression', () => {
+        const node = template('nt(this.props.number)`banana ${this.props.number}`')().expression;
+        const mockState = { file: { opts: { filename: 'unknown' } } };
+        const fn = () => extractPoEntry(ngettext, { node }, enConfig, mockState);
+        expect(fn).to.not.throw();
+    });
+
     it('should throw if plural number is invalid', () => {
         const node = template('nt(n + 1)`banana`')().expression;
         const mockState = { file: { opts: { filename: 'test' } } };

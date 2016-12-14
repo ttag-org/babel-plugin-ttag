@@ -19,7 +19,7 @@ function validateExpresssions(expressions) {
 }
 
 function validateNPlural(exp) {
-    if (!t.isIdentifier(exp) && !t.isNumericLiteral(exp)) {
+    if (!t.isIdentifier(exp) && !t.isNumericLiteral(exp) && !t.isMemberExpression(exp)) {
         throw new ValidationError(`${exp.type} '${ast2Str(exp)}' can not be used as plural number argument`);
     }
 }

@@ -5,10 +5,6 @@ import { DISABLE_COMMENT, C3POID } from './defaults';
 
 const disableRegExp = new RegExp(`\\b${DISABLE_COMMENT}\\b`);
 
-export function toArray(args) {
-    return Array.isArray(args) ? args : [args];
-}
-
 export function quasiToStr(str) {
     return str.replace(/^`|`$/g, '');
 }
@@ -23,11 +19,6 @@ export function ast2Str(ast) {
 
 export function strToQuasi(str) {
     return `\`${str}\``;
-}
-
-export function unescapeUnicode(str) {
-    const r = /\\u([\d\w]{4})/gi;
-    return str.replace(r, (match, grp) => String.fromCharCode(parseInt(grp, 16)));
 }
 
 export function rmDirSync(path) {
@@ -67,7 +58,7 @@ export function template2Msgid(node) {
 }
 
 export function isValidQuasiExpression(expr) {
-    return t.isIdentifier(expr) || t.isLiteral(expr) || t.isNumericLiteral(expr);
+    return t.isIdentifier(expr) || t.isLiteral(expr) || t.isNumericLiteral(expr) || t.isMemberExpression(expr);
 }
 
 export function isInDisabledScope(node, disabledScopes) {

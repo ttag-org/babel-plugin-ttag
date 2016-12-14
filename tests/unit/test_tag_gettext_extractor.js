@@ -38,6 +38,13 @@ describe('tag-gettext extract', () => {
         expect(fn).to.not.throw();
     });
 
+    it('should not throw if member expression literal', () => {
+        const node = template('t`banana ${ this.props.number }`')().expression;
+        const mockState = { file: { opts: { filename: 'unknown' } } };
+        const fn = () => extractPoEntry(gettext, { node }, enConfig, mockState);
+        expect(fn).to.not.throw();
+    });
+
     it('should throw if has invalid expressions', () => {
         const node = template('t`banana ${ n + 1}`')().expression;
         const mockState = { file: { opts: { filename: 'test' } } };
