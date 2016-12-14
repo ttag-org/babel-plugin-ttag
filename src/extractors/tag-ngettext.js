@@ -1,6 +1,6 @@
 import * as t from 'babel-types';
-import { stripTag, template2Msgid, msgid2Orig,
-    isValidQuasiExpression, ast2Str } from '../utils';
+import { template2Msgid, msgid2Orig,
+    isValidQuasiExpression, ast2Str, getQuasiStr, strToQuasi, hasExpressions } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import { ValidationError, NoTranslationError } from '../errors';
 import tpl from 'babel-template';
@@ -69,6 +69,17 @@ function match({ node }, config) {
         node.tag.callee.name === config.getAliasFor(NAME));
 }
 
+function resolveDefault(nodePath, config) {
+    const { node } = nodePath;
+    const transStr = config.isDedent() ? dedent(getQuasiStr(node)) : getQuasiStr(node);
+    if (hasExpressions(node)) {
+        nodePath.replaceWithSourceString(strToQuasi(transStr));
+    } else {
+        nodePath.replaceWith(t.stringLiteral(transStr));
+    }
+    return nodePath;
+}
+
 function resolve(path, poData, config, state) {
     // TODO: handle when has no node argument.
     const { translations, headers } = poData;
@@ -107,4 +118,4 @@ function resolve(path, poData, config, state) {
     return path;
 }
 
-export default { match, extract, resolve, resolveDefault: stripTag, validate, name: NAME };
+export default { match, extract, resolve, resolveDefault, validate, name: NAME };
