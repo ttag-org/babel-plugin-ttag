@@ -23,9 +23,23 @@ describe('fn-gettext extract', () => {
 
     it('should throw if has invalid argument', () => {
         const node = template('gettext(fn())')().expression;
-        const mockState = { file: { opts: { filename: 'test' } } };
+        const mockState = { file: { opts: { filename: 'unknown' } } };
         const fn = () => extractPoEntry(gettext, { node }, enConfig, mockState);
         expect(fn).to.throw('You can not use CallExpression \'fn()\' as an argument to gettext');
+    });
+
+    it('should throw validation if has empty string argument', () => {
+        const node = template('gettext("")')().expression;
+        const mockState = { file: { opts: { filename: 'unknown' } } };
+        const fn = () => extractPoEntry(gettext, { node }, enConfig, mockState);
+        expect(fn).to.throw('You can not pass empty string to gettext');
+    });
+
+    it('should throw if has template argument', () => {
+        const node = template('gettext(`www`)')().expression;
+        const mockState = { file: { opts: { filename: 'unknown' } } };
+        const fn = () => extractPoEntry(gettext, { node }, enConfig, mockState);
+        expect(fn).to.throw('You can not use template literal as an argument to gettext');
     });
 });
 

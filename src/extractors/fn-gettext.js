@@ -9,6 +9,12 @@ function validateArgument(arg) {
     if (!t.isLiteral(arg)) {
         throw new ValidationError(`You can not use ${arg.type} '${ast2Str(arg)}' as an argument to gettext`);
     }
+    if (arg.type === 'TemplateLiteral') {
+        throw new ValidationError('You can not use template literal as an argument to gettext');
+    }
+    if (arg.value === '') {
+        throw new ValidationError('You can not pass empty string to gettext');
+    }
 }
 
 const validate = (path) => {
