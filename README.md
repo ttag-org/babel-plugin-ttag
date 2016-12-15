@@ -13,12 +13,16 @@ Key features:
 - possibility to precompile all translations into the browser bundles (no runtime resolving, all bundles are precompiled).
 - support for plurals and contexts.
 
-Here is the demo project (webpack setup). - https://github.com/AlexMost/polyglot-demo
+Here is the demo project (webpack setup). - https://github.com/AlexMost/c-3po-demo
 
 Installation
 ============
 
 `npm install --save-dev babel-plugin-c-3po && npm install --save c-3po`
+
+
+Documentation is [here](https://alexmost.gitbooks.io/c-3po-book/content/)
+=============
 
 
 Configuration
