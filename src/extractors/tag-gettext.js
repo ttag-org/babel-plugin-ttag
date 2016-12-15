@@ -18,6 +18,10 @@ function validateExpresssions(expressions) {
 const validate = (path) => {
     const { node } = path;
     validateExpresssions(node.quasi.expressions);
+    const msgid = template2Msgid(node);
+    if (msgid === '') {
+        throw new ValidationError('Can not translate empty string');
+    }
 };
 
 function extract(path, config) {

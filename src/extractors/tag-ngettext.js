@@ -29,6 +29,10 @@ const validate = (path) => {
     const { node } = path;
     validateExpresssions(node.quasi.expressions);
     validateNPlural(node.tag.arguments[0]);
+    const msgid = template2Msgid(node);
+    if (msgid === '') {
+        throw new ValidationError('Can not translate empty string');
+    }
 };
 
 function ngettextTemplate(ngettext, pluralForm) {

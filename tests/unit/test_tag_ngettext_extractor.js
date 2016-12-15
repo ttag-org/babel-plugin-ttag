@@ -73,6 +73,13 @@ describe('tag-ngettext extract', () => {
         const result = ngettext.extract({ node }, enConfig);
         expect(result[MSGID]).to.eql(expected);
     });
+
+    it('should throw if translation string is an empty string', () => {
+        const node = template('nt(n)``')().expression;
+        const mockState = { file: { opts: { filename: 'unknown' } } };
+        const fn = () => extractPoEntry(ngettext, { node }, enConfig, mockState);
+        expect(fn).to.throw('Can not translate empty string');
+    });
 });
 
 describe('tag-ngettext match', () => {
