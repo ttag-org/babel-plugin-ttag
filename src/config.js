@@ -1,5 +1,5 @@
 import { ALIASES, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS,
-    UNRESOLVED_ACTION } from './defaults';
+    UNRESOLVED_ACTION, LOCATION } from './defaults';
 const { FAIL, WARN, SKIP } = UNRESOLVED_ACTION;
 import Ajv from 'ajv';
 import gettext from './extractors/tag-gettext';
@@ -13,6 +13,7 @@ const extractConfigSchema = {
     type: ['object', 'null'],
     properties: {
         output: { type: 'string' },
+        location: { type: 'string' },
         headers: {
             properties: {
                 'content-type': { type: 'string' },
@@ -117,6 +118,10 @@ class Config {
 
     getHeaders() {
         return (this.config.extract && this.config.extract.headers) || DEFAULT_HEADERS;
+    }
+
+    getLocation() {
+        return (this.config.extract && this.config.extract.location) || LOCATION.FULL;
     }
 
     getOutputFilepath() {

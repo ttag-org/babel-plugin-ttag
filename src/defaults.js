@@ -27,3 +27,8 @@ export const C3POID = 'c-3po';
 
 export const DEFAULT_POT_OUTPUT = 'polyglot_result.pot';
 
+export const LOCATION = {
+    FULL: 'full',
+    FILE: 'file',
+    NEVER: 'never',
+};
