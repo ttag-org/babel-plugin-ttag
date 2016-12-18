@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import { getNPlurals, getPluralFunc, makePluralFunc } from 'src/po-helpers';
+import { getNPlurals, getPluralFunc, makePluralFunc, applyReference } from 'src/po-helpers';
+import { LOCATION } from 'src/defaults';
 
 
 describe('po-helpers getNPlurals', () => {
@@ -37,5 +38,26 @@ describe('po-helpers makePluralFunc', () => {
     it('should return proper plural func', () => {
         const fn = makePluralFunc('n!=1');
         expect(fn(1, ['banana', 'bananas'])).to.eql('banana');
+    });
+});
+
+describe('po-helpers applyReference', () => {
+    const poEntry = {};
+    const filepath = 'filepath';
+    const node = { loc: { start: { line: 3 } } };
+
+    it('should return file name and line number', () => {
+        const expected = { comments: { reference: 'filepath:3' } };
+        expect(applyReference(poEntry, node, filepath, LOCATION.FULL)).to.eql(expected);
+    });
+
+    it('should return file name', () => {
+        const expected = { comments: { reference: 'filepath' } };
+        expect(applyReference(poEntry, node, filepath, LOCATION.FILE)).to.eql(expected);
+    });
+
+    it('should return no lines', () => {
+        const expected = { comments: { reference: null } };
+        expect(applyReference(poEntry, node, filepath, LOCATION.NEVER)).to.eql(expected);
     });
 });

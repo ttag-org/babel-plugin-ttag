@@ -1,6 +1,6 @@
 import fs from 'fs';
 import gettextParser from 'gettext-parser';
-import { DEFAULT_HEADERS, PO_PRIMITIVES } from './defaults';
+import { DEFAULT_HEADERS, PO_PRIMITIVES, LOCATION } from './defaults';
 
 export function buildPotData(translations) {
     const data = {
@@ -22,11 +22,23 @@ export function buildPotData(translations) {
 }
 
 
-export function applyReference(poEntry, node, filepath) {
+export function applyReference(poEntry, node, filepath, location) {
     if (!poEntry.comments) {
         poEntry.comments = {};
     }
-    poEntry.comments.reference = `${filepath}:${node.loc.start.line}`;
+
+    let reference = null;
+
+    switch (location) {
+        case LOCATION.FILE:
+            reference = filepath; break;
+        case LOCATION.NEVER:
+            reference = null; break;
+        default:
+            reference = `${filepath}:${node.loc.start.line}`;
+    }
+
+    poEntry.comments.reference = reference;
     return poEntry;
 }
 

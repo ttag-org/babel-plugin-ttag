@@ -1,6 +1,7 @@
 import { ALIASES, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS,
-    UNRESOLVED_ACTION } from './defaults';
+    UNRESOLVED_ACTION, LOCATION } from './defaults';
 const { FAIL, WARN, SKIP } = UNRESOLVED_ACTION;
+const { FULL, FILE, NEVER } = LOCATION;
 import Ajv from 'ajv';
 import gettext from './extractors/tag-gettext';
 import ngettext from './extractors/tag-ngettext';
@@ -13,6 +14,7 @@ const extractConfigSchema = {
     type: ['object', 'null'],
     properties: {
         output: { type: 'string' },
+        location: { enum: [FULL, FILE, NEVER] },
         headers: {
             properties: {
                 'content-type': { type: 'string' },
@@ -50,7 +52,7 @@ const extractorsSchema = {
     },
 };
 
-const configSchema = {
+export const configSchema = {
     type: 'object',
     properties: {
         extract: extractConfigSchema,
@@ -62,7 +64,7 @@ const configSchema = {
     additionalProperties: false,
 };
 
-function validateConfig(config, schema) {
+export function validateConfig(config, schema) {
     const ajv = new Ajv({ allErrors: true, verbose: true, v5: true });
     const isValid = ajv.validate(schema, config);
     return [isValid, ajv.errorsText(), ajv.errors];
@@ -117,6 +119,10 @@ class Config {
 
     getHeaders() {
         return (this.config.extract && this.config.extract.headers) || DEFAULT_HEADERS;
+    }
+
+    getLocation() {
+        return (this.config.extract && this.config.extract.location) || LOCATION.FULL;
     }
 
     getOutputFilepath() {
