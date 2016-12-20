@@ -32,6 +32,15 @@ describe('Resolve tag-ngettext', () => {
         expect(result).to.contain(expected);
     });
 
+    it('should resolve proper plural form for member expression', () => {
+        const expected = '_ngettext(item.n, ' +
+            '["plural form with " + item.n + " plural", "plural form with " + item.n + " plurals"])';
+        const input = 'const n = 1; ' +
+            'console.log(nt(item.n)`plural form with ${item.n} plural`);';
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain(expected);
+    });
+
     it('should not include ngettext function multiple times', () => {
         const input = 'const n = 1;\n' +
             'console.log(nt(n)`plural form with ${n} plural`);\n' +

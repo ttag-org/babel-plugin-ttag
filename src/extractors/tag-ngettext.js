@@ -101,12 +101,12 @@ function resolve(path, poData, config, state) {
 
     const args = translations[msgid][MSGSTR];
     const tagArg = node.tag.arguments[0];
-    const exprs = node.quasi.expressions.map(({ name }) => name);
+    const exprs = node.quasi.expressions.map(ast2Str);
 
-    if (t.isIdentifier(tagArg)) {
+    if (t.isIdentifier(tagArg) || t.isMemberExpression(tagArg)) {
         return path.replaceWith(tpl('NGETTEXT(N, ARGS)')({
             NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
-            N: t.identifier(tagArg.name),
+            N: tagArg,
             ARGS: t.arrayExpression(args.map((l) => {
                 const { expression: { quasis, expressions } } = tpl(msgid2Orig(l, exprs))();
                 return t.templateLiteral(quasis, expressions);
