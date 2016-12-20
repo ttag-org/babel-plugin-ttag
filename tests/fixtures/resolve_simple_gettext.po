@@ -52,3 +52,7 @@ msgid_plural ""
 "third line plural"
 msgstr[0] "translation plural"
 msgstr[1] "translation plurals"
+
+#: tests/fixtures/fixture.js:20
+msgid "${ 0 } spaces test"
+msgstr "${0} spaces test [translated]"

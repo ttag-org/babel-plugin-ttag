@@ -43,9 +43,20 @@ export function stripTag(nodePath) {
 // TODO: move this to c-3po.js lib
 const getMsgid = (str, exprs) => str.reduce((s, l, i) => s + l + (exprs[i] && `\${ ${i} }` || ''), '');
 
+const mem = {};
+const memoize1 = (f) => (arg) => {
+    if (mem[arg]) {
+        return mem[arg];
+    }
+    mem[arg] = f(arg);
+    return mem[arg];
+};
+
+const reg = (i) => new RegExp(`\\$\\{([\\s]+?|\\s?)${i}([\\s]+?|\\s?)}`);
+const memReg = memoize1(reg);
 
 export const msgid2Orig = (msgid, exprs) => {
-    return strToQuasi(exprs.reduce((r, expr, i) => r.replace(`\${ ${i} }`, `\${ ${expr} }`), msgid));
+    return strToQuasi(exprs.reduce((r, expr, i) => r.replace(memReg(i), `\${ ${expr} }`), msgid));
 };
 
 export function template2Msgid(node) {

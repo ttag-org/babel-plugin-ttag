@@ -78,4 +78,10 @@ describe('Resolve tag-gettext', () => {
         const result = babel.transform(input, options).code;
         expect(result).to.contain('console.log("translation");');
     });
+
+    it('should skip spaces inside expressions', () => {
+        const input = 'console.log(t`${ a } spaces test`);';
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain('console.log(a + " spaces test [translated]");');
+    });
 });

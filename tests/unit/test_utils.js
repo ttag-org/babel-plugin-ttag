@@ -25,6 +25,18 @@ describe('utils msgid2Orig', () => {
         const expected = '`${ a } banana ${ b }`';
         expect(msgid2Orig(input, ['a', 'b'])).to.eql(expected);
     });
+
+    it('should ignore left space inside expressions', () => {
+        const input = '${0 } banana ${  1}';
+        const expected = '`${ a } banana ${ b }`';
+        expect(msgid2Orig(input, ['a', 'b'])).to.eql(expected);
+    });
+
+    it('should ignore white spaces inside expressions', () => {
+        const input = '${0} banana ${ 1    }';
+        const expected = '`${ a } banana ${ b }`';
+        expect(msgid2Orig(input, ['a', 'b'])).to.eql(expected);
+    });
 });
 
 describe('utils isInDisabledScope', () => {
