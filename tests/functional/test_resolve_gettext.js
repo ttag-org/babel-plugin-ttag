@@ -33,6 +33,13 @@ describe('Resolve tag-gettext', () => {
             'console.log(a + " simple string " + b + " literal with formatting [translated]");');
     });
 
+    it('should resolve gettext literal (with formatting) for member expressions', () => {
+        const input = 'console.log(t`${ item.name } simple string ${ item.age } literal with formatting`);';
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain(
+            'console.log(item.name + " simple string " + item.age + " literal with formatting [translated]");');
+    });
+
     it('should resolve original string if no translation is found', () => {
         const input = 'console.log(t`simple string literal without translation`);';
         const result = babel.transform(input, options).code;

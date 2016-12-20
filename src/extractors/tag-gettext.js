@@ -65,7 +65,7 @@ function resolve(path, poData, config) {
     }
 
     if (hasExpressions(node)) {
-        const exprs = node.quasi.expressions.map(({ name }) => name);
+        const exprs = node.quasi.expressions.map(ast2Str);
         path.replaceWithSourceString(msgid2Orig(transStr, exprs));
     } else {
         path.replaceWith(t.stringLiteral(transStr));
