@@ -2,6 +2,7 @@ import generate from 'babel-generator';
 import { execSync } from 'child_process';
 import * as t from 'babel-types';
 import { DISABLE_COMMENT, C3POID } from './defaults';
+import dedent from 'dedent';
 
 const disableRegExp = new RegExp(`\\b${DISABLE_COMMENT}\\b`);
 
@@ -106,4 +107,11 @@ export function isC3poImport(node) {
 
 export function hasImportSpecifier(node) {
     return node.specifiers && node.specifiers.some(({ type }) => type === 'ImportSpecifier');
+}
+
+export function dedentStr(str) {
+    if (str.match(/\n/) !== null) {
+        return dedent(str);
+    }
+    return str;
 }

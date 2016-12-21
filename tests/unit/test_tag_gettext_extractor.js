@@ -63,6 +63,13 @@ describe('tag-gettext extract', () => {
         expect(result[MSGID]).to.eql(expected);
     });
 
+    it('should not dedent extracted text when has no \\n', () => {
+        const node = template('t`  www`')().expression;
+        const expected = '  www';
+        const result = gettext.extract({ node }, enConfig);
+        expect(result[MSGID]).to.eql(expected);
+    });
+
     it('should throw if translation string is an empty string', () => {
         const node = template('t``')().expression;
         const mockState = { file: { opts: { filename: 'unknown' } } };

@@ -32,4 +32,10 @@ describe('Resolve tag-gettext default', () => {
         const result = babel.transform(input, options).code;
         expect(result).to.contain('console.log("no\\ntranslator\\nnotes");');
     });
+
+    it('should not strip indent if has no \\n', () => {
+        const input = 'console.log(t`  www`);';
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain('console.log("  www");');
+    });
 });

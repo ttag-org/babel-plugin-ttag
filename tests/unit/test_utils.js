@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import template from 'babel-template';
 import { template2Msgid, msgid2Orig, isInDisabledScope,
-    hasDisablingComment } from 'src/utils';
+    hasDisablingComment, dedentStr } from 'src/utils';
 import { DISABLE_COMMENT } from 'src/defaults';
 
 
@@ -71,5 +71,18 @@ describe('utils hasDisablingComment', () => {
     it('should return false if node.body has no nodes', () => {
         const nodeMock = { body: [] };
         expect(hasDisablingComment(nodeMock)).to.be.false;
+    });
+});
+
+describe('utils dedentStr', () => {
+    it('should remove indentation when has \\n symbol', () => {
+        const input = `   some
+                      string`;
+        const expected = `some\nstring`;
+        expect(dedentStr(input)).to.eql(expected);
+    });
+    it('should not remove indentation when has no \\n symbol', () => {
+        const input = '   some';
+        expect(dedentStr(input)).to.eql(input);
     });
 });
