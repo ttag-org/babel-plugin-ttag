@@ -9,6 +9,7 @@ export const ALIASES = {
     'tag-ngettext': 'nt',
     gettext: 'gettext',
     ngettext: 'ngettext',
+    msgid: 'msgid',
 };
 
 export const PO_PRIMITIVES = {

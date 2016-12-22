@@ -55,3 +55,46 @@ describe('ngettext match', () => {
     });
 });
 
+describe('ngettext validate', () => {
+    it('should pass validation', () => {
+        const node = template('ngettext(msgid`test`, `test`, n)')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.not.throw();
+    });
+    it('should not pass validation when first arg is not tagged expression', () => {
+        const node = template('ngettext(`test`, `test`, n)')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.throw("First argument must be tagged template expression. You should use 'msgid' tag");
+    });
+    it('should not pass validation when first arg is not a msgid', () => {
+        const node = template('ngettext(z`test`, `test`, n)')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.throw("Expected 'msgid' for the first argument but not 'z'");
+    });
+    it('should not pass validation when first arg has invalid expressions', () => {
+        const node = template('ngettext(msgid`test ${fn()}`, `test`, n)')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.throw('You can not use CallExpression \'${fn()}\' in localized strings');
+    });
+    it('should not pass validation when plural forms has invalid expressions', () => {
+        const node = template('ngettext(msgid`test`, `test ${ fn() }`, n)')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.throw('You can not use CallExpression \'${fn()}\' in localized strings');
+    });
+    it('should not pass validation if has wrong number of plural forms', () => {
+        const node = template('ngettext(msgid`test`, `test`, `test`, n)')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.throw('Expected to have 2 plural forms but have 3 instead');
+    });
+    it('should not pass validation if has wrong \'n\' argument', () => {
+        const node = template('ngettext(msgid`test`, `test`, fn())')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.throw('CallExpression \'fn()\' can not be used as plural argument');
+    });
+    it('should not pass validation if has empty msgid', () => {
+        const node = template('ngettext(msgid``, `test`, n)')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.throw('Can not translate empty string');
+    });
+});
+
