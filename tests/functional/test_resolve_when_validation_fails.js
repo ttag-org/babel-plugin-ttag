@@ -15,7 +15,7 @@ const options = {
             'en-us': pofile,
         },
         extractors: {
-            'fn-gettext': {
+            gettext: {
                 invalidFormat: 'skip',
             },
         },

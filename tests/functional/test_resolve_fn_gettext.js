@@ -15,7 +15,7 @@ const options = {
     }]],
 };
 
-describe('Resolve fn-gettext', () => {
+describe('Resolve gettext', () => {
     before(() => {
         rmDirSync('debug');
     });

@@ -3,7 +3,7 @@ import { ast2Str } from '../utils';
 import { ValidationError, NoTranslationError } from '../errors';
 import { PO_PRIMITIVES } from '../defaults';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
-const NAME = 'fn-gettext';
+const NAME = 'gettext';
 
 function validateArgument(arg) {
     if (!t.isLiteral(arg)) {

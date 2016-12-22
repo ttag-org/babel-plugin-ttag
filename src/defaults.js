@@ -6,7 +6,7 @@ export const DEFAULT_HEADERS = {
 export const ALIASES = {
     'tag-gettext': 't',
     'tag-ngettext': 'nt',
-    'fn-gettext': 'gettext',
+    gettext: 'gettext',
 };
 
 export const PO_PRIMITIVES = {

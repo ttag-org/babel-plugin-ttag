@@ -5,7 +5,7 @@ const { FULL, FILE, NEVER } = LOCATION;
 import Ajv from 'ajv';
 import gettext from './extractors/tag-gettext';
 import ngettext from './extractors/tag-ngettext';
-import fnGettext from './extractors/fn-gettext';
+import fnGettext from './extractors/gettext';
 import { ConfigValidationError, ConfigError } from './errors';
 
 const DEFAULT_EXTRACTORS = [gettext, ngettext, fnGettext];

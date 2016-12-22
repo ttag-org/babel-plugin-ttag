@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import gettext from 'src/extractors/fn-gettext';
+import gettext from 'src/extractors/gettext';
 import template from 'babel-template';
 import { PO_PRIMITIVES } from 'src/defaults';
 import Config from 'src/config';
@@ -8,7 +8,7 @@ const { MSGID, MSGSTR } = PO_PRIMITIVES;
 
 const enConfig = new Config();
 
-describe('fn-gettext extract', () => {
+describe('gettext extract', () => {
     it('should extract proper msgid ', () => {
         const node = template('gettext("banana")')().expression;
         const result = gettext.extract({ node }, enConfig);
@@ -43,7 +43,7 @@ describe('fn-gettext extract', () => {
     });
 });
 
-describe('fn-gettext match', () => {
+describe('gettext match', () => {
     it('should match gettext', () => {
         const node = template('gettext("banana")')().expression;
         const result = gettext.match({ node }, enConfig);

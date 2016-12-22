@@ -39,7 +39,7 @@ describe('Resolve tag-gettext', () => {
             "' plural', 'plural form with ' + n + ' plurals']));");
     });
 
-    it('should be able to create alias on import for fn-gettext', () => {
+    it('should be able to create alias on import for gettext', () => {
         const input = `
         import { gettext as i18n } from 'c-3po';
         console.log(i18n('simple string literal'));
