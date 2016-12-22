@@ -3,12 +3,14 @@ import { ALIASES, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS,
 const { FAIL, WARN, SKIP } = UNRESOLVED_ACTION;
 const { FULL, FILE, NEVER } = LOCATION;
 import Ajv from 'ajv';
-import gettext from './extractors/tag-gettext';
-import ngettext from './extractors/tag-ngettext';
-import fnGettext from './extractors/gettext';
+import tagGettext from './extractors/tag-gettext';
+import tagNgettext from './extractors/tag-ngettext';
+import gettext from './extractors/gettext';
+import ngettext from './extractors/ngettext';
+
 import { ConfigValidationError, ConfigError } from './errors';
 
-const DEFAULT_EXTRACTORS = [gettext, ngettext, fnGettext];
+const DEFAULT_EXTRACTORS = [tagGettext, tagNgettext, gettext, ngettext];
 
 const extractConfigSchema = {
     type: ['object', 'null'],

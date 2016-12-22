@@ -3,10 +3,12 @@ export const DEFAULT_HEADERS = {
     'plural-forms': 'nplurals=2; plural=(n!=1);',
 };
 
+// TODO: setup default aliases from extractors
 export const ALIASES = {
     'tag-gettext': 't',
     'tag-ngettext': 'nt',
     gettext: 'gettext',
+    ngettext: 'ngettext'
 };
 
 export const PO_PRIMITIVES = {
