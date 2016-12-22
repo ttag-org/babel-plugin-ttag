@@ -39,12 +39,6 @@ const validate = (path, config) => {
     validateExpresssions(msgidTag.quasi.expressions);
     const tags = node.arguments.slice(1, -1);
     tags.forEach(({ expressions }) => validateExpresssions(expressions));
-    const nplurals = getNPlurals(config.getHeaders());
-
-    if (tags.length + 1 !== nplurals) {
-        throw new ValidationError(`Expected to have ${nplurals} plural forms but have ${tags.length + 1} instead`);
-    }
-
     validateNPlural(node.arguments[node.arguments.length - 1]);
     const msgid = getMsgid(msgidTag, config);
     if (msgid === '') {
@@ -63,6 +57,9 @@ function extract(path, config) {
     const tags = path.node.arguments.slice(0, -1);
     const msgid = getMsgid(tags[0], config);
     const nplurals = getNPlurals(config.getHeaders());
+    if (tags.length !== nplurals) {
+        throw new ValidationError(`Expected to have ${nplurals} plural forms but have ${tags.length} instead`);
+    }
     // TODO: handle case when only 1 plural form
     const msgidPlural = getMsgid({ quasi: tags[1] }, config);
     const translate = {

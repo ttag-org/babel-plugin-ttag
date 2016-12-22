@@ -36,7 +36,7 @@ describe('ngettext extract', () => {
             'plural-forms': 'nplurals=3; plural=(n!=1);',
         };
         const config = new Config({ extract: { headers } });
-        const node = template('ngettext(msgid`${ n } banana`, `${ n } bananas`, n)')().expression;
+        const node = template('ngettext(msgid`${ n } банан`, `${ n } банана`, `бананів`, n)')().expression;
         const result = ngettext.extract({ node }, config);
         const msgStr = result[MSGSTR];
         expect(msgStr).to.have.property('length');
@@ -44,6 +44,11 @@ describe('ngettext extract', () => {
         expect(msgStr[0]).to.eql('');
         expect(msgStr[1]).to.eql('');
         expect(msgStr[2]).to.eql('');
+    });
+    it('should not pass validation if has wrong number of plural forms', () => {
+        const node = template('ngettext(msgid`test`, `test`, `test`, n)')().expression;
+        const fn = () => ngettext.extract({ node }, enConfig);
+        expect(fn).to.throw('Expected to have 2 plural forms but have 3 instead');
     });
 });
 
@@ -80,11 +85,6 @@ describe('ngettext validate', () => {
         const node = template('ngettext(msgid`test`, `test ${ fn() }`, n)')().expression;
         const fn = () => ngettext.validate({ node }, enConfig);
         expect(fn).to.throw('You can not use CallExpression \'${fn()}\' in localized strings');
-    });
-    it('should not pass validation if has wrong number of plural forms', () => {
-        const node = template('ngettext(msgid`test`, `test`, `test`, n)')().expression;
-        const fn = () => ngettext.validate({ node }, enConfig);
-        expect(fn).to.throw('Expected to have 2 plural forms but have 3 instead');
     });
     it('should not pass validation if has wrong \'n\' argument', () => {
         const node = template('ngettext(msgid`test`, `test`, fn())')().expression;
