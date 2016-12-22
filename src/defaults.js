@@ -8,7 +8,7 @@ export const ALIASES = {
     'tag-gettext': 't',
     'tag-ngettext': 'nt',
     gettext: 'gettext',
-    ngettext: 'ngettext'
+    ngettext: 'ngettext',
 };
 
 export const PO_PRIMITIVES = {
