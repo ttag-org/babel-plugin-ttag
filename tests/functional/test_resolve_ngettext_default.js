@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import * as babel from 'babel-core';
 import polyglotPlugin from 'src/plugin';
-import { rmDirSync } from 'src/utils';
 
 const options = {
     presets: ['es2015'],

@@ -17,13 +17,6 @@ const extractConfigSchema = {
     properties: {
         output: { type: 'string' },
         location: { enum: [FULL, FILE, NEVER] },
-        headers: {
-            properties: {
-                'content-type': { type: 'string' },
-                'plural-forms': { type: 'string' },
-            },
-            additionalProperties: false,
-        },
     },
     additionalProperties: false,
 };
@@ -54,6 +47,15 @@ const extractorsSchema = {
     },
 };
 
+const defaultHeadersSchema = {
+    type: 'object',
+    properties: {
+        'content-type': { type: 'string' },
+        'plural-forms': { type: 'string' },
+    },
+    additionalProperties: false,
+};
+
 export const configSchema = {
     type: 'object',
     properties: {
@@ -62,6 +64,7 @@ export const configSchema = {
         locales: localesSchema,
         extractors: extractorsSchema,
         dedent: { type: 'boolean' },
+        defaultHeaders: defaultHeadersSchema,
     },
     additionalProperties: false,
 };
@@ -120,7 +123,7 @@ class Config {
     }
 
     getHeaders() {
-        return (this.config.extract && this.config.extract.headers) || DEFAULT_HEADERS;
+        return this.config.defaultHeaders || DEFAULT_HEADERS;
     }
 
     getLocation() {
