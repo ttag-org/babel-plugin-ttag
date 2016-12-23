@@ -103,6 +103,13 @@ function resolveDefault(path, poData, config, state) {
         return tpl(strToQuasi(dedentedStr))().expression;
     });
 
+    const nplurals = getNPlurals(headers);
+
+    while (nplurals > args.length) {
+        const last = args[args.length - 1];
+        args.push(t.templateLiteral(last.quasis, last.expressions));
+    }
+
     path.replaceWith(tpl('NGETTEXT(N, ARGS)')({
         NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
         N: tagArg,

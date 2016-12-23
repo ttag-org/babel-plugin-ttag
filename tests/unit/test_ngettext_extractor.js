@@ -103,4 +103,3 @@ describe('ngettext validate', () => {
         expect(fn).to.throw('Can not translate empty string');
     });
 });
-
