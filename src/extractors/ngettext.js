@@ -95,14 +95,19 @@ function getNgettextUID(state, pluralFunc) {
 
 function resolveDefault(path, poData, config, state) {
     const { headers } = poData;
-    const { name } = getNgettextUID(state, getPluralFunc(headers));
-    path.node.callee.name = name;
+    const tagArg = path.node.arguments[path.node.arguments.length - 1];
     path.node.arguments[0] = path.node.arguments[0].quasi;
-    path.node.arguments.slice(0, -1).forEach((quasi, i) => {
+    const args = path.node.arguments.slice(0, -1).map((quasi) => {
         const quasiStr = getQuasiStr({ quasi });
         const dedentedStr = config.isDedent() ? dedentStr(quasiStr) : quasiStr;
-        path.node.arguments[i] = tpl(strToQuasi(dedentedStr))().expression;
+        return tpl(strToQuasi(dedentedStr))().expression;
     });
+
+    path.replaceWith(tpl('NGETTEXT(N, ARGS)')({
+        NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
+        N: tagArg,
+        ARGS: t.arrayExpression(args),
+    }));
 }
 
 function resolve(path, poData, config, state) {

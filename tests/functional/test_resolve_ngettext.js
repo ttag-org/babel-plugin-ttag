@@ -24,7 +24,7 @@ describe('Resolve ngettext', () => {
     });
 
     it('should resolve proper plural form of n', () => {
-        const expected = '_ngettext(n, ' +
+        const expected = '_tag_ngettext(n, ' +
             '["plural form with " + n + " plural [translated]", "plural form with " + n + " plurals [translated]"])';
         const input = 'const n = 1; ' +
             'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, n));';
@@ -106,19 +106,20 @@ describe('Resolve ngettext default', () => {
     it('should resolve original strings if no translator notes', () => {
         const input = 'console.log(ngettext(msgid`no translation plural`, `no translation plurals`, n));';
         const result = babel.transform(input, options).code;
-        expect(result).to.contain('console.log(_tag_ngettext("no translation plural", "no translation plurals", n));');
+        expect(result).to.contain(
+            'console.log(_tag_ngettext(n, ["no translation plural", "no translation plurals"]));');
     });
 
     it('should resolve original formatted strings if no translator notes', () => {
         const input = 'console.log(ngettext(msgid`no translation plural ${n}`, `no translation plurals ${n}`, n));';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(
-            'console.log(_tag_ngettext("no translation plural " + n, "no translation plurals " + n, n));');
+            'console.log(_tag_ngettext(n, ["no translation plural " + n, "no translation plurals " + n]));');
     });
 
     it('should resolve default strings with indent', () => {
         const input = 'ngettext(msgid`  test\n  test`, `  test\n  tests`, n)';
         const result = babel.transform(input, options).code;
-        expect(result).to.contain('_tag_ngettext("test\\ntest", "test\\ntests", n);');
+        expect(result).to.contain('_tag_ngettext(n, ["test\\ntest", "test\\ntests"]);');
     });
 });
