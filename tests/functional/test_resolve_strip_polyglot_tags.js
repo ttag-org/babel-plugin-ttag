@@ -4,7 +4,7 @@ import polyglotPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
 
-describe('Resolve default', () => {
+describe('Resolve strip tags by default', () => {
     before(() => {
         rmDirSync('debug');
     });
