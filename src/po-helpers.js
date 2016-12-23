@@ -81,3 +81,9 @@ export function makePluralFunc(pluralStr) {
     }
     return fn;
 }
+
+export function getDefaultPoData(config) {
+    return {
+        headers: config.getHeaders(),
+    };
+}

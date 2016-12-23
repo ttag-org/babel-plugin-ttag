@@ -31,11 +31,11 @@ describe('ngettext extract', () => {
     });
 
     it('should extract valid number of msgstrs', () => {
-        const headers = {
+        const defaultHeaders = {
             'content-type': 'text/plain; charset=UTF-8',
             'plural-forms': 'nplurals=3; plural=(n!=1);',
         };
-        const config = new Config({ extract: { headers } });
+        const config = new Config({ defaultHeaders });
         const node = template('ngettext(msgid`${ n } банан`, `${ n } банана`, `бананів`, n)')().expression;
         const result = ngettext.extract({ node }, config);
         const msgStr = result[MSGSTR];

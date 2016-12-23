@@ -37,6 +37,9 @@ test_resolve_tag_ngettext_default:
 test_resolve_ngettext:
 	$(MOCHA_CMD) ./tests/functional/test_resolve_ngettext.js
 
+test_resolve_ngettext_default:
+	$(MOCHA_CMD) ./tests/functional/test_resolve_ngettext_default.js
+
 test_resolve_fn_gettext:
 	$(MOCHA_CMD) ./tests/functional/test_resolve_fn_gettext.js
 
@@ -69,6 +72,7 @@ test_fun: test_resolve_strip_polyglot_tags
 test_fun: test_resolve_tag_ngettext
 test_fun: test_resolve_tag_ngettext_default
 test_fun: test_resolve_ngettext
+test_fun: test_resolve_ngettext_default
 test_fun: test_po_resolve
 test_fun: test_unresolved
 test_fun: test_resolve_fn_gettext

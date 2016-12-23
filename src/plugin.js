@@ -4,7 +4,7 @@ import mkdirp from 'mkdirp';
 import Config from './config';
 import { extractPoEntry, getExtractor } from './extract';
 import { resolveEntries } from './resolve';
-import { buildPotData, makePotStr, parsePoData } from './po-helpers';
+import { buildPotData, makePotStr, parsePoData, getDefaultPoData } from './po-helpers';
 import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
 import { ALIASES } from './defaults';
 
@@ -59,7 +59,8 @@ export default function () {
                 throw nodePath.buildCodeFrameError(err.message);
             }
         } else {
-            extractor.resolveDefault && extractor.resolveDefault(nodePath, poData, config, state);
+            extractor.resolveDefault && extractor.resolveDefault(
+                nodePath, getDefaultPoData(config), config, state);
         }
     }
 
