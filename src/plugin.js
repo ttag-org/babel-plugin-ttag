@@ -59,7 +59,7 @@ export default function () {
                 throw nodePath.buildCodeFrameError(err.message);
             }
         } else {
-            extractor.resolveDefault && extractor.resolveDefault(nodePath, config, state);
+            extractor.resolveDefault && extractor.resolveDefault(nodePath, poData, config, state);
         }
     }
 

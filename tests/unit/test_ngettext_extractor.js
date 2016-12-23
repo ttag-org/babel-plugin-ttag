@@ -50,6 +50,12 @@ describe('ngettext extract', () => {
         const fn = () => ngettext.extract({ node }, enConfig);
         expect(fn).to.throw('Expected to have 2 plural forms but have 3 instead');
     });
+    it('should strip indentation for all forms', () => {
+        const node = template('ngettext(msgid`  test\n  test`, `  test\n  tests`, n)')().expression;
+        const result = ngettext.extract({ node }, enConfig);
+        expect(result[MSGID]).to.eql('test\ntest');
+        expect(result[MSGID_PLURAL]).to.eql('test\ntests');
+    });
 });
 
 describe('ngettext match', () => {

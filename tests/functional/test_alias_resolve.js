@@ -15,7 +15,7 @@ const options = {
     }]],
 };
 
-describe('Resolve tag-gettext', () => {
+describe('Alias resolve', () => {
     before(() => {
         rmDirSync('debug');
     });
@@ -36,7 +36,7 @@ describe('Resolve tag-gettext', () => {
         `;
         const result = babel.transform(input, options).code;
         expect(result).to.contain("console.log(_tag_ngettext(n, ['plural form with ' + n + " +
-            "' plural', 'plural form with ' + n + ' plurals']));");
+            "' plural [translated]', 'plural form with ' + n + ' plurals [translated]']));");
     });
 
     it('should be able to create alias on import for gettext', () => {

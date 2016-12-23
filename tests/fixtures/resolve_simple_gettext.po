@@ -19,12 +19,18 @@ msgstr ""
 #: tests/fixtures/fixture.js:6
 msgid "plural form with ${ 0 } plural"
 msgid_plural "plural form with ${ 0 } plurals"
-msgstr[0] "plural form with ${ 0 } plural"
-msgstr[1] "plural form with ${ 0 } plurals"
+msgstr[0] "plural form with ${ 0 } plural [translated]"
+msgstr[1] "plural form with ${ 0 } plurals [translated]"
 
 #: tests/fixtures/fixture.js:7
 msgid "no translator notes plural"
 msgid_plural "no translator notes plural"
+msgstr[0] ""
+msgstr[1] ""
+
+#: tests/fixtures/fixture.js:7
+msgid "no translation plural"
+msgid_plural "no translation plural"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -56,3 +62,13 @@ msgstr[1] "translation plurals"
 #: tests/fixtures/fixture.js:20
 msgid "${ 0 } spaces test"
 msgstr "${0} spaces test [translated]"
+
+#: tests/fixtures/fixture.js:11
+msgid ""
+"first line plural\n"
+"second line plural"
+msgid_plural ""
+"first line plural\n"
+"second line plural"
+msgstr[0] "translation plural"
+msgstr[1] "translation plurals"

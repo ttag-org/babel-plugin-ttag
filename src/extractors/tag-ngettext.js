@@ -72,7 +72,7 @@ function match({ node }, config) {
         node.tag.callee.name === config.getAliasFor(NAME));
 }
 
-function resolveDefault(nodePath, config) {
+function resolveDefault(nodePath, poData, config) {
     const { node } = nodePath;
     const transStr = config.isDedent() ? dedentStr(getQuasiStr(node)) : getQuasiStr(node);
     if (hasExpressions(node)) {

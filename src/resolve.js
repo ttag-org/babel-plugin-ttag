@@ -16,7 +16,7 @@ export function resolveEntries(extractor, nodePath, poData, config, state) {
     } catch (err) {
         if (err instanceof NoTranslationError) {
             config.noTranslationAction(err.message);
-            extractor.resolveDefault && extractor.resolveDefault(nodePath, config);
+            extractor.resolveDefault && extractor.resolveDefault(nodePath, poData, config, state);
             return;
         }
         throw err;
