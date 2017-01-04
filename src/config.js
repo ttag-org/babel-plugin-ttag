@@ -64,6 +64,7 @@ export const configSchema = {
         locales: localesSchema,
         extractors: extractorsSchema,
         dedent: { type: 'boolean' },
+        discover: { type: 'array' },
         defaultHeaders: defaultHeadersSchema,
     },
     additionalProperties: false,
@@ -101,6 +102,7 @@ class Config {
             throw new ConfigValidationError(errorsText);
         }
         this.aliases = {};
+        this.imports = new Set();
     }
 
     getAliasFor(funcName) {
@@ -115,6 +117,15 @@ class Config {
 
     setAliases(aliases) {
         this.aliases = aliases;
+    }
+
+    setImports(imports) {
+        this.imports = imports;
+    }
+
+    hasImport(alias) {
+        const isInDiscover = this.config.discover && this.config.discover.indexOf(alias) !== -1;
+        return this.imports.has(alias) || isInDiscover;
     }
 
     getExtractors() {

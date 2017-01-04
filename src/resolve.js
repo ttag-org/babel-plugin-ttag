@@ -1,6 +1,12 @@
 import { NoTranslationError, ValidationError } from './errors';
 
 export function resolveEntries(extractor, nodePath, poData, config, state) {
+    const alias = config.getAliasFor(extractor.name);
+
+    if (!config.hasImport(alias)) {
+        return;
+    }
+
     try {
         extractor.validate(nodePath, config);
     } catch (err) {

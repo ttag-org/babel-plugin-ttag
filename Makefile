@@ -52,6 +52,9 @@ test_resolve_when_validation_fails:
 test_alias_resolve:
 	$(MOCHA_CMD) ./tests/functional/test_alias_resolve.js
 
+test_alias_discover:
+	$(MOCHA_CMD) ./tests/functional/test_alias_discover.js
+
 test_unresolved:
 	$(MOCHA_CMD) ./tests/functional/test_unresolved.js
 
@@ -83,6 +86,7 @@ test_fun: test_resolve_fn_gettext
 test_fun: test_alias_resolve
 test_fun: test_disabled_scope
 test_fun: test_resolve_when_validation_fails
+test_fun: test_alias_discover
 
 test: test_fun
 test: test_unit

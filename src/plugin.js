@@ -19,6 +19,7 @@ export default function () {
     const potEntries = [];
     let poData = null;
     let aliases = {};
+    let imports = new Set();
 
     function extractOrResolve(nodePath, state) {
         if (isInDisabledScope(nodePath, disabledScopes)) {
@@ -29,6 +30,7 @@ export default function () {
             config = new Config(state.opts);
         }
         config.setAliases(aliases);
+        config.setImports(imports);
 
         const extractor = getExtractor(nodePath, config);
         if (!extractor) {
@@ -80,6 +82,7 @@ export default function () {
             Program: (nodePath) => {
                 disabledScopes = new Set();
                 aliases = {};
+                imports = new Set();
                 if (hasDisablingComment(nodePath.node)) {
                     disabledScopes.add(nodePath.scope.uid);
                 }
@@ -91,12 +94,18 @@ export default function () {
             },
             ImportDeclaration: (nodePath) => {
                 const { node } = nodePath;
+                if (isC3poImport(node)) {
+                    node.specifiers
+                    .filter(({ local: { name } }) => reverseAliases[name])
+                    .map((s) => imports.add(s.local.name));
+                }
                 if (isC3poImport(node) && hasImportSpecifier(node)) {
                     node.specifiers
                     .filter((s) => s.type === 'ImportSpecifier')
                     .filter(({ imported: { name } }) => reverseAliases[name])
                     .forEach(({ imported, local }) => {
                         aliases[reverseAliases[imported.name]] = local.name;
+                        imports.add(local.name);
                     });
                 }
             },
