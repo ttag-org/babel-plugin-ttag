@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import { getNPlurals, getPluralFunc, makePluralFunc, applyReference } from 'src/po-helpers';
+import { getNPlurals, getPluralFunc, makePluralFunc, applyReference,
+    hasTranslation } from 'src/po-helpers';
 import { LOCATION } from 'src/defaults';
 
 
@@ -59,5 +60,28 @@ describe('po-helpers applyReference', () => {
     it('should return no lines', () => {
         const expected = { comments: { reference: null } };
         expect(applyReference(poEntry, node, filepath, LOCATION.NEVER)).to.eql(expected);
+    });
+});
+
+describe('po-helpers hasTranslation', () => {
+    it('should return false if has no letter characters', () => {
+        const input = '           ';
+        expect(hasTranslation(input)).to.be.false;
+    });
+    it('should return false if has no letter characters but has numbers', () => {
+        const input = '           9';
+        expect(hasTranslation(input)).to.be.false;
+    });
+    it('should return false if has no letter characters but has punctuation', () => {
+        const input = '     .  *    ';
+        expect(hasTranslation(input)).to.be.false;
+    });
+    it('should return false if has no letter characters but has expressions', () => {
+        const input = '${name} ${surname}';
+        expect(hasTranslation(input)).to.be.false;
+    });
+    it('should return true if has letter characters and expressions', () => {
+        const input = 'tell us your ${name} and your ${surname}';
+        expect(hasTranslation(input)).to.be.true;
     });
 });

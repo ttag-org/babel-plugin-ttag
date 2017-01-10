@@ -87,3 +87,9 @@ export function getDefaultPoData(config) {
         headers: config.getHeaders(),
     };
 }
+
+const nonTextRegexp = /\${.*}|\d|\s|[.,\/#!$%\^&\*;:{}=\-_`~()]/g;
+export function hasTranslation(text) {
+    const withoutExpressions = text.replace(nonTextRegexp, '');
+    return Boolean(withoutExpressions.match(/\S/));
+}

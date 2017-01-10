@@ -7,7 +7,7 @@ import tagGettext from './extractors/tag-gettext';
 import tagNgettext from './extractors/tag-ngettext';
 import gettext from './extractors/gettext';
 import ngettext from './extractors/ngettext';
-
+import { parsePoData } from './po-helpers';
 import { ConfigValidationError, ConfigError } from './errors';
 
 const DEFAULT_EXTRACTORS = [tagGettext, tagNgettext, gettext, ngettext];
@@ -48,12 +48,19 @@ const extractorsSchema = {
 };
 
 const defaultHeadersSchema = {
-    type: 'object',
-    properties: {
-        'content-type': { type: 'string' },
-        'plural-forms': { type: 'string' },
-    },
-    additionalProperties: false,
+    anyOf: [
+        {
+            type: 'object',
+            properties: {
+                'content-type': { type: 'string' },
+                'plural-forms': { type: 'string' },
+            },
+            additionalProperties: false,
+        },
+        {
+            type: 'string',
+        },
+    ],
 };
 
 export const configSchema = {
@@ -94,7 +101,7 @@ function logAction(message, level = SKIP) {
 }
 
 // TODO: rename to context.
-class Config {
+export class Config {
     constructor(config = {}) {
         this.config = config;
         const [validationResult, errorsText] = validateConfig(this.config, configSchema);
@@ -103,6 +110,11 @@ class Config {
         }
         this.aliases = {};
         this.imports = new Set();
+        if (this.config.defaultHeaders && typeof this.config.defaultHeaders === 'string') {
+            const { headers } = parsePoData(this.config.defaultHeaders);
+            this.config.defaultHeaders = headers;
+        }
+        Object.freeze(this.config);
     }
 
     getAliasFor(funcName) {
