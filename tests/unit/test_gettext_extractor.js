@@ -31,13 +31,13 @@ describe('gettext validate', () => {
     it('should throw validation if has empty string argument', () => {
         const node = template('gettext("")')().expression;
         const fn = () => gettext.validate({ node }, enConfig);
-        expect(fn).to.throw('No meaningful information in \'\' string');
+        expect(fn).to.throw('Can not translate \'\'');
     });
 
     it('should throw validation if has no meaningful information', () => {
         const node = template('gettext("        2")')().expression;
         const fn = () => gettext.validate({ node }, enConfig);
-        expect(fn).to.throw('No meaningful information in \'        2\' string');
+        expect(fn).to.throw('Can not translate \'        2\'');
     });
 
     it('should throw if has template argument', () => {

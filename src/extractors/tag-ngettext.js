@@ -5,7 +5,7 @@ import { PO_PRIMITIVES } from '../defaults';
 import { ValidationError, NoTranslationError } from '../errors';
 import tpl from 'babel-template';
 import { hasTranslations, getPluralFunc, getNPlurals, pluralFnBody,
-    makePluralFunc } from '../po-helpers';
+    makePluralFunc, hasUsefulInfo } from '../po-helpers';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 const NAME = 'tag-ngettext';
@@ -29,8 +29,8 @@ const validate = (path) => {
     validateExpresssions(node.quasi.expressions);
     validateNPlural(node.tag.arguments[0]);
     const msgid = template2Msgid(node);
-    if (msgid === '') {
-        throw new ValidationError('Can not translate empty string');
+    if (!hasUsefulInfo(msgid)) {
+        throw new ValidationError(`Can not translate '${getQuasiStr(node)}'`);
     }
 };
 

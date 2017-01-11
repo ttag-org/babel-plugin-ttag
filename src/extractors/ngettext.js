@@ -46,8 +46,7 @@ const validate = (path, config) => {
     validateNPlural(node.arguments[node.arguments.length - 1]);
     const msgid = getMsgid(msgidTag, config);
     if (!hasUsefulInfo(msgid)) {
-        throw new ValidationError(
-            `No meaningful information in '${getQuasiStr(msgidTag)}' string`);
+        throw new ValidationError(`Can not translate '${getQuasiStr(msgidTag)}'`);
     }
 };
 

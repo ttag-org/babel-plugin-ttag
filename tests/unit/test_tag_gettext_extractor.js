@@ -72,13 +72,13 @@ describe('tag-gettext validate', () => {
     it('should throw if translation string is an empty string', () => {
         const node = template('t``')().expression;
         const fn = () => gettext.validate({ node }, enConfig);
-        expect(fn).to.throw('No meaningful information in \'\' string');
+        expect(fn).to.throw('Can not translate \'\'');
     });
 
     it('should throw if has no meaningful information', () => {
         const node = template('t`${user} ${name}`')().expression;
         const fn = () => gettext.validate({ node }, enConfig);
-        expect(fn).to.throw('No meaningful information in \'${ user } ${ name }\' string');
+        expect(fn).to.throw('Can not translate \'${ user } ${ name }\'');
     });
 });
 

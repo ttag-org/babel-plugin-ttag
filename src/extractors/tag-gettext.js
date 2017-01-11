@@ -21,8 +21,7 @@ const validate = (path) => {
     validateExpresssions(node.quasi.expressions);
     const msgid = template2Msgid(node);
     if (! hasUsefulInfo(msgid)) {
-        throw new ValidationError(
-            `No meaningful information in '${getQuasiStr(node)}' string`);
+        throw new ValidationError(`Can not translate '${getQuasiStr(node)}'`);
     }
 };
 
