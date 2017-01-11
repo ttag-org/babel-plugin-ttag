@@ -3,7 +3,6 @@ import gettext from 'src/extractors/gettext';
 import template from 'babel-template';
 import { PO_PRIMITIVES } from 'src/defaults';
 import Config from 'src/config';
-import { extractPoEntry } from 'src/extract';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 
 const enConfig = new Config();
@@ -20,25 +19,30 @@ describe('gettext extract', () => {
         const result = gettext.extract({ node }, enConfig);
         expect(result[MSGSTR]).to.eql('');
     });
+});
 
+describe('gettext validate', () => {
     it('should throw if has invalid argument', () => {
         const node = template('gettext(fn())')().expression;
-        const mockState = { file: { opts: { filename: 'unknown' } } };
-        const fn = () => extractPoEntry(gettext, { node }, enConfig, mockState);
+        const fn = () => gettext.validate({ node }, enConfig);
         expect(fn).to.throw('You can not use CallExpression \'fn()\' as an argument to gettext');
     });
 
     it('should throw validation if has empty string argument', () => {
         const node = template('gettext("")')().expression;
-        const mockState = { file: { opts: { filename: 'unknown' } } };
-        const fn = () => extractPoEntry(gettext, { node }, enConfig, mockState);
-        expect(fn).to.throw('You can not pass empty string to gettext');
+        const fn = () => gettext.validate({ node }, enConfig);
+        expect(fn).to.throw('Can not translate \'\'');
+    });
+
+    it('should throw validation if has no meaningful information', () => {
+        const node = template('gettext("        2")')().expression;
+        const fn = () => gettext.validate({ node }, enConfig);
+        expect(fn).to.throw('Can not translate \'        2\'');
     });
 
     it('should throw if has template argument', () => {
         const node = template('gettext(`www`)')().expression;
-        const mockState = { file: { opts: { filename: 'unknown' } } };
-        const fn = () => extractPoEntry(gettext, { node }, enConfig, mockState);
+        const fn = () => gettext.validate({ node }, enConfig);
         expect(fn).to.throw('You can not use template literal as an argument to gettext');
     });
 });

@@ -2,7 +2,8 @@ import * as t from 'babel-types';
 import { PO_PRIMITIVES } from '../defaults';
 import { dedentStr, template2Msgid, isValidQuasiExpression, ast2Str, msgid2Orig,
 getQuasiStr, strToQuasi } from '../utils';
-import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc, hasTranslations } from '../po-helpers';
+import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc, hasTranslations,
+hasUsefulInfo } from '../po-helpers';
 import { ValidationError, NoTranslationError } from '../errors';
 import tpl from 'babel-template';
 
@@ -44,8 +45,8 @@ const validate = (path, config) => {
     tags.forEach(({ expressions }) => validateExpresssions(expressions));
     validateNPlural(node.arguments[node.arguments.length - 1]);
     const msgid = getMsgid(msgidTag, config);
-    if (msgid === '') {
-        throw new ValidationError('Can not translate empty string');
+    if (!hasUsefulInfo(msgid)) {
+        throw new ValidationError(`Can not translate '${getQuasiStr(msgidTag)}'`);
     }
 };
 
