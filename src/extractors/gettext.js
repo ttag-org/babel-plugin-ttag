@@ -2,7 +2,7 @@ import * as t from 'babel-types';
 import { ast2Str } from '../utils';
 import { ValidationError, NoTranslationError } from '../errors';
 import { PO_PRIMITIVES } from '../defaults';
-import { hasTranslation } from '../po-helpers';
+import { hasUsefulInfo } from '../po-helpers';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 const NAME = 'gettext';
 
@@ -13,7 +13,7 @@ function validateArgument(arg) {
     if (arg.type === 'TemplateLiteral') {
         throw new ValidationError('You can not use template literal as an argument to gettext');
     }
-    if (!hasTranslation(arg.value)) {
+    if (!hasUsefulInfo(arg.value)) {
         throw new ValidationError(`No meaningful information in '${arg.value}' string`);
     }
 }

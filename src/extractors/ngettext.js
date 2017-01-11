@@ -3,7 +3,7 @@ import { PO_PRIMITIVES } from '../defaults';
 import { dedentStr, template2Msgid, isValidQuasiExpression, ast2Str, msgid2Orig,
 getQuasiStr, strToQuasi } from '../utils';
 import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc, hasTranslations,
-hasTranslation } from '../po-helpers';
+hasUsefulInfo } from '../po-helpers';
 import { ValidationError, NoTranslationError } from '../errors';
 import tpl from 'babel-template';
 
@@ -45,7 +45,7 @@ const validate = (path, config) => {
     tags.forEach(({ expressions }) => validateExpresssions(expressions));
     validateNPlural(node.arguments[node.arguments.length - 1]);
     const msgid = getMsgid(msgidTag, config);
-    if (!hasTranslation(msgid)) {
+    if (!hasUsefulInfo(msgid)) {
         throw new ValidationError(
             `No meaningful information in '${getQuasiStr(msgidTag)}' string`);
     }
