@@ -3,7 +3,6 @@ import ngettext from 'src/extractors/tag-ngettext';
 import template from 'babel-template';
 import { PO_PRIMITIVES } from 'src/defaults';
 import Config from 'src/config';
-import { extractPoEntry } from 'src/extract';
 const { MSGID, MSGID_PLURAL, MSGSTR } = PO_PRIMITIVES;
 
 const enConfig = new Config();
