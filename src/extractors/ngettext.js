@@ -2,10 +2,10 @@ import * as t from 'babel-types';
 import { PO_PRIMITIVES } from '../defaults';
 import { dedentStr, template2Msgid, isValidQuasiExpression, ast2Str, msgid2Orig,
 getQuasiStr, strToQuasi } from '../utils';
-import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc, hasTranslations } from '../po-helpers';
+import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc, hasTranslations,
+hasTranslation } from '../po-helpers';
 import { ValidationError, NoTranslationError } from '../errors';
 import tpl from 'babel-template';
-import { hasTranslation } from '../po-helpers';
 
 const NAME = 'ngettext';
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
