@@ -100,6 +100,11 @@ describe('ngettext validate', () => {
     it('should not pass validation if has empty msgid', () => {
         const node = template('ngettext(msgid``, `test`, n)')().expression;
         const fn = () => ngettext.validate({ node }, enConfig);
-        expect(fn).to.throw('Can not translate empty string');
+        expect(fn).to.throw('No meaningful information in \'\' string');
+    });
+    it('should not pass validation if has no meaningful information', () => {
+        const node = template('ngettext(msgid`${name} ${n}`, `test`, n)')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.throw('No meaningful information in \'${ name } ${ n }\' string');
     });
 });
