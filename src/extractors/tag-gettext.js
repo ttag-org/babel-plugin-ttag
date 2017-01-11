@@ -3,6 +3,8 @@ import { template2Msgid, msgid2Orig, hasExpressions,
     isValidQuasiExpression, ast2Str, getQuasiStr, strToQuasi, dedentStr } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import { ValidationError, NoTranslationError } from '../errors';
+import { hasUsefulInfo } from '../po-helpers';
+
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 const NAME = 'tag-gettext';
 
@@ -18,8 +20,9 @@ const validate = (path) => {
     const { node } = path;
     validateExpresssions(node.quasi.expressions);
     const msgid = template2Msgid(node);
-    if (msgid === '') {
-        throw new ValidationError('Can not translate empty string');
+    if (! hasUsefulInfo(msgid)) {
+        throw new ValidationError(
+            `No meaningful information in '${getQuasiStr(node)}' string`);
     }
 };
 
