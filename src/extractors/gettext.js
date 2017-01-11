@@ -14,7 +14,7 @@ function validateArgument(arg) {
         throw new ValidationError('You can not use template literal as an argument to gettext');
     }
     if (!hasTranslation(arg.value)) {
-        throw new ValidationError(`No meaningful information in '${ arg.value }' string`);
+        throw new ValidationError(`No meaningful information in '${arg.value}' string`);
     }
 }
 
