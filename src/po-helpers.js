@@ -54,8 +54,13 @@ export function parsePoData(filepath) {
     return { translations, headers };
 }
 
+const pluralRegex = /\splural ?=?([\s\S]*);?/;
 export function getPluralFunc(headers) {
-    return /\splural ?=?([\s\S]*);/.exec(headers['plural-forms'])[1];
+    let pluralFn = pluralRegex.exec(headers['plural-forms'])[1];
+    if (pluralFn[pluralFn.length - 1] === ';') {
+        pluralFn = pluralFn.slice(0, -1);
+    }
+    return pluralFn;
 }
 
 export function getNPlurals(headers) {
@@ -88,8 +93,8 @@ export function getDefaultPoData(config) {
     };
 }
 
-const nonTextRegexp = /\${.*}|\d|\s|[.,\/#!$%\^&\*;:{}=\-_`~()]/g;
-export function hasTranslation(text) {
+const nonTextRegexp = /\${.*?}|\d|\s|[.,\/#!$%\^&\*;:{}=\-_`~()]/g;
+export function hasUsefulInfo(text) {
     const withoutExpressions = text.replace(nonTextRegexp, '');
     return Boolean(withoutExpressions.match(/\S/));
 }

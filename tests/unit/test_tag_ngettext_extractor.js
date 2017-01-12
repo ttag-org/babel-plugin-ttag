@@ -3,7 +3,6 @@ import ngettext from 'src/extractors/tag-ngettext';
 import template from 'babel-template';
 import { PO_PRIMITIVES } from 'src/defaults';
 import Config from 'src/config';
-import { extractPoEntry } from 'src/extract';
 const { MSGID, MSGID_PLURAL, MSGSTR } = PO_PRIMITIVES;
 
 const enConfig = new Config();
@@ -42,27 +41,6 @@ describe('tag-ngettext extract', () => {
         expect(result).to.eql(expected);
     });
 
-    it('should throw if has invalid expressions', () => {
-        const node = template('nt(n)`banana ${ n + 1}`')().expression;
-        const mockState = { file: { opts: { filename: 'test' } } };
-        const fn = () => extractPoEntry(ngettext, { node }, enConfig, mockState);
-        expect(fn).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
-    });
-
-    it('should not throw if member expression', () => {
-        const node = template('nt(this.props.number)`banana ${this.props.number}`')().expression;
-        const mockState = { file: { opts: { filename: 'unknown' } } };
-        const fn = () => extractPoEntry(ngettext, { node }, enConfig, mockState);
-        expect(fn).to.not.throw();
-    });
-
-    it('should throw if plural number is invalid', () => {
-        const node = template('nt(n + 1)`banana`')().expression;
-        const mockState = { file: { opts: { filename: 'test' } } };
-        const fn = () => extractPoEntry(ngettext, { node }, enConfig, mockState);
-        expect(fn).to.throw('BinaryExpression \'n + 1\' can not be used as plural number argument');
-    });
-
     it('should dedent extracted text', () => {
         const node = template(`nt(n)\`
             first
@@ -73,12 +51,35 @@ describe('tag-ngettext extract', () => {
         const result = ngettext.extract({ node }, enConfig);
         expect(result[MSGID]).to.eql(expected);
     });
+});
 
+describe('tag-ngettext validate', () => {
+    it('should throw if has invalid expressions', () => {
+        const node = template('nt(n)`banana ${ n + 1}`')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
+    });
+
+    it('should not throw if member expression', () => {
+        const node = template('nt(this.props.number)`banana ${this.props.number}`')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.not.throw();
+    });
+
+    it('should throw if plural number is invalid', () => {
+        const node = template('nt(n + 1)`banana`')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.throw('BinaryExpression \'n + 1\' can not be used as plural number argument');
+    });
     it('should throw if translation string is an empty string', () => {
         const node = template('nt(n)``')().expression;
-        const mockState = { file: { opts: { filename: 'unknown' } } };
-        const fn = () => extractPoEntry(ngettext, { node }, enConfig, mockState);
-        expect(fn).to.throw('Can not translate empty string');
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.throw('Can not translate \'\'');
+    });
+    it('should throw if has no meaningful information', () => {
+        const node = template('nt(n)`${name} ${n} `')().expression;
+        const fn = () => ngettext.validate({ node }, enConfig);
+        expect(fn).to.throw('Can not translate \'${ name } ${ n } \'');
     });
 });
 

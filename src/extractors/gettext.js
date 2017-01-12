@@ -2,6 +2,7 @@ import * as t from 'babel-types';
 import { ast2Str } from '../utils';
 import { ValidationError, NoTranslationError } from '../errors';
 import { PO_PRIMITIVES } from '../defaults';
+import { hasUsefulInfo } from '../po-helpers';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 const NAME = 'gettext';
 
@@ -12,8 +13,8 @@ function validateArgument(arg) {
     if (arg.type === 'TemplateLiteral') {
         throw new ValidationError('You can not use template literal as an argument to gettext');
     }
-    if (arg.value === '') {
-        throw new ValidationError('You can not pass empty string to gettext');
+    if (!hasUsefulInfo(arg.value)) {
+        throw new ValidationError(`Can not translate '${arg.value}'`);
     }
 }
 

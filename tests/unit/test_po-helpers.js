@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { getNPlurals, getPluralFunc, makePluralFunc, applyReference,
-    hasTranslation } from 'src/po-helpers';
+    hasUsefulInfo } from 'src/po-helpers';
 import { LOCATION } from 'src/defaults';
 
 
@@ -33,6 +33,12 @@ describe('po-helpers getPluralFunc', () => {
         const headers = { 'plural-forms': uk };
         expect(getPluralFunc(headers)).to.eql(expected);
     });
+    it('should extract plural function without semicolon', () => {
+        const headers = {
+            'plural-forms': 'nplurals=2; plural=(n!=1)',
+        };
+        expect(getPluralFunc(headers)).to.eql('(n!=1)');
+    });
 });
 
 describe('po-helpers makePluralFunc', () => {
@@ -63,25 +69,29 @@ describe('po-helpers applyReference', () => {
     });
 });
 
-describe('po-helpers hasTranslation', () => {
+describe('po-helpers hasUsefulInfo', () => {
     it('should return false if has no letter characters', () => {
         const input = '           ';
-        expect(hasTranslation(input)).to.be.false;
+        expect(hasUsefulInfo(input)).to.be.false;
     });
     it('should return false if has no letter characters but has numbers', () => {
         const input = '           9';
-        expect(hasTranslation(input)).to.be.false;
+        expect(hasUsefulInfo(input)).to.be.false;
     });
     it('should return false if has no letter characters but has punctuation', () => {
         const input = '     .  *    ';
-        expect(hasTranslation(input)).to.be.false;
+        expect(hasUsefulInfo(input)).to.be.false;
     });
     it('should return false if has no letter characters but has expressions', () => {
         const input = '${name} ${surname}';
-        expect(hasTranslation(input)).to.be.false;
+        expect(hasUsefulInfo(input)).to.be.false;
     });
     it('should return true if has letter characters and expressions', () => {
         const input = 'tell us your ${name} and your ${surname}';
-        expect(hasTranslation(input)).to.be.true;
+        expect(hasUsefulInfo(input)).to.be.true;
+    });
+    it('should return true for expressions with non ascii characters', () => {
+        const input = '${discountLabelText} с ${dateStartText} по ${dateEndText}';
+        expect(hasUsefulInfo(input)).to.be.true;
     });
 });
