@@ -11,6 +11,7 @@ const options = {
         locales: {
             ua: pofile,
         },
+        discover: ['ngettext'],
     }]],
 };
 

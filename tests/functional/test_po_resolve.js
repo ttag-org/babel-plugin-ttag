@@ -12,6 +12,7 @@ const options = {
         locales: {
             ua: pofile,
         },
+        discover: ['nt'],
     }]],
 };
 

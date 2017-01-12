@@ -13,7 +13,7 @@ describe('Resolve strip tags by default', () => {
         const input = 'console.log(t`simple string literal`);';
         const customOpts = {
             presets: ['es2015'],
-            plugins: [[polyglotPlugin, {}]],
+            plugins: [[polyglotPlugin, { discover: ['t'] }]],
         };
         const result = babel.transform(input, customOpts).code;
         expect(result).to.contain('console.log("simple string literal");');

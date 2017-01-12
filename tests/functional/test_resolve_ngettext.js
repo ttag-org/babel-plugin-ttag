@@ -15,6 +15,7 @@ const options = {
         locales: {
             'en-us': pofile,
         },
+        discover: ['ngettext'],
     }]],
 };
 

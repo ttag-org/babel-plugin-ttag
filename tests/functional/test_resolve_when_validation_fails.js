@@ -19,6 +19,7 @@ const options = {
                 invalidFormat: 'skip',
             },
         },
+        discover: ['gettext', 't'],
     }]],
 };
 

@@ -4,7 +4,7 @@ import polyglotPlugin from 'src/plugin';
 
 const options = {
     presets: ['es2015'],
-    plugins: [[polyglotPlugin, {}]],
+    plugins: [[polyglotPlugin, { discover: ['ngettext'] }]],
 };
 
 describe('Resolve ngettext default', () => {

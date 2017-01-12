@@ -5,7 +5,7 @@ import { rmDirSync } from 'src/utils';
 
 const options = {
     presets: ['es2015'],
-    plugins: [[polyglotPlugin, {}]],
+    plugins: [[polyglotPlugin, { discover: ['t'] }]],
 };
 
 describe('Resolve tag-gettext default', () => {
