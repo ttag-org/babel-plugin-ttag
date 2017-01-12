@@ -20,6 +20,6 @@ describe('Extract comments', () => {
         const inputFile = 'tests/fixtures/test_file_with_gettext.js';
         babel.transformFileSync(path.join(process.cwd(), inputFile), options);
         const result = fs.readFileSync(output).toString();
-        expect(result).to.include('#: tests/fixtures/test_file_with_gettext.js:3');
+        expect(result).to.include('#: tests/fixtures/test_file_with_gettext.js:4');
     });
 });

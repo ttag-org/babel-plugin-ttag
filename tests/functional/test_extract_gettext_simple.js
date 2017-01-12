@@ -15,7 +15,7 @@ describe('Extract tag-gettext', () => {
         const expectedPath = 'tests/fixtures/expected_gettext_simple_literal.pot';
         const options = {
             presets: ['es2015'],
-            plugins: [[polyglotPlugin, { extract: { output } }]],
+            plugins: [[polyglotPlugin, { extract: { output }, discover: ['t'] }]],
         };
         const input = 'console.log(t`simple string literal`);';
         babel.transform(input, options);

@@ -37,6 +37,12 @@ export default function () {
             return;
         }
 
+        const alias = config.getAliasFor(extractor.name);
+
+        if (!config.hasImport(alias)) {
+            return;
+        }
+
         if (config.isExtractMode()) {
             try {
                 const poEntry = extractPoEntry(extractor, nodePath, config, state);

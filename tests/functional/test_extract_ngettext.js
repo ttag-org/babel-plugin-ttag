@@ -7,7 +7,7 @@ import { rmDirSync } from 'src/utils';
 const output = 'debug/translations.pot';
 const options = {
     presets: ['es2015'],
-    plugins: [[polyglotPlugin, { extract: { output } }]],
+    plugins: [[polyglotPlugin, { extract: { output }, discover: ['nt'] }]],
 };
 
 describe('Extract tag-ngettext', () => {
