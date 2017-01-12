@@ -33,6 +33,12 @@ describe('po-helpers getPluralFunc', () => {
         const headers = { 'plural-forms': uk };
         expect(getPluralFunc(headers)).to.eql(expected);
     });
+    it('should extract plural function without semicolon', () => {
+        const headers = {
+            'plural-forms': 'nplurals=2; plural=(n!=1)',
+        };
+        expect(getPluralFunc(headers)).to.eql('(n!=1)');
+    });
 });
 
 describe('po-helpers makePluralFunc', () => {
