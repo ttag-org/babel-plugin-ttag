@@ -84,4 +84,8 @@ describe('po-helpers hasUsefulInfo', () => {
         const input = 'tell us your ${name} and your ${surname}';
         expect(hasUsefulInfo(input)).to.be.true;
     });
+    it('should return true for expressions with non ascii characters', () => {
+        const input = '${discountLabelText} с ${dateStartText} по ${dateEndText}';
+        expect(hasUsefulInfo(input)).to.be.true;
+    });
 });

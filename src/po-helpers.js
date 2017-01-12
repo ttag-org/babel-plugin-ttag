@@ -88,7 +88,7 @@ export function getDefaultPoData(config) {
     };
 }
 
-const nonTextRegexp = /\${.*}|\d|\s|[.,\/#!$%\^&\*;:{}=\-_`~()]/g;
+const nonTextRegexp = /\${.*?}|\d|\s|[.,\/#!$%\^&\*;:{}=\-_`~()]/g;
 export function hasUsefulInfo(text) {
     const withoutExpressions = text.replace(nonTextRegexp, '');
     return Boolean(withoutExpressions.match(/\S/));
