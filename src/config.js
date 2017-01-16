@@ -18,6 +18,7 @@ const extractConfigSchema = {
         output: { type: 'string' },
         location: { enum: [FULL, FILE, NEVER] },
     },
+    required: ['output'],
     additionalProperties: false,
 };
 
