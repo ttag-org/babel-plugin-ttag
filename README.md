@@ -13,7 +13,7 @@ Key features:
 - possibility to precompile all translations into the browser bundles (no runtime resolving, all bundles are precompiled).
 - support for plurals and contexts.
 
-Here is the demo project (webpack setup). - https://github.com/AlexMost/c-3po-demo
+Here is the demo project (webpack setup). - https://github.com/c-3po-org/c-3po-demo
 
 Installation
 ============
