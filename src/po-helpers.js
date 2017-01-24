@@ -22,7 +22,8 @@ export function buildPotData(translations) {
 
         // merge references
         if (oldTrans.comments && oldTrans.comments.reference &&
-            trans.comments && trans.comments.reference) {
+            trans.comments && trans.comments.reference &&
+            ! oldTrans.comments.reference.match(trans.comments.reference)) {
             oldTrans.comments.reference = `${oldTrans.comments.reference}\n${trans.comments.reference}`;
         }
     }

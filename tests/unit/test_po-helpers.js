@@ -152,4 +152,17 @@ describe('po-helpers buildPotData', () => {
         const result = buildPotData([msg1, msg2]);
         expect(result).to.eql(expected);
     });
+
+    it('should not accumulate reference if already has', () => {
+        const msg1 = {
+            msgid: 'test',
+            msgstr: 'test1',
+            comments: {
+                reference: 'path/to/file/1.txt:123',
+            },
+        };
+        const result = buildPotData([msg1, msg1]);
+        const ref = result.translations.context.test.comments.reference;
+        expect(ref).to.not.eql('path/to/file/1.txt:123\npath/to/file/1.txt:123');
+    });
 });
