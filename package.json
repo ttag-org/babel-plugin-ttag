@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AlexMost/babel-plugin-c-3po.git"
+    "url": "git+https://github.com/c-3po-org/babel-plugin-c-3po.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AlexMost/babel-plugin-c-3po/issues"
+    "url": "https://github.com/c-3po-org/babel-plugin-c-3po/issues"
   },
-  "homepage": "https://github.com/AlexMost/babel-plugin-c-3po#readme",
+  "homepage": "https://github.com/c-3po-org/babel-plugin-c-3po#readme",
   "dependencies": {
     "ajv": "4.9.0",
     "babel-generator": "6.18.0",
