@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { getNPlurals, getPluralFunc, makePluralFunc, applyReference,
-    hasUsefulInfo } from 'src/po-helpers';
+    hasUsefulInfo, buildPotData } from 'src/po-helpers';
 import { LOCATION } from 'src/defaults';
 
 
@@ -93,5 +93,63 @@ describe('po-helpers hasUsefulInfo', () => {
     it('should return true for expressions with non ascii characters', () => {
         const input = '${discountLabelText} с ${dateStartText} по ${dateEndText}';
         expect(hasUsefulInfo(input)).to.be.true;
+    });
+});
+
+describe('po-helpers buildPotData', () => {
+    it('should build po data', () => {
+        const msg1 = {
+            msgid: 'test',
+            msgstr: 'test1',
+            comments: {
+                reference: 'path/to/file/1.txt:123',
+            },
+        };
+        const expected = {
+            charset: 'UTF-8',
+            headers: {
+                'content-type': 'text/plain; charset=UTF-8',
+                'plural-forms': 'nplurals=2; plural=(n!=1);',
+            },
+            translations: { context: { test: msg1 } },
+        };
+        const result = buildPotData([msg1]);
+        expect(result).to.eql(expected);
+    });
+
+    it('should accumulate references', () => {
+        const msg1 = {
+            msgid: 'test',
+            msgstr: 'test1',
+            comments: {
+                reference: 'path/to/file/1.txt:123',
+            },
+        };
+        const msg2 = {
+            msgid: 'test',
+            msgstr: 'test1',
+            comments: {
+                reference: 'path/to/file/2.txt:124',
+            },
+        };
+
+        const resultmsg = {
+            msgid: 'test',
+            msgstr: 'test1',
+            comments: {
+                reference: 'path/to/file/1.txt:123\npath/to/file/2.txt:124',
+            },
+        };
+
+        const expected = {
+            charset: 'UTF-8',
+            headers: {
+                'content-type': 'text/plain; charset=UTF-8',
+                'plural-forms': 'nplurals=2; plural=(n!=1);',
+            },
+            translations: { context: { test: resultmsg } },
+        };
+        const result = buildPotData([msg1, msg2]);
+        expect(result).to.eql(expected);
     });
 });

@@ -13,9 +13,18 @@ export function buildPotData(translations) {
     };
 
     const defaultContext = data.translations.context;
-
     for (const trans of translations) {
-        defaultContext[trans.msgid] = trans;
+        if (!defaultContext[trans.msgid]) {
+            defaultContext[trans.msgid] = trans;
+            continue;
+        }
+        const oldTrans = defaultContext[trans.msgid];
+
+        // merge references
+        if (oldTrans.comments && oldTrans.comments.reference &&
+            trans.comments && trans.comments.reference) {
+            oldTrans.comments.reference = `${oldTrans.comments.reference}\n${trans.comments.reference}`;
+        }
     }
 
     return data;
