@@ -1,4 +1,6 @@
 # babel-plugin-c-3po [WIP]
+[![travis](https://api.travis-ci.org/c-3po-org/babel-plugin-c-3po.svg)](https://travis-ci.org/c-3po-org)
+
 [![NPM](https://nodei.co/npm/babel-plugin-c-3po.png?downloads=true)](https://nodei.co/npm/babel-plugin-c-3po/)
 
 ## project status - POC
