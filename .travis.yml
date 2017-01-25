@@ -7,9 +7,10 @@ node_js:
 
 before_script:
   - npm install
+  - npm install -g codecov
 
 script:
   - make test
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - codecov
