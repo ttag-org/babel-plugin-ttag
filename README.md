@@ -1,4 +1,6 @@
 # babel-plugin-c-3po [WIP]
+[![NPM](https://nodei.co/npm/babel-plugin-c-3po.png?downloads=true)](https://nodei.co/npm/babel-plugin-c-3po/)
+
 ## project status - POC
 Solution for providing gettext like translations into your project. Uses es6 native template syntax.
 
