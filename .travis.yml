@@ -7,10 +7,6 @@ node_js:
 
 before_script:
   - npm install
-  - npm install -g codecov
 
 script:
   - make test
-
-after_success:
-  - codecov
