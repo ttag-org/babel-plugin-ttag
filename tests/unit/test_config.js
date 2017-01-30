@@ -11,10 +11,7 @@ describe('config validateConfig', () => {
                 output: 'translations.pot',
                 location: 'file',
             },
-            resolve: { locale: 'en-us' },
-            locales: {
-                'en-us': 'i18n/en.po',
-            },
+            resolve: { translations: 'i18n/en.po' },
         };
         const expected = [true, 'No errors', null];
         expect(validateConfig(config, configSchema)).to.eql(expected);
@@ -26,10 +23,7 @@ describe('config validateConfig', () => {
                 output: 'translations.pot',
                 location: 'bad-location',
             },
-            resolve: { locale: 'en-us' },
-            locales: {
-                'en-us': 'i18n/en.po',
-            },
+            resolve: { translations: 'i18n/en.po' },
         };
         const [isValid, errorsText, errors] = validateConfig(config, configSchema);
         expect(isValid).to.eql(false);
