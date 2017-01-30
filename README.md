@@ -1,21 +1,27 @@
-# babel-plugin-c-3po [WIP]
+# babel-plugin-c-3po
 [![travis](https://api.travis-ci.org/c-3po-org/babel-plugin-c-3po.svg)](https://travis-ci.org/c-3po-org)
 
 [![NPM](https://nodei.co/npm/babel-plugin-c-3po.png?downloads=true)](https://nodei.co/npm/babel-plugin-c-3po/)
 
-## project status - POC
+## project description
 Solution for providing gettext like translations into your project. Uses es6 native template syntax.
+
+## documentation - [c-3po.js.org](c-3po.js.org)
 
 Plugin functions:
 - extracting translations from es6 tagged templates to .pot 
 - resolving translations from .po files right into your sources at compile time.
 
 Key features:
-- no additional formatting syntax(no sprintf), only es6 tagged templates.
-- works with everything that works with babel. (can be used with react and jsx).
-- can be integrated with gettext utility (generates .pot files, resolves translations from .po).
-- possibility to precompile all translations into the browser bundles (no runtime resolving, all bundles are precompiled).
-- support for plurals and contexts.
+The core features of this tool are:
+
+- Works with GNU gettext tool (.po files).
+- Use es6 tagged templates syntax for string formatting (no extra formatting rules, no sprintf e.t.c).
+- The most intelligent gettext functions extraction from javascript sources (babel plugin).
+- Resolves translations from .po files right into your code (no runtime extra work in browser).
+- Works with everything that works with babel (.jsx syntax for instance).
+- Fast feedback loop (alerts when some string is missing translation right at compile time)
+- Designed to work with universal apps (works on a backend and a frontend).
 
 Here is the demo project (webpack setup). - https://github.com/c-3po-org/c-3po-demo
 
@@ -24,28 +30,6 @@ Installation
 
 `npm install --save-dev babel-plugin-c-3po && npm install --save c-3po`
 
-
-Configuration
-=============
-Here is the configuration object that you can specify in plugin options inside *.babelrc*:
-
-```javascript
-{
-  // Specifies where to save extracted gettext entries (.pot) file
-  // Plugin will be extracting gettext entries if '*extract*' property is present.
-  extract: { output: 'dist/translations.pot' }, 
-  
-  // Specifies Which locale will be resolved currently (must be one of which is stored in 'locales' property)
-  // Plugin will be resolving translations from .po file if '*resolve*' property is present.
-  resolve: { locale: 'en-us' },
-  
-  // Map with locales and appropriate .po files with translations.
-  locales: {
-      'en-us': 'i18n/en.po',
-      'ua': 'i18n/ua.po',
-  }
-}
-```
 
 gettext example
 ===============
@@ -70,10 +54,10 @@ Here is how you can handle plural forms:
 > This function has something similar with standart ngettext but behaves a little bit different. It assumes that you have only one form in your sources and other forms will be added in .po files. This is because different languages has different number of plural forms, and there are cases when your default language is not english, so it doesn't make sense to specify 2 plural forms at all.
 
 ```javascript
-import { nt } from 'c-3po';
+import { ngettext, msgid } from 'c-3po';
 const name = 'Mike';
 const n = 5;
-console.log(nt(n)`Mike has ${n} banana`);
+console.log(ngettext(msgid`Mike has ${n} banana`, `Mike has ${n} bananas`));
 ```
 
 Output in .po files:
@@ -91,7 +75,7 @@ There are no additional setup for making this plugin work inside jsx. (just add 
 
 ```javascript
 import React from 'react';
-import { t, nt } from 'c-3po';
+import { t, ngettext, msgid } from 'c-3po';
 
 class PluralDemo extends React.Component {
     constructor(props) {
@@ -107,7 +91,7 @@ class PluralDemo extends React.Component {
         return (
             <div>
                 <h3>{ t`Deadly boring counter demo (but with plurals)` }</h3>
-                <div>{ nt(n)`You have clicked ${n} times` }</div>
+                <div>{ ngettext(msgid`You have clicked ${n} time`, `You have clicked ${n} times`) }</div>
                 <button onClick={this.countInc}>{ t`Click me` }</button>
             </div>
         )
@@ -116,6 +100,7 @@ class PluralDemo extends React.Component {
 
 export default PluralDemo;
 ```
+
 Disabling some code parts
 =========================
 If for some reason you need to disable c-3po plugin transformation for some code block
@@ -136,9 +121,6 @@ Test command:
 ```
 make test
 ```
-
-Documentation  - [https://c-3po.js.org/](https://c-3po.js.org/)
-=============
 
 License
 =======
