@@ -6,7 +6,7 @@
 ## project description
 Solution for providing gettext like translations into your project. Uses es6 native template syntax.
 
-## documentation - [c-3po.js.org](c-3po.js.org)
+## documentation - [c-3po.js.org](http://c-3po.js.org)
 
 Plugin functions:
 - extracting translations from es6 tagged templates to .pot 
