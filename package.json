@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-c-3po",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "description": "",
   "main": "dist/plugin.js",
   "keywords": [
