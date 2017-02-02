@@ -23,7 +23,9 @@ The core features of this tool are:
 - Fast feedback loop (alerts when some string is missing translation right at compile time)
 - Designed to work with universal apps (works on a backend and a frontend).
 
-Here is the demo project (webpack setup). - https://github.com/c-3po-org/c-3po-demo
+## Tutorials
+* [Quick Start](https://c-3po.js.org/quick-start.html)
+* [Localization with webpack and c-3po](https://c-3po.js.org/localization-with-webpack-and-c-3po.html)
 
 Installation
 ============
