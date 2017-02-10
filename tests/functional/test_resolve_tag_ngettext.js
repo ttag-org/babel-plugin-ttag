@@ -93,8 +93,8 @@ describe('Resolve tag-ngettext', () => {
     it('should use proper plural form', () => {
         mkdirp('debug');
         const resultPath = 'debug/ngettext_result.js';
-        const input = 'const a = parseInt(process.env.TEST_A, 10);\n' +
-            'process.stdout.write(nt(a)`plural form with ${ a } plural`);';
+        const input = 'const n = parseInt(process.env.TEST_A, 10);\n' +
+            'process.stdout.write(nt(n)`plural form with ${ n } plural`);';
         const result = babel.transform(input, options).code;
         fs.writeFileSync(resultPath, result, { mode: 0o777 });
         const { stdout: stdout1 } = childProcess.spawnSync(process.argv[0], [resultPath], { env: { TEST_A: 1 } });

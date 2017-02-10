@@ -11,13 +11,13 @@ describe('tag-ngettext extract', () => {
     it('should extract proper msgid ', () => {
         const node = template('nt(n)`${n} banana`')().expression;
         const result = ngettext.extract({ node }, enConfig);
-        expect(result[MSGID]).to.eql('${ 0 } banana');
+        expect(result[MSGID]).to.eql('${ n } banana');
     });
 
     it('should extract proper msgplural ', () => {
         const node = template('nt(n)`${n} banana`')().expression;
         const result = ngettext.extract({ node }, enConfig);
-        expect(result[MSGID_PLURAL]).to.eql('${ 0 } banana');
+        expect(result[MSGID_PLURAL]).to.eql('${ n } banana');
     });
 
     it('should extract proper msgstr', () => {
