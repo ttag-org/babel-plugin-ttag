@@ -35,7 +35,8 @@ describe('Resolve tag-gettext', () => {
         const input = 'console.log(t`${ item.name.data } simple string ${ item.age.data } literal with formatting`);';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(
-            'console.log(item.name.data + " simple string " + item.age.data + " literal with formatting [translated]");');
+            'console.log(item.name.data + " simple string " + ' +
+            'item.age.data + " literal with formatting [translated]");');
     });
 
     it('should resolve original string if no translation is found', () => {
