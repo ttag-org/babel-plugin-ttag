@@ -52,6 +52,16 @@ export function applyReference(poEntry, node, filepath, location) {
     return poEntry;
 }
 
+export function applyExtractedComments(poEntry, node) {
+    if (!poEntry.comments) {
+        poEntry.comments = {};
+    }
+
+    const comments = node.leadingComments;
+    const transComments = comments ? comments.map((c) => c.value) : [];
+    poEntry.comments.extracted = transComments.join('\n');
+}
+
 export function makePotStr(data) {
     return gettextParser.po.compile(data);
 }

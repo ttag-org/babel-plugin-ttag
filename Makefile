@@ -16,6 +16,9 @@ test_extract_ngettext:
 test_extract_filename:
 	$(MOCHA_CMD) ./tests/functional/test_extract_filename.js
 
+test_extract_developer_comments:
+	$(MOCHA_CMD) ./tests/functional/test_extract_developer_comments.js
+
 test_resolve_gettext:
 	$(MOCHA_CMD) ./tests/functional/test_resolve_gettext.js
 
@@ -71,6 +74,7 @@ test_fun: test_extract_gettext
 test_fun: test_extract_gettext_with_formatting
 test_fun: test_extract_ngettext
 test_fun: test_extract_filename
+test_fun: test_extract_developer_comments
 test_fun: test_resolve_gettext
 test_fun: test_resolve_gettext_default
 test_fun: test_resolve_default

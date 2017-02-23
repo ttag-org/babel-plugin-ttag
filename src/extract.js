@@ -1,4 +1,4 @@
-import { applyReference } from './po-helpers';
+import { applyReference, applyExtractedComments } from './po-helpers';
 import path from 'path';
 import { ValidationError } from './errors';
 
@@ -25,6 +25,10 @@ export const extractPoEntry = (extractor, nodePath, config, state) => {
     if (filename !== 'unknown') {
         const base = `${process.cwd()}${path.sep}`;
         return applyReference(poEntry, node, filename.replace(base, ''), location);
+    }
+
+    if (config.devCommentsEnabled()) {
+        applyExtractedComments(poEntry, nodePath.parent);
     }
 
     return poEntry;

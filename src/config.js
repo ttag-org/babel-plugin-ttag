@@ -74,6 +74,7 @@ export const configSchema = {
         dedent: { type: 'boolean' },
         discover: { type: 'array' },
         defaultHeaders: defaultHeadersSchema,
+        addComments: { oneOf: [{ type: 'boolean' }, { type: 'string' }] },
     },
     additionalProperties: false,
 };
@@ -192,6 +193,10 @@ export class Config {
             return true;
         }
         return this.config.dedent;
+    }
+
+    devCommentsEnabled() {
+        return Boolean(this.config.addComments);
     }
 }
 
