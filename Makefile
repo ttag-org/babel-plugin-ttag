@@ -98,3 +98,6 @@ test_fun: test_alias_discover
 
 test: test_fun
 test: test_unit
+
+lint:
+	npm run lint

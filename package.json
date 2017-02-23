@@ -13,7 +13,8 @@
     "lint": "eslint ./src ./tests",
     "fix": "eslint --fix ./src ./tests",
     "build": "babel src --out-dir dist",
-    "prepublish": "npm run lint && make test && npm run build"
+    "preversion": "npm run lint && make test",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",

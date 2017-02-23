@@ -3,15 +3,12 @@ import * as babel from 'babel-core';
 import polyglotPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
-const pofile = 'tests/fixtures/resolve_simple_gettext.po';
+const translations = 'tests/fixtures/resolve_simple_gettext.po';
 
 const options = {
     presets: ['es2015'],
     plugins: [[polyglotPlugin, {
-        resolve: { locale: 'en-us' },
-        locales: {
-            'en-us': pofile,
-        },
+        resolve: { translations },
         discover: ['gettext'],
     }]],
 };

@@ -25,16 +25,11 @@ const extractConfigSchema = {
 const resolveConfigSchema = {
     type: ['object', 'null'],
     properties: {
-        locale: { type: 'string' },
+        translations: { type: 'string' },
         unresolved: { enum: [FAIL, WARN, SKIP] },
     },
-    required: ['locale'],
+    required: ['translations'],
     additionalProperties: false,
-};
-
-const localesSchema = {
-    type: 'object',
-    additionalProperties: { type: 'string' },
 };
 
 const extractorsSchema = {
@@ -69,7 +64,6 @@ export const configSchema = {
     properties: {
         extract: extractConfigSchema,
         resolve: resolveConfigSchema,
-        locales: localesSchema,
         extractors: extractorsSchema,
         dedent: { type: 'boolean' },
         discover: { type: 'array' },
@@ -160,9 +154,7 @@ export class Config {
     }
 
     getPoFilePath() {
-        // TODO: handle locale is not found;
-        const locale = this.config.resolve.locale;
-        return this.config.locales[locale];
+        return this.config.resolve.translations;
     }
 
     isExtractMode() {
