@@ -28,7 +28,12 @@ export const extractPoEntry = (extractor, nodePath, config, state) => {
     }
 
     if (config.devCommentsEnabled()) {
-        applyExtractedComments(poEntry, nodePath.parent);
+        const maybeTag = config.getAddComments();
+        let tag = null;
+        if (typeof maybeTag === 'string') {
+            tag = maybeTag;
+        }
+        applyExtractedComments(poEntry, nodePath.parent, tag);
     }
 
     return poEntry;

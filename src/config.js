@@ -198,6 +198,10 @@ export class Config {
     devCommentsEnabled() {
         return Boolean(this.config.addComments);
     }
+
+    getAddComments() {
+        return this.config.addComments;
+    }
 }
 
 export default Config;
