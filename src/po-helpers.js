@@ -1,6 +1,7 @@
 import fs from 'fs';
 import gettextParser from 'gettext-parser';
 import { DEFAULT_HEADERS, PO_PRIMITIVES, LOCATION } from './defaults';
+import dedent from 'dedent';
 
 export function buildPotData(translations) {
     const data = {
@@ -50,6 +51,26 @@ export function applyReference(poEntry, node, filepath, location) {
 
     poEntry.comments.reference = reference;
     return poEntry;
+}
+
+const tagRegex = {};
+export function applyExtractedComments(poEntry, node, tag) {
+    if (!poEntry.comments) {
+        poEntry.comments = {};
+    }
+
+    const comments = node.leadingComments;
+    let transComments = comments ? comments.map((c) => c.value) : [];
+    if (tag) {
+        if (!tagRegex[tag]) {
+            tagRegex[tag] = new RegExp(`^\s*${tag}\s*(.*?)\s*$`);
+        }
+        transComments = transComments
+            .map((c) => c.match(tagRegex[tag]))
+            .filter((match) => Boolean(match))
+            .map((c) => dedent(c[1]));
+    }
+    poEntry.comments.extracted = transComments.join('\n');
 }
 
 export function makePotStr(data) {
