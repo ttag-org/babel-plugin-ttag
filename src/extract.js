@@ -24,7 +24,7 @@ export const extractPoEntry = (extractor, nodePath, config, state) => {
 
     if (filename !== 'unknown') {
         const base = `${process.cwd()}${path.sep}`;
-        return applyReference(poEntry, node, filename.replace(base, ''), location);
+        applyReference(poEntry, node, filename.replace(base, ''), location);
     }
 
     if (config.devCommentsEnabled()) {
