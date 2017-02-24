@@ -1,0 +1,36 @@
+import { expect } from 'chai';
+import * as babel from 'babel-core';
+import fs from 'fs';
+import polyglotPlugin from 'src/plugin';
+import { rmDirSync } from 'src/utils';
+
+const output = 'debug/translations.pot';
+const options = {
+    presets: ['es2015'],
+    plugins: [[polyglotPlugin, {
+        extract: { output },
+        discover: ['t'],
+        sortByMsgid: true,
+    }]],
+};
+
+describe('Sorting entries by msgid', () => {
+    before(() => {
+        rmDirSync('debug');
+    });
+
+    it('should sort entries by msgid', () => {
+        const expectedPath = 'tests/fixtures/expected_sort.pot';
+        const input = `
+        t\`bbbb\`;
+        t\`aaaaa\`;
+        t\`ccccc\`;
+        t\`fffff\`;
+        t\`eeeee\`;
+        `;
+        babel.transform(input, options);
+        const result = fs.readFileSync(output).toString();
+        const expected = fs.readFileSync(expectedPath).toString();
+        expect(result).to.eql(expected);
+    });
+});

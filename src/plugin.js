@@ -4,7 +4,8 @@ import mkdirp from 'mkdirp';
 import Config from './config';
 import { extractPoEntry, getExtractor } from './extract';
 import { resolveEntries } from './resolve';
-import { buildPotData, makePotStr, parsePoData, getDefaultPoData } from './po-helpers';
+import { buildPotData, makePotStr, parsePoData, getDefaultPoData,
+msgidComparator } from './po-helpers';
 import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
 import { ALIASES } from './defaults';
 
@@ -16,7 +17,7 @@ for (const key of Object.keys(ALIASES)) {
 export default function () {
     let config;
     let disabledScopes = new Set();
-    const potEntries = [];
+    let potEntries = [];
     let poData = null;
     let aliases = {};
     let imports = new Set();
@@ -75,6 +76,10 @@ export default function () {
     return {
         post() {
             if (config && config.isExtractMode() && potEntries.length) {
+                if (config.isSortedByMsgid()) {
+                    // TODO: maybe use heap datastructure to avoid sorting on each filesave
+                    potEntries = potEntries.sort(msgidComparator);
+                }
                 const potStr = makePotStr(buildPotData(potEntries));
                 const filepath = config.getOutputFilepath();
                 const dirPath = path.dirname(filepath);

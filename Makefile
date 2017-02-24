@@ -73,6 +73,9 @@ test_disabled_scope:
 test_unit:
 	$(MOCHA_CMD) ./tests/unit/**/*.js
 
+test_entries_sort:
+	$(MOCHA_CMD) ./tests/functional/test_entries_sort.js
+
 test_fun: test_extract_gettext
 test_fun: test_extract_gettext_with_formatting
 test_fun: test_extract_ngettext
@@ -95,6 +98,7 @@ test_fun: test_alias_resolve
 test_fun: test_disabled_scope
 test_fun: test_resolve_when_validation_fails
 test_fun: test_alias_discover
+test_fun: test_entries_sort
 
 test: test_fun
 test: test_unit
