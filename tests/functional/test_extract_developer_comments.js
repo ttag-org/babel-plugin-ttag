@@ -68,8 +68,6 @@ describe('Extract developer comments', () => {
         expect(result).to.contain('#. comment3-11'); // 3-12 is too far away, ignore
     });
 
-
-
     it('should not fail if no comments', () => {
         const input = dedent(`
         import { t } from 'c-3po';
