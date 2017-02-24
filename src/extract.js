@@ -33,7 +33,7 @@ export const extractPoEntry = (extractor, nodePath, config, state) => {
         if (typeof maybeTag === 'string') {
             tag = maybeTag;
         }
-        applyExtractedComments(poEntry, nodePath.parent, tag);
+        applyExtractedComments(poEntry, nodePath, tag);
     }
 
     return poEntry;

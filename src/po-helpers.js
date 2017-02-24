@@ -54,9 +54,20 @@ export function applyReference(poEntry, node, filepath, location) {
 }
 
 const tagRegex = {};
-export function applyExtractedComments(poEntry, node, tag) {
+export function applyExtractedComments(poEntry, nodePath, tag) {
     if (!poEntry.comments) {
         poEntry.comments = {};
+    }
+
+    const node = nodePath.node;
+
+    if (!(
+        node.type.match(/Statement$/) ||
+        node.type.match(/Declaration$/)
+    )) {
+        // Collect parents' comments
+        //
+        applyExtractedComments(poEntry, nodePath.parentPath, tag);
     }
 
     const comments = node.leadingComments;
@@ -70,7 +81,15 @@ export function applyExtractedComments(poEntry, node, tag) {
             .filter((match) => Boolean(match))
             .map((c) => dedent(c[1]));
     }
-    poEntry.comments.extracted = transComments.join('\n');
+
+    if (transComments.length === 0) return;
+
+    if (poEntry.comments.extracted) {
+        poEntry.comments.extracted += '\n';
+    } else {
+        poEntry.comments.extracted = '';
+    }
+    poEntry.comments.extracted += transComments.join('\n');
 }
 
 export function makePotStr(data) {
