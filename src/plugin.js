@@ -4,7 +4,8 @@ import mkdirp from 'mkdirp';
 import Config from './config';
 import { extractPoEntry, getExtractor } from './extract';
 import { resolveEntries } from './resolve';
-import { buildPotData, makePotStr, parsePoData, getDefaultPoData } from './po-helpers';
+import { buildPotData, makePotStr, parsePoData, getDefaultPoData,
+msgidComparator } from './po-helpers';
 import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
 import { ALIASES } from './defaults';
 
@@ -77,7 +78,7 @@ export default function () {
             if (config && config.isExtractMode() && potEntries.length) {
                 if (config.isSortedByMsgid()) {
                     // TODO: maybe use heap datastructure to avoid sorting on each filesave
-                    potEntries = potEntries.sort((e1, e2) => e1.msgid > e2.msgid);
+                    potEntries = potEntries.sort(msgidComparator);
                 }
                 const potStr = makePotStr(buildPotData(potEntries));
                 const filepath = config.getOutputFilepath();
