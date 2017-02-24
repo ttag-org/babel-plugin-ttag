@@ -1,3 +1,4 @@
+import * as t from 'babel-types';
 import fs from 'fs';
 import gettextParser from 'gettext-parser';
 import { DEFAULT_HEADERS, PO_PRIMITIVES, LOCATION } from './defaults';
@@ -62,8 +63,8 @@ export function applyExtractedComments(poEntry, nodePath, tag) {
     const node = nodePath.node;
 
     if (!(
-        node.type.match(/Statement$/) ||
-        node.type.match(/Declaration$/)
+        t.isStatement(node) ||
+        t.isDeclaration(node)
     )) {
         // Collect parents' comments
         //
