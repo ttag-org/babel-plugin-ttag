@@ -69,6 +69,7 @@ export const configSchema = {
         discover: { type: 'array' },
         defaultHeaders: defaultHeadersSchema,
         addComments: { oneOf: [{ type: 'boolean' }, { type: 'string' }] },
+        sortByMsgid: { type: 'boolean' },
     },
     additionalProperties: false,
 };
@@ -193,6 +194,10 @@ export class Config {
 
     getAddComments() {
         return this.config.addComments;
+    }
+
+    isSortedByMsgid() {
+        return Boolean(this.config.sortByMsgid);
     }
 }
 

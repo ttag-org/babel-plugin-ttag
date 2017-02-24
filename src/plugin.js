@@ -16,7 +16,7 @@ for (const key of Object.keys(ALIASES)) {
 export default function () {
     let config;
     let disabledScopes = new Set();
-    const potEntries = [];
+    let potEntries = [];
     let poData = null;
     let aliases = {};
     let imports = new Set();
@@ -75,6 +75,10 @@ export default function () {
     return {
         post() {
             if (config && config.isExtractMode() && potEntries.length) {
+                if (config.isSortedByMsgid()) {
+                    // TODO: maybe use heap datastructure to avoid sorting on each filesave
+                    potEntries = potEntries.sort((e1, e2) => e1.msgid > e2.msgid);
+                }
                 const potStr = makePotStr(buildPotData(potEntries));
                 const filepath = config.getOutputFilepath();
                 const dirPath = path.dirname(filepath);
