@@ -33,10 +33,10 @@ export function buildPotData(translations, isSortedByMsgid) {
     const defaultContext = data.translations.context;
 
     if (isSortedByMsgid) {
-        [...Array(translations.length).keys()].map(() => {
+        for (const _ of Array(translations.length).keys()) {
             const trans = translations.dequeue();
             updatePotData(trans, defaultContext);
-        })
+        }
     } else {
         for (const trans of translations) {
             updatePotData(trans, defaultContext);

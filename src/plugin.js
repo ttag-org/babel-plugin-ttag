@@ -21,8 +21,8 @@ export default function () {
     let disabledScopes = new Set();
     let imports = new Set();
     let poData = null;
-    let potEntries = [];
-    let potEntriesSorted = new PriorityQueue({ comparator: msgidComparator });
+    const potEntries = [];
+    const potEntriesSorted = new PriorityQueue({ comparator: msgidComparator });
 
     function extractOrResolve(nodePath, state) {
         if (isInDisabledScope(nodePath, disabledScopes)) {
