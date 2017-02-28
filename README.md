@@ -59,7 +59,7 @@ Here is how you can handle plural forms:
 import { ngettext, msgid } from 'c-3po';
 const name = 'Mike';
 const n = 5;
-console.log(ngettext(msgid`Mike has ${n} banana`, `Mike has ${n} bananas`));
+console.log(ngettext(msgid`Mike has ${n} banana`, `Mike has ${n} bananas`, n));
 ```
 
 Output in .po files:
@@ -93,7 +93,7 @@ class PluralDemo extends React.Component {
         return (
             <div>
                 <h3>{ t`Deadly boring counter demo (but with plurals)` }</h3>
-                <div>{ ngettext(msgid`You have clicked ${n} time`, `You have clicked ${n} times`) }</div>
+                <div>{ ngettext(msgid`You have clicked ${n} time`, `You have clicked ${n} times`, n) }</div>
                 <button onClick={this.countInc}>{ t`Click me` }</button>
             </div>
         )
