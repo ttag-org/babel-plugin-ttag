@@ -24,8 +24,7 @@ function validateNPlural(exp) {
     }
 }
 
-const validate = (path) => {
-    const { node } = path;
+const validate = (node) => {
     validateExpresssions(node.quasi.expressions);
     validateNPlural(node.tag.arguments[0]);
     const msgid = template2Msgid(node);

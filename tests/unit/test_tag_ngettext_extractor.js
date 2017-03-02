@@ -56,29 +56,29 @@ describe('tag-ngettext extract', () => {
 describe('tag-ngettext validate', () => {
     it('should throw if has invalid expressions', () => {
         const node = template('nt(n)`banana ${ n + 1}`')().expression;
-        const fn = () => ngettext.validate({ node }, enConfig);
+        const fn = () => ngettext.validate(node, enConfig);
         expect(fn).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
     });
 
     it('should not throw if member expression', () => {
         const node = template('nt(this.props.number)`banana ${this.props.number}`')().expression;
-        const fn = () => ngettext.validate({ node }, enConfig);
+        const fn = () => ngettext.validate(node, enConfig);
         expect(fn).to.not.throw();
     });
 
     it('should throw if plural number is invalid', () => {
         const node = template('nt(n + 1)`banana`')().expression;
-        const fn = () => ngettext.validate({ node }, enConfig);
+        const fn = () => ngettext.validate(node, enConfig);
         expect(fn).to.throw('BinaryExpression \'n + 1\' can not be used as plural number argument');
     });
     it('should throw if translation string is an empty string', () => {
         const node = template('nt(n)``')().expression;
-        const fn = () => ngettext.validate({ node }, enConfig);
+        const fn = () => ngettext.validate(node, enConfig);
         expect(fn).to.throw('Can not translate \'\'');
     });
     it('should throw if has no meaningful information', () => {
         const node = template('nt(n)`${name} ${n} `')().expression;
-        const fn = () => ngettext.validate({ node }, enConfig);
+        const fn = () => ngettext.validate(node, enConfig);
         expect(fn).to.throw('Can not translate \'${ name } ${ n } \'');
     });
 });
