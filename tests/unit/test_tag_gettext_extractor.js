@@ -85,7 +85,7 @@ describe('tag-gettext validate', () => {
 describe('tag-gettext match', () => {
     it('should match gettext', () => {
         const node = template('t`${n} banana`')().expression;
-        const result = gettext.match({ node }, enConfig);
+        const result = gettext.match(node, enConfig);
         expect(result).to.be.true;
     });
 });

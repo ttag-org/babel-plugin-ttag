@@ -65,7 +65,7 @@ function extract(path, config) {
     return translate;
 }
 
-function match({ node }, config) {
+function match(node, config) {
     return (t.isTaggedTemplateExpression(node) &&
         node.tag.callee &&
         node.tag.callee.name === config.getAliasFor(NAME));
