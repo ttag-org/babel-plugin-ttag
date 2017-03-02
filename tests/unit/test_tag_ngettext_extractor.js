@@ -86,12 +86,12 @@ describe('tag-ngettext validate', () => {
 describe('tag-ngettext match', () => {
     it('should match ngettext', () => {
         const node = template('nt(n)`${n} banana`')().expression;
-        const result = ngettext.match({ node }, enConfig);
+        const result = ngettext.match(node, enConfig);
         expect(result).to.be.true;
     });
     it('should not match ngettext', () => {
         const node = template('ntt(n)`${n} banana`')().expression;
-        const result = ngettext.match({ node }, enConfig);
+        const result = ngettext.match(node, enConfig);
         expect(result).to.be.false;
     });
 });

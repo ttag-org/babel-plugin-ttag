@@ -33,7 +33,7 @@ function extract(path, config) {
     };
 }
 
-function match({ node }, config) {
+function match(node, config) {
     return t.isTaggedTemplateExpression(node) && node.tag.name === config.getAliasFor(NAME);
 }
 

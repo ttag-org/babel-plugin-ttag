@@ -49,7 +49,7 @@ const validate = (node, config) => {
     }
 };
 
-function match({ node }, config) {
+function match(node, config) {
     return (t.isCallExpression(node) &&
     t.isIdentifier(node.callee) &&
     node.callee.name === config.getAliasFor(NAME) &&

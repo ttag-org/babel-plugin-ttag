@@ -61,7 +61,7 @@ describe('ngettext extract', () => {
 describe('ngettext match', () => {
     it('should match gettext', () => {
         const node = template('ngettext(msgid`test`, `test`, `test`)')().expression;
-        const result = ngettext.match({ node }, enConfig);
+        const result = ngettext.match(node, enConfig);
         expect(result).to.be.true;
     });
 });

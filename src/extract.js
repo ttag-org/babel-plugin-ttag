@@ -4,7 +4,7 @@ import { ValidationError } from './errors';
 
 export function getExtractor(nodePath, config) {
     const extractors = config.getExtractors();
-    return extractors.find((ext) => ext.match(nodePath, config));
+    return extractors.find((ext) => ext.match(nodePath.node, config));
 }
 
 export const extractPoEntry = (extractor, nodePath, config, state) => {

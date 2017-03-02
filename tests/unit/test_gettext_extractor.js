@@ -50,13 +50,13 @@ describe('gettext validate', () => {
 describe('gettext match', () => {
     it('should match gettext', () => {
         const node = template('gettext("banana")')().expression;
-        const result = gettext.match({ node }, enConfig);
+        const result = gettext.match(node, enConfig);
         expect(result).to.be.true;
     });
 
     it('should match gettext with zero arguments', () => {
         const node = template('gettext()')().expression;
-        const result = gettext.match({ node }, enConfig);
+        const result = gettext.match(node, enConfig);
         expect(result).to.be.false;
     });
 });
