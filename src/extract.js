@@ -9,7 +9,7 @@ export function getExtractor(nodePath, config) {
 
 export const extractPoEntry = (extractor, nodePath, config, state) => {
     try {
-        extractor.validate(nodePath, config);
+        extractor.validate(nodePath.node, config);
     } catch (err) {
         if (err instanceof ValidationError) {
             config.validationFailureAction(extractor.name, err.message);

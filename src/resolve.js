@@ -2,7 +2,7 @@ import { NoTranslationError, ValidationError } from './errors';
 
 export function resolveEntries(extractor, nodePath, poData, config, state) {
     try {
-        extractor.validate(nodePath, config);
+        extractor.validate(nodePath.node, config);
     } catch (err) {
         if (err instanceof ValidationError) {
             config.validationFailureAction(extractor.name, err.message);

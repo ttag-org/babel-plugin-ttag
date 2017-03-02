@@ -16,8 +16,7 @@ function validateExpresssions(expressions) {
     });
 }
 
-const validate = (path) => {
-    const { node } = path;
+const validate = (node) => {
     validateExpresssions(node.quasi.expressions);
     const msgid = template2Msgid(node);
     if (! hasUsefulInfo(msgid)) {

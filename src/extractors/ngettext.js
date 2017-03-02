@@ -28,8 +28,7 @@ function validateNPlural(exp) {
     }
 }
 
-const validate = (path, config) => {
-    const { node } = path;
+const validate = (node, config) => {
     const msgidTag = node.arguments[0];
     const msgidAlias = config.getAliasFor('msgid');
     if (! t.isTaggedTemplateExpression(msgidTag)) {

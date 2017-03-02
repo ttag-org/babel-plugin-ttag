@@ -18,8 +18,8 @@ function validateArgument(arg) {
     }
 }
 
-const validate = (path) => {
-    validateArgument(path.node.arguments[0]);
+const validate = (node) => {
+    validateArgument(node.arguments[0]);
 };
 
 function extract(path) {
