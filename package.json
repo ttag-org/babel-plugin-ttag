@@ -33,6 +33,7 @@
     "babel-types": "6.18.0",
     "dedent": "0.6.0",
     "gettext-parser": "1.2.0",
+    "js-priority-queue": "^0.1.5",
     "mkdirp": "0.5.1"
   },
   "devDependencies": {

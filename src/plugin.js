@@ -8,6 +8,7 @@ import { buildPotData, makePotStr, parsePoData, getDefaultPoData,
 msgidComparator } from './po-helpers';
 import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
 import { ALIASES } from './defaults';
+import PriorityQueue from 'js-priority-queue';
 
 const reverseAliases = {};
 for (const key of Object.keys(ALIASES)) {
@@ -15,12 +16,13 @@ for (const key of Object.keys(ALIASES)) {
 }
 
 export default function () {
+    let aliases = {};
     let config;
     let disabledScopes = new Set();
-    let potEntries = [];
-    let poData = null;
-    let aliases = {};
     let imports = new Set();
+    let poData = null;
+    const potEntries = [];
+    const potEntriesSorted = new PriorityQueue({ comparator: msgidComparator });
 
     function extractOrResolve(nodePath, state) {
         if (isInDisabledScope(nodePath, disabledScopes)) {
@@ -47,7 +49,11 @@ export default function () {
         if (config.isExtractMode()) {
             try {
                 const poEntry = extractPoEntry(extractor, nodePath, config, state);
-                poEntry && potEntries.push(poEntry);
+                if (config.isSortedByMsgid()) {
+                    poEntry && potEntriesSorted.queue(poEntry);
+                } else {
+                    poEntry && potEntries.push(poEntry);
+                }
             } catch (err) {
                 // TODO: handle specific instances of errors
                 throw nodePath.buildCodeFrameError(err.message);
@@ -75,12 +81,13 @@ export default function () {
 
     return {
         post() {
-            if (config && config.isExtractMode() && potEntries.length) {
+            if (config && config.isExtractMode() && (potEntries.length || potEntriesSorted.length)) {
+                let potStr;
                 if (config.isSortedByMsgid()) {
-                    // TODO: maybe use heap datastructure to avoid sorting on each filesave
-                    potEntries = potEntries.sort(msgidComparator);
+                    potStr = makePotStr(buildPotData(potEntriesSorted, true));
+                } else {
+                    potStr = makePotStr(buildPotData(potEntries));
                 }
-                const potStr = makePotStr(buildPotData(potEntries));
                 const filepath = config.getOutputFilepath();
                 const dirPath = path.dirname(filepath);
                 mkdirp.sync(dirPath);

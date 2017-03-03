@@ -4,7 +4,23 @@ import gettextParser from 'gettext-parser';
 import { DEFAULT_HEADERS, PO_PRIMITIVES, LOCATION } from './defaults';
 import dedent from 'dedent';
 
-export function buildPotData(translations) {
+
+function updatePotData(trans, defaultContext) {
+    const oldTrans = defaultContext[trans.msgid];
+    if (!oldTrans) {
+        defaultContext[trans.msgid] = trans;
+    } else if (
+        oldTrans.comments && oldTrans.comments.reference &&
+        trans.comments && trans.comments.reference &&
+        ! oldTrans.comments.reference.match(trans.comments.reference)
+    ) {
+        // merge references
+        oldTrans.comments.reference = `${oldTrans.comments.reference}\n${trans.comments.reference}`;
+    }
+}
+
+
+export function buildPotData(translations, isSortedByMsgid) {
     const data = {
         charset: 'UTF-8',
         headers: DEFAULT_HEADERS,
@@ -15,18 +31,15 @@ export function buildPotData(translations) {
     };
 
     const defaultContext = data.translations.context;
-    for (const trans of translations) {
-        if (!defaultContext[trans.msgid]) {
-            defaultContext[trans.msgid] = trans;
-            continue;
-        }
-        const oldTrans = defaultContext[trans.msgid];
 
-        // merge references
-        if (oldTrans.comments && oldTrans.comments.reference &&
-            trans.comments && trans.comments.reference &&
-            ! oldTrans.comments.reference.match(trans.comments.reference)) {
-            oldTrans.comments.reference = `${oldTrans.comments.reference}\n${trans.comments.reference}`;
+    if (isSortedByMsgid) {
+        for (const _ of Array(translations.length).keys()) {
+            const trans = translations.dequeue();
+            updatePotData(trans, defaultContext);
+        }
+    } else {
+        for (const trans of translations) {
+            updatePotData(trans, defaultContext);
         }
     }
 
