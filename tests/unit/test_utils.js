@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import template from 'babel-template';
 import { template2Msgid, msgid2Orig, isInDisabledScope,
-    hasDisablingComment, dedentStr } from 'src/utils';
+    hasDisablingComment, dedentStr, getMsgid } from 'src/utils';
 import { DISABLE_COMMENT } from 'src/defaults';
 
 
@@ -84,5 +84,23 @@ describe('utils dedentStr', () => {
     it('should not remove indentation when has no \\n symbol', () => {
         const input = '   some';
         expect(dedentStr(input)).to.eql(input);
+    });
+});
+
+function getStrsExprs(strs, ...exprs) {
+    return [strs, exprs];
+}
+
+describe('utils getMsgid', () => {
+    it('should extract msgid', () => {
+        const a = 1;
+        const [strs, exprs] = getStrsExprs`test ${a}`;
+        expect(getMsgid(strs, exprs)).to.be.eql('test ${ 0 }');
+    });
+
+    it('should extract msgid with 0', () => {
+        const a = 0;
+        const [strs, exprs] = getStrsExprs`test ${a}`;
+        expect(getMsgid(strs, exprs)).to.be.eql('test ${ 0 }');
     });
 });

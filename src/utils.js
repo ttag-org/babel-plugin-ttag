@@ -41,8 +41,9 @@ export function stripTag(nodePath) {
     }
 }
 
-// TODO: move this to c-3po.js lib
-const getMsgid = (str, exprs) => str.reduce((s, l, i) => s + l + (exprs[i] && `\${ ${i} }` || ''), '');
+export const getMsgid = (str, exprs) => {
+    return str.reduce((s, l, i) => s + l + (exprs[i] !== undefined && `\${ ${i} }` || ''), '');
+};
 
 const mem = {};
 const memoize1 = (f) => (arg) => {
