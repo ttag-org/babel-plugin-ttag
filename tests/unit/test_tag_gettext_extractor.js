@@ -12,7 +12,7 @@ describe('tag-gettext extract', () => {
     it('should extract proper msgid ', () => {
         const node = template('t`${n} banana`')().expression;
         const result = gettext.extract({ node }, enConfig);
-        expect(result[MSGID]).to.eql('${ 0 } banana');
+        expect(result[MSGID]).to.eql('${ n } banana');
     });
 
     it('should extract proper msgstr', () => {

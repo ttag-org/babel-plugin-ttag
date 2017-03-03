@@ -9,18 +9,28 @@ msgid "simple string literal"
 msgstr "simple string literal translated"
 
 #: tests/fixtures/fixture.js:10
-msgid "${ 0 } simple string ${ 1 } literal with formatting"
-msgstr "${ 0 } simple string ${ 1 } literal with formatting [translated]"
+msgid "${ a } simple string ${ b } literal with formatting"
+msgstr "${ a } simple string ${ b } literal with formatting [translated]"
+
+#: tests/fixtures/fixture.js:111
+msgid "${ item.name.data } simple string ${ item.age.data } literal with formatting"
+msgstr "${ item.name.data } simple string ${ item.age.data } literal with formatting [translated]"
 
 #: tests/fixtures/fixture.js:5
 msgid "no translator notes"
 msgstr ""
 
 #: tests/fixtures/fixture.js:6
-msgid "plural form with ${ 0 } plural"
-msgid_plural "plural form with ${ 0 } plurals"
-msgstr[0] "plural form with ${ 0 } plural [translated]"
-msgstr[1] "plural form with ${ 0 } plurals [translated]"
+msgid "plural form with ${ n } plural"
+msgid_plural "plural form with ${ n } plurals"
+msgstr[0] "plural form with ${ n } plural [translated]"
+msgstr[1] "plural form with ${ n } plurals [translated]"
+
+#: tests/fixtures/fixture.js:678
+msgid "plural form with ${ item.n } plural"
+msgid_plural "plural form with ${ item.n } plurals"
+msgstr[0] "plural form with ${ item.n } plural [translated]"
+msgstr[1] "plural form with ${ item.n } plurals [translated]"
 
 #: tests/fixtures/fixture.js:7
 msgid "no translator notes plural"
@@ -35,8 +45,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: tests/fixtures/fixture.js:7
-msgid "no translator notes plural formatted ${ 0 }"
-msgid_plural "no translator notes plural formatted ${ 0 }"
+msgid "no translator notes plural formatted ${ a }"
+msgid_plural "no translator notes plural formatted ${ a }"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -60,8 +70,8 @@ msgstr[0] "translation plural"
 msgstr[1] "translation plurals"
 
 #: tests/fixtures/fixture.js:20
-msgid "${ 0 } spaces test"
-msgstr "${0} spaces test [translated]"
+msgid "${ a } spaces test"
+msgstr "${a} spaces test [translated]"
 
 #: tests/fixtures/fixture.js:11
 msgid ""
