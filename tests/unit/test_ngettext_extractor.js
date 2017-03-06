@@ -1,11 +1,11 @@
 import template from 'babel-template';
 import ngettext from 'src/extractors/ngettext';
-import Config from 'src/config';
+import Context from 'src/context';
 import { expect } from 'chai';
 import { PO_PRIMITIVES } from 'src/defaults';
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
-const enConfig = new Config();
+const enConfig = new Context();
 
 describe('ngettext extract', () => {
     it('should extract proper msgid1', () => {
@@ -35,7 +35,7 @@ describe('ngettext extract', () => {
             'content-type': 'text/plain; charset=UTF-8',
             'plural-forms': 'nplurals=3; plural=(n!=1);',
         };
-        const config = new Config({ defaultHeaders });
+        const config = new Context({ defaultHeaders });
         const node = template('ngettext(msgid`${ n } банан`, `${ n } банана`, `бананів`, n)')().expression;
         const result = ngettext.extract({ node }, config);
         const msgStr = result[MSGSTR];

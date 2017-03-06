@@ -2,10 +2,10 @@ import { expect } from 'chai';
 import ngettext from 'src/extractors/tag-ngettext';
 import template from 'babel-template';
 import { PO_PRIMITIVES } from 'src/defaults';
-import Config from 'src/config';
+import Context from 'src/context';
 const { MSGID, MSGID_PLURAL, MSGSTR } = PO_PRIMITIVES;
 
-const enConfig = new Config();
+const enConfig = new Context();
 
 describe('tag-ngettext extract', () => {
     it('should extract proper msgid ', () => {

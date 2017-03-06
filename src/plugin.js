@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
-import Config from './config';
+import C3poContext from './context';
 import { extractPoEntry, getExtractor } from './extract';
 import { resolveEntries } from './resolve';
 import { buildPotData, makePotStr, parsePoData, getDefaultPoData,
@@ -15,7 +15,7 @@ for (const key of Object.keys(ALIASES)) {
 }
 
 export default function () {
-    let config;
+    let context;
     let disabledScopes = new Set();
     let potEntries = [];
     let poData = null;
@@ -27,26 +27,26 @@ export default function () {
             return;
         }
 
-        if (!config) {
-            config = new Config(state.opts);
+        if (!context) {
+            context = new C3poContext(state.opts);
         }
-        config.setAliases(aliases);
-        config.setImports(imports);
+        context.setAliases(aliases);
+        context.setImports(imports);
 
-        const extractor = getExtractor(nodePath, config);
+        const extractor = getExtractor(nodePath, context);
         if (!extractor) {
             return;
         }
 
-        const alias = config.getAliasFor(extractor.name);
+        const alias = context.getAliasFor(extractor.name);
 
-        if (!config.hasImport(alias)) {
+        if (!context.hasImport(alias)) {
             return;
         }
 
-        if (config.isExtractMode()) {
+        if (context.isExtractMode()) {
             try {
-                const poEntry = extractPoEntry(extractor, nodePath, config, state);
+                const poEntry = extractPoEntry(extractor, nodePath, context, state);
                 poEntry && potEntries.push(poEntry);
             } catch (err) {
                 // TODO: handle specific instances of errors
@@ -54,34 +54,34 @@ export default function () {
             }
         }
 
-        if (config.isResolveMode()) {
-            const poFilePath = config.getPoFilePath();
+        if (context.isResolveMode()) {
+            const poFilePath = context.getPoFilePath();
 
             if (!poData) {
                 poData = parsePoData(poFilePath);
             }
 
             try {
-                resolveEntries(extractor, nodePath, poData, config, state);
+                resolveEntries(extractor, nodePath, poData, context, state);
             } catch (err) {
                 // TODO: handle specific instances of errors
                 throw nodePath.buildCodeFrameError(err.message);
             }
         } else {
             extractor.resolveDefault && extractor.resolveDefault(
-                nodePath, getDefaultPoData(config), config, state);
+                nodePath, getDefaultPoData(context), context, state);
         }
     }
 
     return {
         post() {
-            if (config && config.isExtractMode() && potEntries.length) {
-                if (config.isSortedByMsgid()) {
+            if (context && context.isExtractMode() && potEntries.length) {
+                if (context.isSortedByMsgid()) {
                     // TODO: maybe use heap datastructure to avoid sorting on each filesave
                     potEntries = potEntries.sort(msgidComparator);
                 }
                 const potStr = makePotStr(buildPotData(potEntries));
-                const filepath = config.getOutputFilepath();
+                const filepath = context.getOutputFilepath();
                 const dirPath = path.dirname(filepath);
                 mkdirp.sync(dirPath);
                 fs.writeFileSync(filepath, potStr);

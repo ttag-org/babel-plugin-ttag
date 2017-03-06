@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import template from 'babel-template';
 import { extractPoEntry } from 'src/extract';
-import Config from 'src/config';
+import Context from 'src/context';
 import gettext from 'src/extractors/tag-gettext';
 
 describe('extract extractPoEntry', () => {
     it('should not throw if validation fails and has extract skip', () => {
-        const enConfig = new Config({
+        const enConfig = new Context({
             extractors: {
                 'tag-gettext': { invalidFormat: 'skip' },
             },
@@ -19,7 +19,7 @@ describe('extract extractPoEntry', () => {
     });
 
     it('should throw if validation fails', () => {
-        const enConfig = new Config({
+        const enConfig = new Context({
             extractors: {
                 'tag-gettext': { invalidFormat: 'fail' },
             },

@@ -48,10 +48,10 @@ function getNgettextUID(state, pluralFunc) {
     return state.file.__ngettextUid;
 }
 
-function extract(path, config) {
+function extract(path, context) {
     const { node } = path;
-    const nplurals = getNPlurals(config.getHeaders());
-    const msgid = config.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
+    const nplurals = getNPlurals(context.getHeaders());
+    const msgid = context.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
     const translate = {
         [MSGID]: msgid,
         [MSGID_PLURAL]: msgid,
@@ -65,15 +65,15 @@ function extract(path, config) {
     return translate;
 }
 
-function match(node, config) {
+function match(node, context) {
     return (t.isTaggedTemplateExpression(node) &&
         node.tag.callee &&
-        node.tag.callee.name === config.getAliasFor(NAME));
+        node.tag.callee.name === context.getAliasFor(NAME));
 }
 
-function resolveDefault(nodePath, poData, config) {
+function resolveDefault(nodePath, poData, context) {
     const { node } = nodePath;
-    const transStr = config.isDedent() ? dedentStr(getQuasiStr(node)) : getQuasiStr(node);
+    const transStr = context.isDedent() ? dedentStr(getQuasiStr(node)) : getQuasiStr(node);
     if (hasExpressions(node)) {
         nodePath.replaceWithSourceString(strToQuasi(transStr));
     } else {
@@ -82,19 +82,19 @@ function resolveDefault(nodePath, poData, config) {
     return nodePath;
 }
 
-function resolve(path, poData, config, state) {
+function resolve(path, poData, context, state) {
     // TODO: handle when has no node argument.
     const { translations, headers } = poData;
     const { node } = path;
-    const msgid = config.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
+    const msgid = context.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
     const translationObj = translations[msgid];
 
     if (!translationObj) {
-        throw new NoTranslationError(`No "${msgid}" in "${config.getPoFilePath()}" file`);
+        throw new NoTranslationError(`No "${msgid}" in "${context.getPoFilePath()}" file`);
     }
 
     if (!hasTranslations(translationObj)) {
-        throw new NoTranslationError(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
+        throw new NoTranslationError(`No translation for "${msgid}" in "${context.getPoFilePath()}" file`);
     }
 
     const args = translations[msgid][MSGSTR];

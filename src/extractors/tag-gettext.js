@@ -24,22 +24,22 @@ const validate = (node) => {
     }
 };
 
-function extract(path, config) {
+function extract(path, context) {
     const { node } = path;
-    const msgid = config.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
+    const msgid = context.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
     return {
         [MSGID]: msgid,
         [MSGSTR]: '',
     };
 }
 
-function match(node, config) {
-    return t.isTaggedTemplateExpression(node) && node.tag.name === config.getAliasFor(NAME);
+function match(node, context) {
+    return t.isTaggedTemplateExpression(node) && node.tag.name === context.getAliasFor(NAME);
 }
 
-function resolveDefault(nodePath, poData, config) {
+function resolveDefault(nodePath, poData, context) {
     const { node } = nodePath;
-    const transStr = config.isDedent() ? dedentStr(getQuasiStr(node)) : getQuasiStr(node);
+    const transStr = context.isDedent() ? dedentStr(getQuasiStr(node)) : getQuasiStr(node);
     if (hasExpressions(node)) {
         nodePath.replaceWithSourceString(strToQuasi(transStr));
     } else {
@@ -48,20 +48,20 @@ function resolveDefault(nodePath, poData, config) {
     return nodePath;
 }
 
-function resolve(path, poData, config) {
+function resolve(path, poData, context) {
     const { translations } = poData;
     const { node } = path;
-    const msgid = config.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
+    const msgid = context.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
     const translationObj = translations[msgid];
 
     if (!translationObj) {
-        throw new NoTranslationError(`No "${msgid}" in "${config.getPoFilePath()}" file`);
+        throw new NoTranslationError(`No "${msgid}" in "${context.getPoFilePath()}" file`);
     }
 
     const transStr = translationObj[MSGSTR][0];
 
     if (!transStr.length) {
-        throw new NoTranslationError(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
+        throw new NoTranslationError(`No translation for "${msgid}" in "${context.getPoFilePath()}" file`);
     }
 
     if (hasExpressions(node)) {
