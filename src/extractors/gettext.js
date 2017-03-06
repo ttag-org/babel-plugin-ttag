@@ -31,10 +31,10 @@ function extract(path) {
     };
 }
 
-function match(node, config) {
+function match(node, context) {
     return (t.isCallExpression(node) &&
         t.isIdentifier(node.callee) &&
-        node.callee.name === config.getAliasFor(NAME) &&
+        node.callee.name === context.getAliasFor(NAME) &&
         node.arguments.length > 0);
 }
 
@@ -42,19 +42,19 @@ function resolveDefault(nodePath) {
     return nodePath.replaceWith(nodePath.node.arguments[0]);
 }
 
-function resolve(path, poData, config) {
+function resolve(path, poData, context) {
     const { translations } = poData;
     const { node } = path;
     const { value: msgid } = node.arguments[0];
     const translationObj = translations[msgid];
 
     if (!translationObj) {
-        throw new NoTranslationError(`No "${msgid}" in "${config.getPoFilePath()}" file`);
+        throw new NoTranslationError(`No "${msgid}" in "${context.getPoFilePath()}" file`);
     }
 
     const transStr = translationObj[MSGSTR][0];
     if (!transStr.length) {
-        throw new NoTranslationError(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
+        throw new NoTranslationError(`No translation for "${msgid}" in "${context.getPoFilePath()}" file`);
     }
 
     path.replaceWith(t.stringLiteral(transStr));

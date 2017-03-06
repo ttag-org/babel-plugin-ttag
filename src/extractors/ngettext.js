@@ -10,8 +10,8 @@ import tpl from 'babel-template';
 const NAME = 'ngettext';
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
-function getMsgid(tag, config) {
-    return config.isDedent() ? dedentStr(template2Msgid(tag)) : template2Msgid(tag);
+function getMsgid(tag, context) {
+    return context.isDedent() ? dedentStr(template2Msgid(tag)) : template2Msgid(tag);
 }
 
 function validateExpresssions(expressions) {
@@ -28,9 +28,9 @@ function validateNPlural(exp) {
     }
 }
 
-const validate = (node, config) => {
+const validate = (node, context) => {
     const msgidTag = node.arguments[0];
-    const msgidAlias = config.getAliasFor('msgid');
+    const msgidAlias = context.getAliasFor('msgid');
     if (! t.isTaggedTemplateExpression(msgidTag)) {
         throw new ValidationError(
             `First argument must be tagged template expression. You should use '${msgidAlias}' tag`);
@@ -43,28 +43,28 @@ const validate = (node, config) => {
     const tags = node.arguments.slice(1, -1);
     tags.forEach(({ expressions }) => validateExpresssions(expressions));
     validateNPlural(node.arguments[node.arguments.length - 1]);
-    const msgid = getMsgid(msgidTag, config);
+    const msgid = getMsgid(msgidTag, context);
     if (!hasUsefulInfo(msgid)) {
         throw new ValidationError(`Can not translate '${getQuasiStr(msgidTag)}'`);
     }
 };
 
-function match(node, config) {
+function match(node, context) {
     return (t.isCallExpression(node) &&
     t.isIdentifier(node.callee) &&
-    node.callee.name === config.getAliasFor(NAME) &&
+    node.callee.name === context.getAliasFor(NAME) &&
     node.arguments.length > 0);
 }
 
-function extract(path, config) {
+function extract(path, context) {
     const tags = path.node.arguments.slice(0, -1);
-    const msgid = getMsgid(tags[0], config);
-    const nplurals = getNPlurals(config.getHeaders());
+    const msgid = getMsgid(tags[0], context);
+    const nplurals = getNPlurals(context.getHeaders());
     if (tags.length !== nplurals) {
         throw new ValidationError(`Expected to have ${nplurals} plural forms but have ${tags.length} instead`);
     }
     // TODO: handle case when only 1 plural form
-    const msgidPlural = getMsgid({ quasi: tags[1] }, config);
+    const msgidPlural = getMsgid({ quasi: tags[1] }, context);
     const translate = {
         [MSGID]: msgid,
         [MSGID_PLURAL]: msgidPlural,
@@ -93,13 +93,13 @@ function getNgettextUID(state, pluralFunc) {
     return state.file.__ngettextUid;
 }
 
-function resolveDefault(path, poData, config, state) {
+function resolveDefault(path, poData, context, state) {
     const { headers } = poData;
     const tagArg = path.node.arguments[path.node.arguments.length - 1];
     path.node.arguments[0] = path.node.arguments[0].quasi;
     const args = path.node.arguments.slice(0, -1).map((quasi) => {
         const quasiStr = getQuasiStr({ quasi });
-        const dedentedStr = config.isDedent() ? dedentStr(quasiStr) : quasiStr;
+        const dedentedStr = context.isDedent() ? dedentStr(quasiStr) : quasiStr;
         return tpl(strToQuasi(dedentedStr))().expression;
     });
 
@@ -117,19 +117,19 @@ function resolveDefault(path, poData, config, state) {
     }));
 }
 
-function resolve(path, poData, config, state) {
+function resolve(path, poData, context, state) {
     const { translations, headers } = poData;
     const { node } = path;
     const [msgidTag, ..._] = node.arguments.slice(0, -1);
-    const msgid = getMsgid(msgidTag, config);
+    const msgid = getMsgid(msgidTag, context);
     const translationObj = translations[msgid];
 
     if (!translationObj) {
-        throw new NoTranslationError(`No "${msgid}" in "${config.getPoFilePath()}" file`);
+        throw new NoTranslationError(`No "${msgid}" in "${context.getPoFilePath()}" file`);
     }
 
     if (!hasTranslations(translationObj)) {
-        throw new NoTranslationError(`No translation for "${msgid}" in "${config.getPoFilePath()}" file`);
+        throw new NoTranslationError(`No translation for "${msgid}" in "${context.getPoFilePath()}" file`);
     }
 
     const args = translationObj[MSGSTR];
