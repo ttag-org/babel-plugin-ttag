@@ -8,6 +8,7 @@ import { buildPotData, makePotStr, parsePoData, getDefaultPoData,
 msgidComparator } from './po-helpers';
 import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
 import { ALIASES } from './defaults';
+import PluginContext from './plugin-context';
 
 const reverseAliases = {};
 for (const key of Object.keys(ALIASES)) {
@@ -19,8 +20,8 @@ export default function () {
     let disabledScopes = new Set();
     let potEntries = [];
     let poData = null;
-    let aliases = {};
-    let imports = new Set();
+    const context = new PluginContext();
+    context.getNode = (nodePath) => nodePath.node;
 
     function extractOrResolve(nodePath, state) {
         if (isInDisabledScope(nodePath, disabledScopes)) {
@@ -30,8 +31,8 @@ export default function () {
         if (!config) {
             config = new Config(state.opts);
         }
-        config.setAliases(aliases);
-        config.setImports(imports);
+        config.setAliases(context.aliases);
+        config.setImports(context.imports);
 
         const extractor = getExtractor(nodePath, config);
         if (!extractor) {
@@ -87,13 +88,11 @@ export default function () {
                 fs.writeFileSync(filepath, potStr);
             }
         },
-        visitor: {
+        visitor: context.apply({
             TaggedTemplateExpression: extractOrResolve,
             CallExpression: extractOrResolve,
             Program: (nodePath) => {
                 disabledScopes = new Set();
-                aliases = {};
-                imports = new Set();
                 if (hasDisablingComment(nodePath.node)) {
                     disabledScopes.add(nodePath.scope.uid);
                 }
@@ -102,24 +101,7 @@ export default function () {
                 if (hasDisablingComment(nodePath.node)) {
                     disabledScopes.add(nodePath.scope.uid);
                 }
-            },
-            ImportDeclaration: (nodePath) => {
-                const { node } = nodePath;
-                if (isC3poImport(node)) {
-                    node.specifiers
-                    .filter(({ local: { name } }) => reverseAliases[name])
-                    .map((s) => imports.add(s.local.name));
-                }
-                if (isC3poImport(node) && hasImportSpecifier(node)) {
-                    node.specifiers
-                    .filter((s) => s.type === 'ImportSpecifier')
-                    .filter(({ imported: { name } }) => reverseAliases[name])
-                    .forEach(({ imported, local }) => {
-                        aliases[reverseAliases[imported.name]] = local.name;
-                        imports.add(local.name);
-                    });
-                }
-            },
-        },
+            }
+        }),
     };
 }
