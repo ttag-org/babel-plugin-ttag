@@ -57,8 +57,8 @@ function match(node, context) {
     node.arguments.length > 0);
 }
 
-function extract(path, context) {
-    const tags = path.node.arguments.slice(0, -1);
+function extract(node, context) {
+    const tags = node.arguments.slice(0, -1);
     const msgid = context.isDedent() ? dedentStr(template2Msgid(tags[0])) : template2Msgid(tags[0]);
     const nplurals = getNPlurals(context.getHeaders());
     if (tags.length !== nplurals) {

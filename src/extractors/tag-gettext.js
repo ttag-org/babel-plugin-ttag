@@ -24,8 +24,7 @@ const validate = (node) => {
     }
 };
 
-function extract(path, context) {
-    const { node } = path;
+function extract(node, context) {
     const msgid = context.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
     return {
         [MSGID]: msgid,

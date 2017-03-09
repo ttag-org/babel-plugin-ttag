@@ -48,8 +48,7 @@ function getNgettextUID(state, pluralFunc) {
     return state.file.__ngettextUid;
 }
 
-function extract(path, context) {
-    const { node } = path;
+function extract(node, context) {
     const nplurals = getNPlurals(context.getHeaders());
     const msgid = context.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
     const translate = {

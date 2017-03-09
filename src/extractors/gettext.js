@@ -26,8 +26,7 @@ const validate = (node) => {
     validateArgument(node.arguments[0]);
 };
 
-function extract(path) {
-    const { node } = path;
+function extract(node) {
     const msgid = getMsgid(node);
     return {
         [MSGID]: msgid,

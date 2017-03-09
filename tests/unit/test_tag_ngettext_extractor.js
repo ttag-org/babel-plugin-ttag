@@ -10,19 +10,19 @@ const enConfig = new Context();
 describe('tag-ngettext extract', () => {
     it('should extract proper msgid ', () => {
         const node = template('nt(n)`${n} banana`')().expression;
-        const result = ngettext.extract({ node }, enConfig);
+        const result = ngettext.extract(node, enConfig);
         expect(result[MSGID]).to.eql('${ 0 } banana');
     });
 
     it('should extract proper msgplural ', () => {
         const node = template('nt(n)`${n} banana`')().expression;
-        const result = ngettext.extract({ node }, enConfig);
+        const result = ngettext.extract(node, enConfig);
         expect(result[MSGID_PLURAL]).to.eql('${ 0 } banana');
     });
 
     it('should extract proper msgstr', () => {
         const node = template('nt(n)`${n} banana`')().expression;
-        const result = ngettext.extract({ node }, enConfig);
+        const result = ngettext.extract(node, enConfig);
         const msgStr = result[MSGSTR];
         expect(msgStr).to.have.property('length');
         expect(msgStr.length).to.eql(2);
@@ -32,7 +32,7 @@ describe('tag-ngettext extract', () => {
 
     it('should extract proper structure without expressions', () => {
         const node = template('nt(n)`banana`')().expression;
-        const result = ngettext.extract({ node }, enConfig);
+        const result = ngettext.extract(node, enConfig);
         const expected = {
             msgid: 'banana',
             msgid_plural: 'banana',
@@ -48,7 +48,7 @@ describe('tag-ngettext extract', () => {
             third
             \``)().expression;
         const expected = 'first\nsecond\nthird';
-        const result = ngettext.extract({ node }, enConfig);
+        const result = ngettext.extract(node, enConfig);
         expect(result[MSGID]).to.eql(expected);
     });
 });
