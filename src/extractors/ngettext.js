@@ -118,8 +118,7 @@ function resolveDefault(path, context, state) {
     }));
 }
 
-function resolve(path, translationObj, context, state) {
-    const { node } = path;
+function resolve(node, translationObj, context, state) {
     const [msgidTag, ..._] = node.arguments.slice(0, -1);
 
     const args = translationObj[MSGSTR];
@@ -127,22 +126,22 @@ function resolve(path, translationObj, context, state) {
     const exprs = msgidTag.quasi.expressions.map(ast2Str);
 
     if (t.isIdentifier(tagArg) || t.isMemberExpression(tagArg)) {
-        return path.replaceWith(tpl('NGETTEXT(N, ARGS)')({
+        return tpl('NGETTEXT(N, ARGS)')({
             NGETTEXT: getNgettextUID(state, getPluralFunc(context.getHeaders())),
             N: tagArg,
             ARGS: t.arrayExpression(args.map((l) => {
                 const { expression: { quasis, expressions } } = tpl(msgid2Orig(l, exprs))();
                 return t.templateLiteral(quasis, expressions);
             })),
-        }));
+        });
     }
 
     if (t.isLiteral(tagArg)) {
         const pluralFn = makePluralFunc(getPluralFunc(context.getHeaders()));
         const orig = msgid2Orig(pluralFn(tagArg.value, args), exprs);
-        return path.replaceWith(tpl(orig)());
+        return tpl(orig)();
     }
-    return path;
+    return undefined;
 }
 
 export default { match, extract, resolve, name: NAME, validate, resolveDefault, getMsgid };

@@ -27,7 +27,10 @@ export function resolveEntries(extractor, nodePath, context, state) {
             throw new NoTranslationError(`No translation for "${msgid}" in "${context.getPoFilePath()}" file`);
         }
 
-        extractor.resolve(nodePath, translationObj, context, state);
+        const resultNode = extractor.resolve(nodePath.node, translationObj, context, state);
+        if (resultNode !== undefined) {
+            nodePath.replaceWith(resultNode);
+        }
     } catch (err) {
         if (err instanceof NoTranslationError) {
             context.noTranslationAction(err.message);

@@ -1,6 +1,7 @@
 import * as t from 'babel-types';
+import tpl from 'babel-template';
 import { template2Msgid, msgid2Orig, hasExpressions,
-    isValidQuasiExpression, ast2Str, getQuasiStr, strToQuasi, dedentStr } from '../utils';
+    isValidQuasiExpression, ast2Str, getQuasiStr, dedentStr } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import { ValidationError } from '../errors';
 import { hasUsefulInfo } from '../po-helpers';
@@ -39,16 +40,14 @@ function resolveDefault(nodePath, context) {
     return nodePath;
 }
 
-function resolve(path, translation) {
+function resolve(node, translation) {
     const transStr = translation[MSGSTR][0];
-    const { node } = path;
 
     if (hasExpressions(node)) {
         const exprs = node.quasi.expressions.map(ast2Str);
-        path.replaceWithSourceString(msgid2Orig(transStr, exprs));
-    } else {
-        path.replaceWith(t.stringLiteral(transStr));
+        return tpl(msgid2Orig(transStr, exprs))();
     }
+    return t.stringLiteral(transStr);
 }
 
 export default { match, resolve, resolveDefault, validate, name: NAME, getMsgid: template2Msgid };

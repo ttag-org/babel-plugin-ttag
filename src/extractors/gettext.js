@@ -37,9 +37,9 @@ function resolveDefault(nodePath) {
     return nodePath.replaceWith(nodePath.node.arguments[0]);
 }
 
-function resolve(path, translation) {
+function resolve(node, translation) {
     const transStr = translation[MSGSTR][0];
-    path.replaceWith(t.stringLiteral(transStr));
+    return t.stringLiteral(transStr);
 }
 
 export default { match, resolve, resolveDefault, validate, name: NAME, getMsgid };

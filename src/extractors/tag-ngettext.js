@@ -1,6 +1,6 @@
 import * as t from 'babel-types';
 import { template2Msgid, msgid2Orig,
-    isValidQuasiExpression, ast2Str, getQuasiStr, strToQuasi, hasExpressions, dedentStr } from '../utils';
+    isValidQuasiExpression, ast2Str, getQuasiStr, hasExpressions, dedentStr } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import { ValidationError } from '../errors';
 import tpl from 'babel-template';
@@ -81,29 +81,29 @@ function resolveDefault(nodePath, context) {
     return nodePath;
 }
 
-function resolve(path, translationObj, context, state) {
-    const { node } = path;
+function resolve(node, translationObj, context, state) {
     const args = translationObj[MSGSTR];
     const tagArg = node.tag.arguments[0];
     const exprs = node.quasi.expressions.map(ast2Str);
 
     if (t.isIdentifier(tagArg) || t.isMemberExpression(tagArg)) {
-        return path.replaceWith(tpl('NGETTEXT(N, ARGS)')({
+        return tpl('NGETTEXT(N, ARGS)')({
             NGETTEXT: getNgettextUID(state, getPluralFunc(context.getHeaders())),
             N: tagArg,
             ARGS: t.arrayExpression(args.map((l) => {
                 const { expression: { quasis, expressions } } = tpl(msgid2Orig(l, exprs))();
                 return t.templateLiteral(quasis, expressions);
             })),
-        }));
+        });
     }
 
     if (t.isLiteral(tagArg)) {
         const pluralFn = makePluralFunc(getPluralFunc(context.getHeaders()));
         const orig = msgid2Orig(pluralFn(tagArg.value, args), exprs);
-        return path.replaceWith(tpl(orig)());
+        return tpl(orig)();
     }
-    return path;
+
+    return undefined;
 }
 
 export default { match, extract, resolve, resolveDefault, validate, name: NAME, getMsgid: template2Msgid };
