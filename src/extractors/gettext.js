@@ -10,7 +10,8 @@ function getMsgid(node) {
     return node.arguments[0].value;
 }
 
-function validateArgument(arg) {
+const validate = (node) => {
+    const arg = node.arguments[0];
     if (!t.isLiteral(arg)) {
         throw new ValidationError(`You can not use ${arg.type} '${ast2Str(arg)}' as an argument to gettext`);
     }
@@ -20,10 +21,6 @@ function validateArgument(arg) {
     if (!hasUsefulInfo(arg.value)) {
         throw new ValidationError(`Can not translate '${arg.value}'`);
     }
-}
-
-const validate = (node) => {
-    validateArgument(node.arguments[0]);
 };
 
 function match(node, context) {

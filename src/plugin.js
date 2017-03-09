@@ -3,7 +3,7 @@ import path from 'path';
 import mkdirp from 'mkdirp';
 import C3poContext from './context';
 import { extractPoEntry, getExtractor } from './extract';
-import { resolveEntries } from './resolve';
+import { resolveEntries, resolveDefaultEntries } from './resolve';
 import { buildPotData, makePotStr, parsePoData, msgidComparator } from './po-helpers';
 import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
 import { ALIASES } from './defaults';
@@ -66,12 +66,7 @@ export default function () {
                 throw nodePath.buildCodeFrameError(err.message);
             }
         } else {
-            if (extractor.resolveDefault) {
-                const result = extractor.resolveDefault(nodePath.node, context, state);
-                if (result !== undefined) {
-                    nodePath.replaceWith(result);
-                }
-            }
+            resolveDefaultEntries(extractor, nodePath, context, state);
         }
     }
 
