@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import * as babel from 'babel-core';
-import polyglotPlugin from 'src/plugin';
+import c3poPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
 const options = {
     presets: ['es2015'],
-    plugins: [[polyglotPlugin, { discover: ['t'] }]],
+    plugins: [[c3poPlugin, { discover: ['t'] }]],
 };
 
 describe('Resolve tag-gettext default', () => {

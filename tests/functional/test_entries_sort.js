@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import * as babel from 'babel-core';
 import fs from 'fs';
-import polyglotPlugin from 'src/plugin';
+import c3poPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
 const output = 'debug/translations.pot';
 const options = {
     presets: ['es2015'],
-    plugins: [[polyglotPlugin, {
+    plugins: [[c3poPlugin, {
         extract: { output },
         discover: ['t'],
         sortByMsgid: true,

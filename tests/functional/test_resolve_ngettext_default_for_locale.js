@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import * as babel from 'babel-core';
-import polyglotPlugin from 'src/plugin';
+import c3poPlugin from 'src/plugin';
 
 const translations = 'tests/fixtures/ua.po';
 
 const options = {
     presets: ['es2015'],
-    plugins: [[polyglotPlugin, {
+    plugins: [[c3poPlugin, {
         resolve: { translations },
         discover: ['ngettext'],
     }]],
