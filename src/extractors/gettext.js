@@ -3,7 +3,7 @@ import { ast2Str } from '../utils';
 import { ValidationError } from '../errors';
 import { PO_PRIMITIVES } from '../defaults';
 import { hasUsefulInfo } from '../po-helpers';
-const { MSGID, MSGSTR } = PO_PRIMITIVES;
+const { MSGSTR } = PO_PRIMITIVES;
 const NAME = 'gettext';
 
 function getMsgid(node) {
@@ -26,14 +26,6 @@ const validate = (node) => {
     validateArgument(node.arguments[0]);
 };
 
-function extract(node) {
-    const msgid = getMsgid(node);
-    return {
-        [MSGID]: msgid,
-        [MSGSTR]: '',
-    };
-}
-
 function match(node, context) {
     return (t.isCallExpression(node) &&
         t.isIdentifier(node.callee) &&
@@ -50,4 +42,4 @@ function resolve(path, translation) {
     path.replaceWith(t.stringLiteral(transStr));
 }
 
-export default { match, extract, resolve, resolveDefault, validate, name: NAME, getMsgid };
+export default { match, resolve, resolveDefault, validate, name: NAME, getMsgid };

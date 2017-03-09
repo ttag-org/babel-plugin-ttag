@@ -1,9 +1,8 @@
 import * as t from 'babel-types';
 import { PO_PRIMITIVES } from '../defaults';
 import { dedentStr, template2Msgid, isValidQuasiExpression, ast2Str, msgid2Orig,
-getQuasiStr, strToQuasi } from '../utils';
-import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc,
-hasUsefulInfo } from '../po-helpers';
+    getQuasiStr, strToQuasi } from '../utils';
+import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc, hasUsefulInfo } from '../po-helpers';
 import { ValidationError } from '../errors';
 import tpl from 'babel-template';
 

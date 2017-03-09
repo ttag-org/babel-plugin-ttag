@@ -5,7 +5,7 @@ import { PO_PRIMITIVES } from '../defaults';
 import { ValidationError } from '../errors';
 import { hasUsefulInfo } from '../po-helpers';
 
-const { MSGID, MSGSTR } = PO_PRIMITIVES;
+const { MSGSTR } = PO_PRIMITIVES;
 const NAME = 'tag-gettext';
 
 function validateExpresssions(expressions) {
@@ -23,14 +23,6 @@ const validate = (node) => {
         throw new ValidationError(`Can not translate '${getQuasiStr(node)}'`);
     }
 };
-
-function extract(node, context) {
-    const msgid = context.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
-    return {
-        [MSGID]: msgid,
-        [MSGSTR]: '',
-    };
-}
 
 function match(node, context) {
     return t.isTaggedTemplateExpression(node) && node.tag.name === context.getAliasFor(NAME);
@@ -59,4 +51,4 @@ function resolve(path, translation) {
     }
 }
 
-export default { match, extract, resolve, resolveDefault, validate, name: NAME, getMsgid: template2Msgid };
+export default { match, resolve, resolveDefault, validate, name: NAME, getMsgid: template2Msgid };

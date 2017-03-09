@@ -1,54 +1,9 @@
 import { expect } from 'chai';
 import gettext from 'src/extractors/tag-gettext';
 import template from 'babel-template';
-import { PO_PRIMITIVES } from 'src/defaults';
 import Context from 'src/context';
 
-const { MSGID, MSGSTR } = PO_PRIMITIVES;
-
 const enConfig = new Context();
-
-describe('tag-gettext extract', () => {
-    it('should extract proper msgid ', () => {
-        const node = template('t`${n} banana`')().expression;
-        const result = gettext.extract(node, enConfig);
-        expect(result[MSGID]).to.eql('${ 0 } banana');
-    });
-
-    it('should extract proper msgstr', () => {
-        const node = template('t`${n} banana`')().expression;
-        const result = gettext.extract(node, enConfig);
-        expect(result[MSGSTR]).to.eql('');
-    });
-
-    it('should extract proper structure without expressions', () => {
-        const node = template('t`banana`')().expression;
-        const result = gettext.extract(node, enConfig);
-        const expected = {
-            msgid: 'banana',
-            msgstr: '',
-        };
-        expect(result).to.eql(expected);
-    });
-
-    it('should dedent extracted text', () => {
-        const node = template(`t\`
-            first
-            second
-            third
-            \``)().expression;
-        const expected = 'first\nsecond\nthird';
-        const result = gettext.extract(node, enConfig);
-        expect(result[MSGID]).to.eql(expected);
-    });
-
-    it('should not dedent extracted text when has no \\n', () => {
-        const node = template('t`  www`')().expression;
-        const expected = '  www';
-        const result = gettext.extract(node, enConfig);
-        expect(result[MSGID]).to.eql(expected);
-    });
-});
 
 describe('tag-gettext validate', () => {
     it('should not throw if numeric literal', () => {
