@@ -33,8 +33,8 @@ function match(node, context) {
         node.arguments.length > 0);
 }
 
-function resolveDefault(nodePath) {
-    return nodePath.replaceWith(nodePath.node.arguments[0]);
+function resolveDefault(node) {
+    return node.arguments[0];
 }
 
 function resolve(node, translation) {

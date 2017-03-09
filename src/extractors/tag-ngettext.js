@@ -70,15 +70,12 @@ function match(node, context) {
         node.tag.callee.name === context.getAliasFor(NAME));
 }
 
-function resolveDefault(nodePath, context) {
-    const { node } = nodePath;
+function resolveDefault(node, context) {
     const transStr = context.isDedent() ? dedentStr(getQuasiStr(node)) : getQuasiStr(node);
     if (hasExpressions(node)) {
-        nodePath.replaceWith(node.quasi);
-    } else {
-        nodePath.replaceWith(t.stringLiteral(transStr));
+        return node.quasi;
     }
-    return nodePath;
+    return t.stringLiteral(transStr);
 }
 
 function resolve(node, translationObj, context, state) {

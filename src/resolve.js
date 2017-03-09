@@ -34,7 +34,12 @@ export function resolveEntries(extractor, nodePath, context, state) {
     } catch (err) {
         if (err instanceof NoTranslationError) {
             context.noTranslationAction(err.message);
-            extractor.resolveDefault && extractor.resolveDefault(nodePath, context, state);
+            if (extractor.resolveDefault) {
+                const resultNode = extractor.resolveDefault(nodePath.node, context, state);
+                if (resultNode !== undefined) {
+                    nodePath.replaceWith(resultNode);
+                }
+            }
             return;
         }
         throw err;

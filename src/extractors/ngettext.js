@@ -94,11 +94,11 @@ function getNgettextUID(state, pluralFunc) {
     return state.file.__ngettextUid;
 }
 
-function resolveDefault(path, context, state) {
+function resolveDefault(node, context, state) {
     const headers = context.getHeaders();
-    const tagArg = path.node.arguments[path.node.arguments.length - 1];
-    path.node.arguments[0] = path.node.arguments[0].quasi;
-    const args = path.node.arguments.slice(0, -1).map((quasi) => {
+    const tagArg = node.arguments[node.arguments.length - 1];
+    node.arguments[0] = node.arguments[0].quasi;
+    const args = node.arguments.slice(0, -1).map((quasi) => {
         const quasiStr = getQuasiStr({ quasi });
         const dedentedStr = context.isDedent() ? dedentStr(quasiStr) : quasiStr;
         return tpl(strToQuasi(dedentedStr))().expression;
@@ -111,11 +111,11 @@ function resolveDefault(path, context, state) {
         args.push(t.templateLiteral(last.quasis, last.expressions));
     }
 
-    path.replaceWith(tpl('NGETTEXT(N, ARGS)')({
+    return tpl('NGETTEXT(N, ARGS)')({
         NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
         N: tagArg,
         ARGS: t.arrayExpression(args),
-    }));
+    });
 }
 
 function resolve(node, translationObj, context, state) {

@@ -66,7 +66,12 @@ export default function () {
                 throw nodePath.buildCodeFrameError(err.message);
             }
         } else {
-            extractor.resolveDefault && extractor.resolveDefault(nodePath, context, state);
+            if (extractor.resolveDefault) {
+                const result = extractor.resolveDefault(nodePath.node, context, state);
+                if (result !== undefined) {
+                    nodePath.replaceWith(result);
+                }
+            }
         }
     }
 
