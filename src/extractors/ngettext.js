@@ -2,16 +2,17 @@ import * as t from 'babel-types';
 import { PO_PRIMITIVES } from '../defaults';
 import { dedentStr, template2Msgid, isValidQuasiExpression, ast2Str, msgid2Orig,
 getQuasiStr, strToQuasi } from '../utils';
-import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc, hasTranslations,
+import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc,
 hasUsefulInfo } from '../po-helpers';
-import { ValidationError, NoTranslationError } from '../errors';
+import { ValidationError } from '../errors';
 import tpl from 'babel-template';
 
 const NAME = 'ngettext';
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
-function getMsgid(tag, context) {
-    return context.isDedent() ? dedentStr(template2Msgid(tag)) : template2Msgid(tag);
+function getMsgid(node) {
+    const [msgidTag, ..._] = node.arguments.slice(0, -1);
+    return template2Msgid(msgidTag);
 }
 
 function validateExpresssions(expressions) {
@@ -43,7 +44,7 @@ const validate = (node, context) => {
     const tags = node.arguments.slice(1, -1);
     tags.forEach(({ expressions }) => validateExpresssions(expressions));
     validateNPlural(node.arguments[node.arguments.length - 1]);
-    const msgid = getMsgid(msgidTag, context);
+    const msgid = template2Msgid(msgidTag);
     if (!hasUsefulInfo(msgid)) {
         throw new ValidationError(`Can not translate '${getQuasiStr(msgidTag)}'`);
     }
@@ -58,13 +59,14 @@ function match(node, context) {
 
 function extract(path, context) {
     const tags = path.node.arguments.slice(0, -1);
-    const msgid = getMsgid(tags[0], context);
+    const msgid = context.isDedent() ? dedentStr(template2Msgid(tags[0])) : template2Msgid(tags[0]);
     const nplurals = getNPlurals(context.getHeaders());
     if (tags.length !== nplurals) {
         throw new ValidationError(`Expected to have ${nplurals} plural forms but have ${tags.length} instead`);
     }
     // TODO: handle case when only 1 plural form
-    const msgidPlural = getMsgid({ quasi: tags[1] }, context);
+    const msgidPlural = context.isDedent() ? dedentStr(template2Msgid({ quasi: tags[1] })) :
+        template2Msgid({ quasi: tags[1] });
     const translate = {
         [MSGID]: msgid,
         [MSGID_PLURAL]: msgidPlural,
@@ -93,8 +95,8 @@ function getNgettextUID(state, pluralFunc) {
     return state.file.__ngettextUid;
 }
 
-function resolveDefault(path, poData, context, state) {
-    const { headers } = poData;
+function resolveDefault(path, context, state) {
+    const headers = context.getHeaders();
     const tagArg = path.node.arguments[path.node.arguments.length - 1];
     path.node.arguments[0] = path.node.arguments[0].quasi;
     const args = path.node.arguments.slice(0, -1).map((quasi) => {
@@ -117,20 +119,9 @@ function resolveDefault(path, poData, context, state) {
     }));
 }
 
-function resolve(path, poData, context, state) {
-    const { translations, headers } = poData;
+function resolve(path, translationObj, context, state) {
     const { node } = path;
     const [msgidTag, ..._] = node.arguments.slice(0, -1);
-    const msgid = getMsgid(msgidTag, context);
-    const translationObj = translations[msgid];
-
-    if (!translationObj) {
-        throw new NoTranslationError(`No "${msgid}" in "${context.getPoFilePath()}" file`);
-    }
-
-    if (!hasTranslations(translationObj)) {
-        throw new NoTranslationError(`No translation for "${msgid}" in "${context.getPoFilePath()}" file`);
-    }
 
     const args = translationObj[MSGSTR];
     const tagArg = node.arguments[node.arguments.length - 1];
@@ -138,7 +129,7 @@ function resolve(path, poData, context, state) {
 
     if (t.isIdentifier(tagArg) || t.isMemberExpression(tagArg)) {
         return path.replaceWith(tpl('NGETTEXT(N, ARGS)')({
-            NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
+            NGETTEXT: getNgettextUID(state, getPluralFunc(context.getHeaders())),
             N: tagArg,
             ARGS: t.arrayExpression(args.map((l) => {
                 const { expression: { quasis, expressions } } = tpl(msgid2Orig(l, exprs))();
@@ -148,11 +139,11 @@ function resolve(path, poData, context, state) {
     }
 
     if (t.isLiteral(tagArg)) {
-        const pluralFn = makePluralFunc(getPluralFunc(headers));
+        const pluralFn = makePluralFunc(getPluralFunc(context.getHeaders()));
         const orig = msgid2Orig(pluralFn(tagArg.value, args), exprs);
         return path.replaceWith(tpl(orig)());
     }
     return path;
 }
 
-export default { match, extract, resolve, name: NAME, validate, resolveDefault };
+export default { match, extract, resolve, name: NAME, validate, resolveDefault, getMsgid };

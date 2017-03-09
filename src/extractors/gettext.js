@@ -1,10 +1,14 @@
 import * as t from 'babel-types';
 import { ast2Str } from '../utils';
-import { ValidationError, NoTranslationError } from '../errors';
+import { ValidationError } from '../errors';
 import { PO_PRIMITIVES } from '../defaults';
 import { hasUsefulInfo } from '../po-helpers';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 const NAME = 'gettext';
+
+function getMsgid(node) {
+    return node.arguments[0].value;
+}
 
 function validateArgument(arg) {
     if (!t.isLiteral(arg)) {
@@ -24,7 +28,7 @@ const validate = (node) => {
 
 function extract(path) {
     const { node } = path;
-    const { value: msgid } = node.arguments[0];
+    const msgid = getMsgid(node);
     return {
         [MSGID]: msgid,
         [MSGSTR]: '',
@@ -42,22 +46,9 @@ function resolveDefault(nodePath) {
     return nodePath.replaceWith(nodePath.node.arguments[0]);
 }
 
-function resolve(path, poData, context) {
-    const { translations } = poData;
-    const { node } = path;
-    const { value: msgid } = node.arguments[0];
-    const translationObj = translations[msgid];
-
-    if (!translationObj) {
-        throw new NoTranslationError(`No "${msgid}" in "${context.getPoFilePath()}" file`);
-    }
-
-    const transStr = translationObj[MSGSTR][0];
-    if (!transStr.length) {
-        throw new NoTranslationError(`No translation for "${msgid}" in "${context.getPoFilePath()}" file`);
-    }
-
+function resolve(path, translation) {
+    const transStr = translation[MSGSTR][0];
     path.replaceWith(t.stringLiteral(transStr));
 }
 
-export default { match, extract, resolve, resolveDefault, validate, name: NAME };
+export default { match, extract, resolve, resolveDefault, validate, name: NAME, getMsgid };
