@@ -32,7 +32,7 @@ function resolveDefault(nodePath, context) {
     const { node } = nodePath;
     const transStr = context.isDedent() ? dedentStr(getQuasiStr(node)) : getQuasiStr(node);
     if (hasExpressions(node)) {
-        nodePath.replaceWithSourceString(strToQuasi(transStr));
+        nodePath.replaceWith(node.quasi);
     } else {
         nodePath.replaceWith(t.stringLiteral(transStr));
     }

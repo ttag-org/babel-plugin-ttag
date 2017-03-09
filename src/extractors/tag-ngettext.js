@@ -74,7 +74,7 @@ function resolveDefault(nodePath, context) {
     const { node } = nodePath;
     const transStr = context.isDedent() ? dedentStr(getQuasiStr(node)) : getQuasiStr(node);
     if (hasExpressions(node)) {
-        nodePath.replaceWithSourceString(strToQuasi(transStr));
+        nodePath.replaceWith(node.quasi);
     } else {
         nodePath.replaceWith(t.stringLiteral(transStr));
     }
@@ -82,7 +82,6 @@ function resolveDefault(nodePath, context) {
 }
 
 function resolve(path, translationObj, context, state) {
-    // TODO: handle when has no node argument.
     const { node } = path;
     const args = translationObj[MSGSTR];
     const tagArg = node.tag.arguments[0];
