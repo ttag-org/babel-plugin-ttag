@@ -35,6 +35,7 @@ class C3poContext {
         if (!validationResult) {
             throw new ConfigValidationError(errorsText);
         }
+        this.poData = null;
         this.aliases = {};
         this.imports = new Set();
         if (this.config.defaultHeaders && typeof this.config.defaultHeaders === 'string') {
@@ -73,7 +74,7 @@ class C3poContext {
     }
 
     getHeaders() {
-        return this.config.defaultHeaders || DEFAULT_HEADERS;
+        return (this.poData && this.poData.headers) || this.config.defaultHeaders || DEFAULT_HEADERS;
     }
 
     getLocation() {
@@ -129,6 +130,15 @@ class C3poContext {
     isSortedByMsgid() {
         return Boolean(this.config.sortByMsgid);
     }
+
+    setPoData(poData) {
+        this.poData = poData;
+    }
+
+    getTranslations() {
+        return this.poData.translations;
+    }
+
 }
 
 export default C3poContext;

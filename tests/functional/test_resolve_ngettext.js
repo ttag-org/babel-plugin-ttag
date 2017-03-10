@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import * as babel from 'babel-core';
 import fs from 'fs';
-import polyglotPlugin from 'src/plugin';
+import c3poPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 import mkdirp from 'mkdirp';
 import childProcess from 'child_process';
@@ -10,7 +10,7 @@ const translations = 'tests/fixtures/resolve_simple_gettext.po';
 
 const options = {
     presets: ['es2015'],
-    plugins: [[polyglotPlugin, {
+    plugins: [[c3poPlugin, {
         resolve: { translations },
         discover: ['ngettext'],
     }]],

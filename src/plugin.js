@@ -3,9 +3,8 @@ import path from 'path';
 import mkdirp from 'mkdirp';
 import C3poContext from './context';
 import { extractPoEntry, getExtractor } from './extract';
-import { resolveEntries } from './resolve';
-import { buildPotData, makePotStr, parsePoData, getDefaultPoData,
-msgidComparator } from './po-helpers';
+import { resolveEntries, resolveDefaultEntries } from './resolve';
+import { buildPotData, makePotStr, parsePoData, msgidComparator } from './po-helpers';
 import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
 import { ALIASES } from './defaults';
 
@@ -18,7 +17,6 @@ export default function () {
     let context;
     let disabledScopes = new Set();
     let potEntries = [];
-    let poData = null;
     let aliases = {};
     let imports = new Set();
 
@@ -57,19 +55,18 @@ export default function () {
         if (context.isResolveMode()) {
             const poFilePath = context.getPoFilePath();
 
-            if (!poData) {
-                poData = parsePoData(poFilePath);
+            if (!context.poData) {
+                context.setPoData(parsePoData(poFilePath));
             }
 
             try {
-                resolveEntries(extractor, nodePath, poData, context, state);
+                resolveEntries(extractor, nodePath, context, state);
             } catch (err) {
                 // TODO: handle specific instances of errors
                 throw nodePath.buildCodeFrameError(err.message);
             }
         } else {
-            extractor.resolveDefault && extractor.resolveDefault(
-                nodePath, getDefaultPoData(context), context, state);
+            resolveDefaultEntries(extractor, nodePath, context, state);
         }
     }
 

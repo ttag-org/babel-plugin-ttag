@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import * as babel from 'babel-core';
-import polyglotPlugin from 'src/plugin';
+import c3poPlugin from 'src/plugin';
 
 const options = {
     presets: ['es2015'],
-    plugins: [[polyglotPlugin, { discover: ['ngettext'] }]],
+    plugins: [[c3poPlugin, { discover: ['ngettext'] }]],
 };
 
 describe('Resolve ngettext default', () => {

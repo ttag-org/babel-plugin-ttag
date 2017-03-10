@@ -1,10 +1,10 @@
 import * as t from 'babel-types';
 import { template2Msgid, msgid2Orig,
-    isValidQuasiExpression, ast2Str, getQuasiStr, strToQuasi, hasExpressions, dedentStr } from '../utils';
+    isValidQuasiExpression, ast2Str, getQuasiStr, hasExpressions, dedentStr } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
-import { ValidationError, NoTranslationError } from '../errors';
+import { ValidationError } from '../errors';
 import tpl from 'babel-template';
-import { hasTranslations, getPluralFunc, getNPlurals, pluralFnBody,
+import { getPluralFunc, getNPlurals, pluralFnBody,
     makePluralFunc, hasUsefulInfo } from '../po-helpers';
 
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
@@ -48,8 +48,7 @@ function getNgettextUID(state, pluralFunc) {
     return state.file.__ngettextUid;
 }
 
-function extract(path, context) {
-    const { node } = path;
+function extract(node, context) {
     const nplurals = getNPlurals(context.getHeaders());
     const msgid = context.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
     const translate = {
@@ -71,53 +70,37 @@ function match(node, context) {
         node.tag.callee.name === context.getAliasFor(NAME));
 }
 
-function resolveDefault(nodePath, poData, context) {
-    const { node } = nodePath;
+function resolveDefault(node, context) {
     const transStr = context.isDedent() ? dedentStr(getQuasiStr(node)) : getQuasiStr(node);
     if (hasExpressions(node)) {
-        nodePath.replaceWithSourceString(strToQuasi(transStr));
-    } else {
-        nodePath.replaceWith(t.stringLiteral(transStr));
+        return node.quasi;
     }
-    return nodePath;
+    return t.stringLiteral(transStr);
 }
 
-function resolve(path, poData, context, state) {
-    // TODO: handle when has no node argument.
-    const { translations, headers } = poData;
-    const { node } = path;
-    const msgid = context.isDedent() ? dedentStr(template2Msgid(node)) : template2Msgid(node);
-    const translationObj = translations[msgid];
-
-    if (!translationObj) {
-        throw new NoTranslationError(`No "${msgid}" in "${context.getPoFilePath()}" file`);
-    }
-
-    if (!hasTranslations(translationObj)) {
-        throw new NoTranslationError(`No translation for "${msgid}" in "${context.getPoFilePath()}" file`);
-    }
-
-    const args = translations[msgid][MSGSTR];
+function resolve(node, translationObj, context, state) {
+    const args = translationObj[MSGSTR];
     const tagArg = node.tag.arguments[0];
     const exprs = node.quasi.expressions.map(ast2Str);
 
     if (t.isIdentifier(tagArg) || t.isMemberExpression(tagArg)) {
-        return path.replaceWith(tpl('NGETTEXT(N, ARGS)')({
-            NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
+        return tpl('NGETTEXT(N, ARGS)')({
+            NGETTEXT: getNgettextUID(state, getPluralFunc(context.getHeaders())),
             N: tagArg,
             ARGS: t.arrayExpression(args.map((l) => {
                 const { expression: { quasis, expressions } } = tpl(msgid2Orig(l, exprs))();
                 return t.templateLiteral(quasis, expressions);
             })),
-        }));
+        });
     }
 
     if (t.isLiteral(tagArg)) {
-        const pluralFn = makePluralFunc(getPluralFunc(headers));
+        const pluralFn = makePluralFunc(getPluralFunc(context.getHeaders()));
         const orig = msgid2Orig(pluralFn(tagArg.value, args), exprs);
-        return path.replaceWith(tpl(orig)());
+        return tpl(orig)();
     }
-    return path;
+
+    return undefined;
 }
 
-export default { match, extract, resolve, resolveDefault, validate, name: NAME };
+export default { match, extract, resolve, resolveDefault, validate, name: NAME, getMsgid: template2Msgid };

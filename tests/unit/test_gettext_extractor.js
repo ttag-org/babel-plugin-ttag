@@ -1,25 +1,9 @@
 import { expect } from 'chai';
 import gettext from 'src/extractors/gettext';
 import template from 'babel-template';
-import { PO_PRIMITIVES } from 'src/defaults';
 import Context from 'src/context';
-const { MSGID, MSGSTR } = PO_PRIMITIVES;
 
 const enConfig = new Context();
-
-describe('gettext extract', () => {
-    it('should extract proper msgid ', () => {
-        const node = template('gettext("banana")')().expression;
-        const result = gettext.extract({ node }, enConfig);
-        expect(result[MSGID]).to.eql('banana');
-    });
-
-    it('should extract proper msgstr', () => {
-        const node = template('gettext("banana")')().expression;
-        const result = gettext.extract({ node }, enConfig);
-        expect(result[MSGSTR]).to.eql('');
-    });
-});
 
 describe('gettext validate', () => {
     it('should throw if has invalid argument', () => {
