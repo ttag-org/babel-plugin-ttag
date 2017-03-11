@@ -1,11 +1,6 @@
 import * as t from 'babel-types';
-import tpl from 'babel-template';
 import gettext from './tag-gettext';
-import { msgid2Orig, hasExpressions,
-    ast2Str, getQuasiStr, dedentStr } from '../utils';
-import { PO_PRIMITIVES } from '../defaults';
 
-const { MSGSTR } = PO_PRIMITIVES;
 const NAME = 'jsxtag-gettext';
 
 function match(node, context) {
