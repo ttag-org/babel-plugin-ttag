@@ -30,19 +30,17 @@ function templateLiteral2Array({ quasis, expressions }) {
 function resolveDefault(node, context) {
     const resolved = gettext.resolveDefault(node, context);
     if (resolved.type === 'TemplateLiteral') {
-        return t.arrayExpression(templateLiteral2Array(resolved))
+        return t.arrayExpression(templateLiteral2Array(resolved));
     }
     return t.arrayExpression([resolved]);
 }
 
 function resolve(node, translation) {
-    const transStr = translation[MSGSTR][0];
-
-    if (hasExpressions(node)) {
-        const exprs = node.quasi.expressions.map(ast2Str);
-        return tpl(msgid2Orig(transStr, exprs))();
+    const resolved = gettext.resolve(node, translation);
+    if (resolved.type === 'ExpressionStatement') {
+        return t.arrayExpression(templateLiteral2Array(resolved.expression));
     }
-    return t.stringLiteral(transStr);
+    return t.arrayExpression([resolved]);
 }
 
 export default {
