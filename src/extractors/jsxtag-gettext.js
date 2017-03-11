@@ -15,9 +15,24 @@ function match(node, context) {
 function resolveDefault(node, context) {
     const transStr = context.isDedent() ? dedentStr(getQuasiStr(node)) : getQuasiStr(node);
     if (hasExpressions(node)) {
-        return node.quasi;
+        // node.quasi is TemplateLiteral with expressions and quasis.
+        // We should return [quasis[0], expressions[0], quasis[1], ...]
+        //
+        const { quasis, expressions } = node.quasi;
+        const items = [];
+
+        quasis.forEach((quasi, i) => {
+            if (quasi.value.cooked !== '') {
+                items.push(t.stringLiteral(quasi.value.cooked));
+            }
+            if (expressions[i]) {
+                items.push(expressions[i]);
+            }
+        });
+
+        return t.arrayExpression(items);
     }
-    return t.stringLiteral(transStr);
+    return t.arrayExpression([t.stringLiteral(transStr)]);
 }
 
 function resolve(node, translation) {

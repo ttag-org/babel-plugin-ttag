@@ -25,32 +25,32 @@ describe('Resolve jsxtag-gettext', () => {
     });
 
     it('should resolve gettext literal (with formatting)', () => {
-        const input = 'console.log(t`${ a } simple string ${ b } literal with formatting`);';
+        const input = 'console.log(jt`${ a } simple string ${ b } literal with formatting`);';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(
             'console.log([a, " simple string ", " literal with formatting [translated]"]);');
     });
 
     it('should resolve original string if no translation is found', () => {
-        const input = 'console.log(t`simple string literal without translation`);';
+        const input = 'console.log(jt`simple string literal without translation`);';
         const result = babel.transform(input, options).code;
         expect(result).to.contain('console.log(["simple string literal without translation"]);');
     });
 
     it('should resolve original string if no translator notes', () => {
-        const input = 'console.log(t`no translator notes`);';
+        const input = 'console.log(jt`no translator notes`);';
         const result = babel.transform(input, options).code;
         expect(result).to.contain('console.log(["no translator notes"]);');
     });
 
     it('should resolve original formatted string if no translator notes', () => {
-        const input = 'console.log(t`simple string literal without translation ${a}`);';
+        const input = 'console.log(jt`simple string literal without translation ${a}`);';
         const result = babel.transform(input, options).code;
         expect(result).to.contain('console.log(["simple string literal without translation ", a]);');
     });
 
     it('should resolve original formatted string if msgid is not found in po', () => {
-        const input = 'console.log(t`some random string`);';
+        const input = 'console.log(jt`some random string`);';
         const result = babel.transform(input, options).code;
         expect(result).to.contain('console.log(["some random string"]);');
     });
