@@ -8,7 +8,7 @@ import { DISABLE_COMMENT } from 'src/defaults';
 describe('utils template2Msgid', () => {
     it('should extract msgid with expressions', () => {
         const node = template('nt(n)`${n} banana ${ b }`')().expression;
-        const expected = '${ 0 } banana ${ 1 }';
+        const expected = '${ n } banana ${ b }';
         expect(template2Msgid(node)).to.eql(expected);
     });
 
@@ -21,7 +21,7 @@ describe('utils template2Msgid', () => {
 
 describe('utils msgid2Orig', () => {
     it('should extract original template with expressions', () => {
-        const input = '${ 0 } banana ${ 1 }';
+        const input = '${ a } banana ${ b }';
         const expected = '`${ a } banana ${ b }`';
         expect(msgid2Orig(input, ['a', 'b'])).to.eql(expected);
     });

@@ -41,9 +41,28 @@ export function stripTag(nodePath) {
     }
 }
 
-export const getMsgid = (str, exprs) => {
-    return str.reduce((s, l, i) => s + l + (exprs[i] !== undefined && `\${ ${i} }` || ''), '');
-};
+function getMembersPath(node) {
+    const obj = t.isMemberExpression(node.object) ? getMembersPath(node.object) : node.object.name;
+    const prop = node.property.name;
+    return `${obj}.${prop}`;
+}
+
+export const getMsgid = (str, exprs) => str.reduce((s, l, i) => {
+    if (exprs[i] === undefined) {
+        return s + l;
+    }
+
+    let name;
+    if (t.isIdentifier(exprs[i])) {
+        name = exprs[i].name;
+    } else if (t.isMemberExpression(exprs[i])) {
+        name = getMembersPath(exprs[i]);
+    } else {
+        name = i;
+    }
+
+    return `${s}${l}\${ ${name} }`;
+}, '');
 
 const mem = {};
 const memoize1 = (f) => (arg) => {
