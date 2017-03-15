@@ -48,19 +48,18 @@ function getMembersPath(node) {
 }
 
 export const getMsgid = (str, exprs) => str.reduce((s, l, i) => {
-    if (exprs[i] === undefined) {
+    const expr = exprs[i];
+    if (expr === undefined) {
         return s + l;
     }
-
     let name;
-    if (t.isIdentifier(exprs[i])) {
-        name = exprs[i].name;
-    } else if (t.isMemberExpression(exprs[i])) {
-        name = getMembersPath(exprs[i]);
+    if (t.isIdentifier(expr)) {
+        name = expr.name;
+    } else if (t.isMemberExpression(expr)) {
+        name = getMembersPath(expr);
     } else {
         name = i;
     }
-
     return `${s}${l}\${ ${name} }`;
 }, '');
 
