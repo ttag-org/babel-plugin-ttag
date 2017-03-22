@@ -47,7 +47,7 @@ So you can see that you can use native es6 template formatting. To make your str
 Translator will see this inside .po files:
 ```po
 #: src/page.js:8
-msgid "Hello ${ 0 }"
+msgid "Hello ${ name }"
 msgstr ""
 ```
 Plural example
@@ -65,8 +65,8 @@ console.log(ngettext(msgid`Mike has ${n} banana`, `Mike has ${n} bananas`, n));
 Output in .po files:
 ```po
 #: src/PluralDemo.js:18
-msgid "Mike has ${n} banana"
-msgid_plural "Mike has ${n} banana"
+msgid "Mike has ${ n } banana"
+msgid_plural "Mike has ${ n } banana"
 msgstr[0] ""
 msgstr[1] ""
 ```
