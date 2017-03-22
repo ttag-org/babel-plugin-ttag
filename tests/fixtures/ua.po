@@ -9,8 +9,8 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: tests/fixtures/fixture.js:6
-msgid "plural form with ${ 0 } plural"
-msgid_plural "plural form with ${ 0 } plurals"
-msgstr[0] "plural form with ${ 0 } plural"
-msgstr[1] "plural form with ${ 0 } plurals"
-msgstr[2] "plural form with ${ 0 } plurals"
+msgid "plural form with ${ n } plural"
+msgid_plural "plural form with ${ n } plurals"
+msgstr[0] "plural form with ${ n } plural"
+msgstr[1] "plural form with ${ n } plurals"
+msgstr[2] "plural form with ${ n } plurals"
