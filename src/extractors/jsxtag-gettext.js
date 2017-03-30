@@ -24,7 +24,7 @@ function templateLiteral2Array({ quasis, expressions }) {
 
 function resolveDefault(node, context) {
     const resolved = gettext.resolveDefault(node, context);
-    if (resolved.type === 'TemplateLiteral') {
+    if (t.isTemplateLiteral(resolved)) {
         return t.arrayExpression(templateLiteral2Array(resolved));
     }
     return t.arrayExpression([resolved]);
@@ -32,7 +32,7 @@ function resolveDefault(node, context) {
 
 function resolve(node, translation) {
     const resolved = gettext.resolve(node, translation);
-    if (resolved.type === 'ExpressionStatement') {
+    if (t.isExpressionStatement(resolved)) {
         return t.arrayExpression(templateLiteral2Array(resolved.expression));
     }
     return t.arrayExpression([resolved]);
