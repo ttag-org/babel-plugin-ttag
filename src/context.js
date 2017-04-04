@@ -6,7 +6,7 @@ import jsxtagGettext from './extractors/jsxtag-gettext';
 import tagNgettext from './extractors/tag-ngettext';
 import gettext from './extractors/gettext';
 import ngettext from './extractors/ngettext';
-import { parsePoData } from './po-helpers';
+import { parsePoData, getDefaultPoData } from './po-helpers';
 import { ConfigValidationError, ConfigError } from './errors';
 import { validateConfig, configSchema } from './config';
 
@@ -36,13 +36,13 @@ class C3poContext {
         if (!validationResult) {
             throw new ConfigValidationError(errorsText);
         }
-        this.poData = null;
         this.aliases = {};
         this.imports = new Set();
         if (this.config.defaultHeaders && typeof this.config.defaultHeaders === 'string') {
             const { headers } = parsePoData(this.config.defaultHeaders);
             this.config.defaultHeaders = headers;
         }
+        this.setPoData();
         Object.freeze(this.config);
     }
 
@@ -87,7 +87,7 @@ class C3poContext {
     }
 
     getPoFilePath() {
-        return this.config.resolve.translations;
+        return this.config.resolve && this.config.resolve.translations;
     }
 
     isExtractMode() {
@@ -132,8 +132,13 @@ class C3poContext {
         return Boolean(this.config.sortByMsgid);
     }
 
-    setPoData(poData) {
-        this.poData = poData;
+    setPoData() {
+        const poFilePath = this.getPoFilePath();
+        if (!poFilePath) {
+            this.poData = getDefaultPoData(this.getHeaders());
+            return;
+        }
+        this.poData = poFilePath === 'default' ? getDefaultPoData(this.getHeaders()) : parsePoData(poFilePath);
     }
 
     getTranslations() {

@@ -5,7 +5,7 @@ import { rmDirSync } from 'src/utils';
 
 const options = {
     presets: ['es2015'],
-    plugins: [[c3poPlugin, { discover: ['nt'] }]],
+    plugins: [[c3poPlugin, { discover: ['nt'], resolve: { translations: 'default' } }]],
 };
 
 describe('Resolve tag-ngettext default', () => {

@@ -5,7 +5,10 @@ import { rmDirSync } from 'src/utils';
 
 const options = {
     presets: ['es2015'],
-    plugins: [[c3poPlugin, { discover: ['t'] }]],
+    plugins: [[c3poPlugin, {
+        discover: ['t'],
+        resolve: { translations: 'default' },
+    }]],
 };
 
 describe('Resolve tag-gettext default', () => {

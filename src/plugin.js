@@ -3,8 +3,8 @@ import path from 'path';
 import mkdirp from 'mkdirp';
 import C3poContext from './context';
 import { extractPoEntry, getExtractor } from './extract';
-import { resolveEntries, resolveDefaultEntries } from './resolve';
-import { buildPotData, makePotStr, parsePoData, msgidComparator } from './po-helpers';
+import { resolveEntries } from './resolve';
+import { buildPotData, makePotStr, msgidComparator } from './po-helpers';
 import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
 import { ALIASES } from './defaults';
 
@@ -53,12 +53,6 @@ export default function () {
         }
 
         if (context.isResolveMode()) {
-            const poFilePath = context.getPoFilePath();
-
-            if (!context.poData) {
-                context.setPoData(parsePoData(poFilePath));
-            }
-
             try {
                 resolveEntries(extractor, nodePath, context, state);
             } catch (err) {
@@ -66,7 +60,7 @@ export default function () {
                 throw nodePath.buildCodeFrameError(err.message);
             }
         } else {
-            resolveDefaultEntries(extractor, nodePath, context, state);
+            extractor.validate(nodePath.node, context);
         }
     }
 
