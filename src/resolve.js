@@ -1,36 +1,8 @@
-import { NoTranslationError, ValidationError } from './errors';
+import { NoTranslationError } from './errors';
 import { dedentStr } from './utils';
 import { hasTranslations } from './po-helpers';
 
-export function resolveDefaultEntries(extractor, nodePath, context, state) {
-    try {
-        extractor.validate(nodePath.node, context);
-    } catch (err) {
-        if (err instanceof ValidationError) {
-            context.validationFailureAction(extractor.name, err.message);
-            return;
-        }
-        throw err;
-    }
-    if (extractor.resolveDefault) {
-        const resultNode = extractor.resolveDefault(nodePath.node, context, state);
-        if (resultNode !== undefined) {
-            nodePath.replaceWith(resultNode);
-        }
-    }
-}
-
 export function resolveEntries(extractor, nodePath, context, state) {
-    try {
-        extractor.validate(nodePath.node, context);
-    } catch (err) {
-        if (err instanceof ValidationError) {
-            context.validationFailureAction(extractor.name, err.message);
-            return;
-        }
-        throw err;
-    }
-
     try {
         const translations = context.getTranslations();
         const msgid = context.isDedent() ? dedentStr(extractor.getMsgid(nodePath.node)) :

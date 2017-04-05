@@ -7,6 +7,7 @@ import { resolveEntries } from './resolve';
 import { buildPotData, makePotStr, msgidComparator } from './po-helpers';
 import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
 import { ALIASES } from './defaults';
+import { ValidationError } from './errors';
 
 const reverseAliases = {};
 for (const key of Object.keys(ALIASES)) {
@@ -42,25 +43,28 @@ export default function () {
             return;
         }
 
-        if (context.isExtractMode()) {
+        try {
             try {
+                extractor.validate(nodePath.node, context);
+            } catch (err) {
+                if (err instanceof ValidationError) {
+                    context.validationFailureAction(extractor.name, err.message);
+                    return;
+                }
+                throw err;
+            }
+
+            if (context.isExtractMode()) {
                 const poEntry = extractPoEntry(extractor, nodePath, context, state);
                 poEntry && potEntries.push(poEntry);
-            } catch (err) {
-                // TODO: handle specific instances of errors
-                throw nodePath.buildCodeFrameError(err.message);
             }
-        }
 
-        if (context.isResolveMode()) {
-            try {
+            if (context.isResolveMode()) {
                 resolveEntries(extractor, nodePath, context, state);
-            } catch (err) {
-                // TODO: handle specific instances of errors
-                throw nodePath.buildCodeFrameError(err.message);
             }
-        } else {
-            extractor.validate(nodePath.node, context);
+        } catch (err) {
+            // TODO: handle specific instances of errors
+            throw nodePath.buildCodeFrameError(err.message);
         }
     }
 

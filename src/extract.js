@@ -5,8 +5,6 @@ import path from 'path';
 import { PO_PRIMITIVES } from './defaults';
 const { MSGID, MSGSTR } = PO_PRIMITIVES;
 
-import { ValidationError } from './errors';
-
 function defaultExtract(msgid) {
     return {
         [MSGID]: msgid,
@@ -20,15 +18,6 @@ export function getExtractor(nodePath, context) {
 }
 
 export const extractPoEntry = (extractor, nodePath, context, state) => {
-    try {
-        extractor.validate(nodePath.node, context);
-    } catch (err) {
-        if (err instanceof ValidationError) {
-            context.validationFailureAction(extractor.name, err.message);
-            return null;
-        }
-        throw err;
-    }
     const { node } = nodePath;
     const filename = state.file.opts.filename;
     let poEntry;
