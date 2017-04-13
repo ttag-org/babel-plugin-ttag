@@ -9,11 +9,11 @@ describe('Resolve strip tags by default', () => {
         rmDirSync('debug');
     });
 
-    it('should strip polyglot tags in any case (without resolve config)', () => {
+    it('should strip polyglot tags if translations: default (without resolve config)', () => {
         const input = 'console.log(t`simple string literal`);';
         const customOpts = {
             presets: ['es2015'],
-            plugins: [[c3poPlugin, { discover: ['t'] }]],
+            plugins: [[c3poPlugin, { discover: ['t'], resolve: { translations: 'default' } }]],
         };
         const result = babel.transform(input, customOpts).code;
         expect(result).to.contain('console.log("simple string literal");');

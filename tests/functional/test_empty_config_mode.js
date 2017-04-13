@@ -4,7 +4,6 @@ import c3poPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
 const options = {
-    presets: ['es2015'],
     plugins: [c3poPlugin],
 };
 
@@ -12,13 +11,13 @@ describe('Empty config', () => {
     before(() => {
         rmDirSync('debug');
     });
-    it('should not resolve if no extractors match', () => {
+    it('should not resolve if no resolve option', () => {
         const input = `
         import { t } from 'c-3po';
         fun1(t\`test\`);
         `;
         const result = babel.transform(input, options).code;
-        expect(result).to.contain("fun1('test');");
+        expect(result).to.contain('fun1(t`test`);');
     });
     it('validation should work for empty config', () => {
         const input = `

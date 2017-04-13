@@ -138,10 +138,8 @@ export function makePluralFunc(pluralStr) {
     return fn;
 }
 
-export function getDefaultPoData(config) {
-    return {
-        headers: config.getHeaders(),
-    };
+export function getDefaultPoData(headers) {
+    return { headers, translations: { '': {} } };
 }
 
 const nonTextRegexp = /\${.*?}|\d|\s|[.,\/#!$%\^&\*;:{}=\-_`~()]/g;

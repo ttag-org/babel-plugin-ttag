@@ -4,7 +4,7 @@ import c3poPlugin from 'src/plugin';
 
 const options = {
     presets: ['es2015'],
-    plugins: [[c3poPlugin, { discover: ['ngettext'] }]],
+    plugins: [[c3poPlugin, { discover: ['ngettext'], resolve: { translations: 'default' } }]],
 };
 
 describe('Resolve ngettext default', () => {
