@@ -6,7 +6,6 @@ export const DEFAULT_HEADERS = {
 // TODO: setup default aliases from extractors
 export const ALIASES = {
     'tag-gettext': 't',
-    'tag-ngettext': 'nt',
     'jsxtag-gettext': 'jt',
     gettext: 'gettext',
     ngettext: 'ngettext',

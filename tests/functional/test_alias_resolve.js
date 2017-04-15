@@ -28,8 +28,8 @@ describe('Alias resolve', () => {
 
     it('should be able to create alias on import for tag-ngettext', () => {
         const input = `
-        import { nt as ungettext } from 'c-3po';
-        console.log(ungettext(n)\`plural form with \${ n } plural\`);
+        import { ngettext as ungettext } from 'c-3po';
+        console.log(ungettext(msgid\`plural form with \${ n } plural\`, \`plural form with \${ n } plural\`, n));
         `;
         const result = babel.transform(input, options).code;
         expect(result).to.contain("console.log(_tag_ngettext(n, ['plural form with ' + n + " +

@@ -9,7 +9,7 @@ const options = {
     presets: ['es2015'],
     plugins: [[c3poPlugin, {
         resolve: { translations },
-        discover: ['nt'],
+        discover: ['ngettext'],
     }]],
 };
 
@@ -22,7 +22,7 @@ describe('Test po resolve', () => {
         const expected = 'n % 10 == 1 && n % 100 != 11 ? 0 : ' +
             'n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2';
         const input = 'const n = 1; ' +
-            'console.log(nt(n)`plural form with ${n} plural`);';
+            'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, n));';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(expected);
     });

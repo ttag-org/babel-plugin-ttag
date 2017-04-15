@@ -9,7 +9,7 @@ const options = {
     presets: ['es2015'],
     plugins: [[c3poPlugin, {
         resolve: { translations, unresolved: 'fail' },
-        discover: ['t', 'nt'],
+        discover: ['t', 'ngettext'],
     }]],
 };
 
@@ -24,7 +24,7 @@ describe('Unresolved', () => {
         expect(fun).to.throw('No "random string" in "tests/fixtures/resolve_simple_gettext.po" file');
     });
     it('should throw for tag-ngettext', () => {
-        const input = 'console.log(nt(n)`random string`);';
+        const input = 'console.log(ngettext(msgid`random string`, `random string`, n));';
         const fun = () => babel.transform(input, options).code;
         expect(fun).to.throw('No "random string" in "tests/fixtures/resolve_simple_gettext.po" file');
     });
