@@ -3,14 +3,13 @@ import { ALIASES, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS,
 const { FAIL, WARN, SKIP } = UNRESOLVED_ACTION;
 import tagGettext from './extractors/tag-gettext';
 import jsxtagGettext from './extractors/jsxtag-gettext';
-import tagNgettext from './extractors/tag-ngettext';
 import gettext from './extractors/gettext';
 import ngettext from './extractors/ngettext';
 import { parsePoData, getDefaultPoData } from './po-helpers';
 import { ConfigValidationError, ConfigError } from './errors';
 import { validateConfig, configSchema } from './config';
 
-const DEFAULT_EXTRACTORS = [tagGettext, jsxtagGettext, tagNgettext, gettext, ngettext];
+const DEFAULT_EXTRACTORS = [tagGettext, jsxtagGettext, gettext, ngettext];
 
 function logAction(message, level = SKIP) {
     /* eslint-disable no-console */
