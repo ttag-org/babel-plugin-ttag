@@ -1,4 +1,5 @@
 SHELL := /bin/bash
+SHELL := /bin/bash
 export PATH := $(PWD)/node_modules/.bin:$(PATH)
 export NODE_PATH = ./
 
@@ -79,6 +80,9 @@ test_unit:
 test_entries_sort:
 	$(MOCHA_CMD) ./tests/functional/test_entries_sort.js
 
+test_sorted_entries_sort:
+	$(MOCHA_CMD) ./tests/functional/test_sorted_entries_sort.js
+
 test_empty_config:
 	$(MOCHA_CMD) ./tests/functional/test_empty_config_mode.js
 
@@ -106,6 +110,7 @@ test_fun: test_disabled_scope
 test_fun: test_resolve_when_validation_fails
 test_fun: test_alias_discover
 test_fun: test_entries_sort
+test_fun: test_sorted_entries_sort
 test_fun: test_empty_config
 
 test: test_fun
