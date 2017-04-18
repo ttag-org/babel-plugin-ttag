@@ -147,13 +147,3 @@ export function hasUsefulInfo(text) {
     const withoutExpressions = text.replace(nonTextRegexp, '');
     return Boolean(withoutExpressions.match(/\S/));
 }
-
-export function msgidComparator(e1, e2) {
-    if (e1.msgid > e2.msgid) {
-        return 1;
-    }
-    if (e2.msgid > e1.msgid) {
-        return -1;
-    }
-    return 0;
-}

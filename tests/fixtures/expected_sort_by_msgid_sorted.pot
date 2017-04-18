@@ -1,0 +1,30 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: tests/fixtures/sort_by_msgid_input.js:2
+#: tests/fixtures/sort_by_msgid_input2.js:3
+msgid "a test"
+msgstr ""
+
+#: tests/fixtures/sort_by_msgid_input.js:11
+#: tests/fixtures/sort_by_msgid_input2.js:7
+msgid "b test"
+msgstr ""
+
+#: tests/fixtures/sort_by_msgid_input2.js:9
+msgid "c test"
+msgstr ""
+
+#: tests/fixtures/sort_by_msgid_input.js:4
+#: tests/fixtures/sort_by_msgid_input.js:5
+#: tests/fixtures/sort_by_msgid_input.js:6
+#: tests/fixtures/sort_by_msgid_input.js:7
+#: tests/fixtures/sort_by_msgid_input.js:8
+#: tests/fixtures/sort_by_msgid_input.js:9
+#: tests/fixtures/sort_by_msgid_input2.js:5
+#: tests/fixtures/sort_by_msgid_input2.js:11
+#: tests/fixtures/sort_by_msgid_input2.js:12
+msgid "s test"
+msgstr ""
