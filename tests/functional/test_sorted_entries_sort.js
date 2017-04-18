@@ -1,3 +1,4 @@
+import path from 'path';
 import { expect } from 'chai';
 import * as babel from 'babel-core';
 import fs from 'fs';
@@ -19,16 +20,12 @@ describe('Sorting entries by msgid', () => {
         rmDirSync('debug');
     });
 
-    it('should sort entries by msgid', () => {
-        const expectedPath = 'tests/fixtures/expected_sort.pot';
-        const input = `
-        t\`bbbb\`;
-        t\`aaaaa\`;
-        t\`ccccc\`;
-        t\`fffff\`;
-        t\`eeeee\`;
-        `;
-        babel.transform(input, options);
+    it('should not duplicate reference filenames', () => {
+        const inputFile = 'tests/fixtures/sort_by_msgid_input.js';
+        const inputFile2 = 'tests/fixtures/sort_by_msgid_input2.js';
+        const expectedPath = 'tests/fixtures/expected_sort_by_msgid_sorted.pot';
+        babel.transformFileSync(path.join(process.cwd(), inputFile), options);
+        babel.transformFileSync(path.join(process.cwd(), inputFile2), options);
         const result = fs.readFileSync(output).toString();
         const expected = fs.readFileSync(expectedPath).toString();
         expect(result).to.eql(expected);

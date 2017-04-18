@@ -4,7 +4,7 @@ import mkdirp from 'mkdirp';
 import C3poContext from './context';
 import { extractPoEntry, getExtractor } from './extract';
 import { resolveEntries } from './resolve';
-import { buildPotData, makePotStr, msgidComparator } from './po-helpers';
+import { buildPotData, makePotStr } from './po-helpers';
 import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
 import { ALIASES } from './defaults';
 import { ValidationError } from './errors';
@@ -17,7 +17,7 @@ for (const key of Object.keys(ALIASES)) {
 export default function () {
     let context;
     let disabledScopes = new Set();
-    let potEntries = [];
+    const potEntries = [];
     let aliases = {};
     let imports = new Set();
 
@@ -71,11 +71,15 @@ export default function () {
     return {
         post() {
             if (context && context.isExtractMode() && potEntries.length) {
+                const poData = buildPotData(potEntries);
                 if (context.isSortedByMsgid()) {
-                    // TODO: maybe use heap datastructure to avoid sorting on each filesave
-                    potEntries = potEntries.sort(msgidComparator);
+                    const oldPoData = poData.translations.context;
+                    const newContext = {};
+                    const keys = Object.keys(oldPoData).sort();
+                    keys.forEach((k) => { newContext[k] = oldPoData[k]; });
+                    poData.translations.context = newContext;
                 }
-                const potStr = makePotStr(buildPotData(potEntries));
+                const potStr = makePotStr(poData);
                 const filepath = context.getOutputFilepath();
                 const dirPath = path.dirname(filepath);
                 mkdirp.sync(dirPath);
