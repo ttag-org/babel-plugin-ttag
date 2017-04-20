@@ -75,6 +75,7 @@ describe('Resolve ngettext', () => {
     });
 
     it('should use proper plural form', () => {
+        rmDirSync('debug');
         mkdirp('debug');
         const resultPath = 'debug/ngettext_result.js';
         const input = 'const n = parseInt(process.env.TEST_N, 10);\n' +
@@ -82,9 +83,12 @@ describe('Resolve ngettext', () => {
             '`plural form with ${ n } plurals`, n));';
         const result = babel.transform(input, options).code;
         fs.writeFileSync(resultPath, result, { mode: 0o777 });
-        const { stdout: stdout1 } = childProcess.spawnSync(process.argv[0], [resultPath], { env: { TEST_N: 1 } });
+
+        const { stdout: stdout1 } = childProcess.spawnSync('node', [resultPath],
+            { env: Object.assign(process.env, { TEST_N: 1 }) });
         expect(stdout1.toString()).to.eql('plural form with 1 plural [translated]');
-        const { stdout: stdout2 } = childProcess.spawnSync(process.argv[0], [resultPath], { env: { TEST_N: 2 } });
+        const { stdout: stdout2 } = childProcess.spawnSync('node', [resultPath],
+            { env: Object.assign(process.env, { TEST_N: 2 }) });
         expect(stdout2.toString()).to.eql('plural form with 2 plurals [translated]');
     });
 

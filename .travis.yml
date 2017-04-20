@@ -7,7 +7,11 @@ node_js:
 
 before_script:
   - npm install
+  - npm install -g codecov
 
 script:
   - make lint
-  - make test
+  - sh coverage_run.sh
+
+after_success:
+  - codecov
