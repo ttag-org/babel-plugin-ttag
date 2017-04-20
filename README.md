@@ -1,5 +1,6 @@
 # babel-plugin-c-3po
 [![travis](https://api.travis-ci.org/c-3po-org/babel-plugin-c-3po.svg)](https://travis-ci.org/c-3po-org)
+[![codecov](https://codecov.io/gh/c-3po-org/babel-plugin-c-3po/branch/master/graph/badge.svg)](https://codecov.io/gh/c-3po-org/babel-plugin-c-3po)
 
 [![NPM](https://nodei.co/npm/babel-plugin-c-3po.png?downloads=true)](https://nodei.co/npm/babel-plugin-c-3po/)
 
