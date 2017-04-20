@@ -1,9 +1,7 @@
 language: node_js
 
 node_js:
-  - node
   - 6
-  - 5
 
 before_script:
   - npm install
@@ -11,7 +9,7 @@ before_script:
 
 script:
   - make lint
-  - sh coverage_run.sh
+  - ./coverage_run.sh
 
 after_success:
   - codecov
