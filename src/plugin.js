@@ -5,7 +5,8 @@ import C3poContext from './context';
 import { extractPoEntry, getExtractor } from './extract';
 import { resolveEntries } from './resolve';
 import { buildPotData, makePotStr } from './po-helpers';
-import { hasDisablingComment, isInDisabledScope, isC3poImport, hasImportSpecifier } from './utils';
+import { hasDisablingComment, isInDisabledScope, isC3poImport,
+    hasImportSpecifier, poReferenceComparator } from './utils';
 import { ALIASES } from './defaults';
 import { ValidationError } from './errors';
 
@@ -72,6 +73,30 @@ export default function () {
         post() {
             if (context && context.isExtractMode() && potEntries.length) {
                 const poData = buildPotData(potEntries);
+
+                // Here we sort reference entries, this could be useful
+                // with conf. options extract.location: 'file' and sortByMsgid
+                // which simplifies merge of .po files from different
+                // branches of SCM such as git or mercurial.
+                const poEntries = poData.translations.context;
+                Object.keys(poEntries).forEach((k) => {
+                    const poEntry = poEntries[k];
+                    // poEntry has a form:
+                    // {
+                    //     msgid: 'message identifier',
+                    //     msgstr: 'translation string',
+                    //     comments: {
+                    //         reference: 'path/to/file.js:line_number\npath/to/other/file.js:line_number'
+                    //     }
+                    // }
+                    if (poEntry.comments && poEntry.comments.reference) {
+                        poEntry.comments.reference = poEntry.comments.reference
+                            .split('\n')
+                            .sort(poReferenceComparator)
+                            .join('\n');
+                    }
+                });
+
                 if (context.isSortedByMsgid()) {
                     const oldPoData = poData.translations.context;
                     const newContext = {};
