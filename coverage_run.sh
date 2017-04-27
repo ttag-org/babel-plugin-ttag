@@ -1,3 +1,4 @@
+set -e
 export PATH=`pwd`/node_modules/.bin:$PATH
 export NODE_PATH=`pwd`:$NODE_MODULES
 
