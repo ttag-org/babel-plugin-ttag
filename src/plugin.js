@@ -72,30 +72,66 @@ export default function () {
         post() {
             if (context && context.isExtractMode() && potEntries.length) {
                 const poData = buildPotData(potEntries);
+
+                // Here we sort reference entries, this could be useful
+                // with conf. options extract.location: 'file' and sortByMsgid
+                // which simplifies merge of .po files from different
+                // branches of SCM such as git or mercurial.
+                const poEntries = poData.translations.context;
+                Object.keys(poEntries).forEach((k) => {
+                    const poEntry = poEntries[k];
+                    // poEntry has a form:
+                    // {
+                    //     msgid: 'message identifier',
+                    //     msgstr: 'translation string',
+                    //     comments: {
+                    //         reference: 'path/to/file.js:line_number\npath/to/other/file.js:line_number'
+                    //     }
+                    // }
+                    if (poEntry.comments && poEntry.comments.reference) {
+                        const cmp = (x, y) => {
+                            if (/.*:\d+$/.test(x)){
+                                // reference has a form path/to/file.js:line_number
+                                const firstIdx = x.lastIndexOf(':');
+                                const firstFileRef = x.substring(0, firstIdx);
+                                const firstLineNum = Number(x.substring(firstIdx + 1));
+                                const secondIdx = y.lastIndexOf(':');
+                                const secondFileRef = x.substring(0, firstIdx);
+                                const secondLineNum = Number(x.substring(firstIdx + 1));
+                                if (firstFileRef !== secondFileRef) {
+                                    if (firstFileRef < secondFileRef) {
+                                        return -1;
+                                    }
+                                    return 1;
+                                } else {
+                                    if (firstIdx < secondIdx) {
+                                        return -1;
+                                    } else if (firstIdx > secondIdx) {
+                                        return 1;
+                                    }
+                                    return 0;
+                                }
+                            } else {
+                                if (x < y) {
+                                    return -1;
+                                } else if (x > y) {
+                                    return 1;
+                                }
+                                return 0;
+                            }
+                        };
+                        poEntry.comments.reference = poEntry.comments.reference
+                            .split('\n')
+                            .sort(cmp)
+                            .join('\n');
+                    }
+                });
+
                 if (context.isSortedByMsgid()) {
                     const oldPoData = poData.translations.context;
                     const newContext = {};
                     const keys = Object.keys(oldPoData).sort();
-                    keys.forEach((k) => {
-                        const oldPoEntry = oldPoData[k];
-                        // oldPoEntry has a form:
-                        // {
-                        //     msgid: 'message identifier',
-                        //     msgstr: 'translation string',
-                        //     comments: {
-                        //         reference: 'path/to/file.js:line_number\npath/to/other/file.js:line_number'
-                        //     }
-                        // }
-                        const reference = oldPoEntry.comments.reference;
-
-                        // Here we sort reference entries, this could be useful
-                        // with conf. options extract.location: 'file' and sortByMsgid
-                        // which allow you easily merge .po files from different
-                        // branches of SCM such like git or mercurial.
-                        oldPoEntry.comments.reference = reference.split('\n').sort().join('\n');
-
-                        newContext[k] = oldPoData[k];
-                    });
+                    keys.forEach((k) => { newContext[k] = oldPoData[k]; });
                     poData.translations.context = newContext;
                 }
                 const potStr = makePotStr(poData);
