@@ -90,35 +90,35 @@ export default function () {
                     // }
                     if (poEntry.comments && poEntry.comments.reference) {
                         const cmp = (x, y) => {
-                            if (/.*:\d+$/.test(x)){
+                            if (/.*:\d+$/.test(x)) {
                                 // reference has a form path/to/file.js:line_number
                                 const firstIdx = x.lastIndexOf(':');
                                 const firstFileRef = x.substring(0, firstIdx);
                                 const firstLineNum = Number(x.substring(firstIdx + 1));
                                 const secondIdx = y.lastIndexOf(':');
-                                const secondFileRef = x.substring(0, firstIdx);
-                                const secondLineNum = Number(x.substring(firstIdx + 1));
+                                const secondFileRef = x.substring(0, secondIdx);
+                                const secondLineNum = Number(x.substring(secondIdx + 1));
                                 if (firstFileRef !== secondFileRef) {
                                     if (firstFileRef < secondFileRef) {
                                         return -1;
                                     }
                                     return 1;
-                                } else {
-                                    if (firstIdx < secondIdx) {
-                                        return -1;
-                                    } else if (firstIdx > secondIdx) {
-                                        return 1;
-                                    }
-                                    return 0;
                                 }
-                            } else {
-                                if (x < y) {
+                                // else
+                                if (firstLineNum < secondLineNum) {
                                     return -1;
-                                } else if (x > y) {
+                                } else if (firstLineNum > secondLineNum) {
                                     return 1;
                                 }
                                 return 0;
                             }
+                            // else
+                            if (x < y) {
+                                return -1;
+                            } else if (x > y) {
+                                return 1;
+                            }
+                            return 0;
                         };
                         poEntry.comments.reference = poEntry.comments.reference
                             .split('\n')
