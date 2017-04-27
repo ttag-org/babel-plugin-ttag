@@ -73,6 +73,9 @@ test_entries_sort:
 test_sorted_entries_sort:
 	$(MOCHA_CMD) ./tests/functional/test_sorted_entries_sort.js
 
+test_sorted_entries_without_reference_line_num:
+	$(MOCHA_CMD) ./tests/functional/test_sorted_entries_without_reference_line_num.js
+
 test_empty_config:
 	$(MOCHA_CMD) ./tests/functional/test_empty_config_mode.js
 

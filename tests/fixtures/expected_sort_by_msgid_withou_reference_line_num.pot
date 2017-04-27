@@ -1,0 +1,23 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: tests/fixtures/sort_by_msgid_input.js
+#: tests/fixtures/sort_by_msgid_input2.js
+msgid "a test"
+msgstr ""
+
+#: tests/fixtures/sort_by_msgid_input.js
+#: tests/fixtures/sort_by_msgid_input2.js
+msgid "b test"
+msgstr ""
+
+#: tests/fixtures/sort_by_msgid_input2.js
+msgid "c test"
+msgstr ""
+
+#: tests/fixtures/sort_by_msgid_input.js
+#: tests/fixtures/sort_by_msgid_input2.js
+msgid "s test"
+msgstr ""
