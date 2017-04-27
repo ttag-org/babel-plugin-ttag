@@ -134,3 +134,36 @@ export function dedentStr(str) {
     }
     return str;
 }
+
+export function poReferenceComparator(firstPoRef, secondPoRef) {
+    if (/.*:\d+$/.test(firstPoRef)) {
+        // reference has a form path/to/file.js:line_number
+        const firstIdx = firstPoRef.lastIndexOf(':');
+        const firstFileRef = firstPoRef.substring(0, firstIdx);
+        const firstLineNum = Number(firstPoRef.substring(firstIdx + 1));
+        const secondIdx = secondPoRef.lastIndexOf(':');
+        const secondFileRef = secondPoRef.substring(0, secondIdx);
+        const secondLineNum = Number(secondPoRef.substring(secondIdx + 1));
+        if (firstFileRef !== secondFileRef) {
+            if (firstFileRef < secondFileRef) {
+                return -1;
+            }
+            return 1;
+        }
+        // else
+        if (firstLineNum < secondLineNum) {
+            return -1;
+        } else if (firstLineNum > secondLineNum) {
+            return 1;
+        }
+        return 0;
+    }
+    // else
+    // reference has a form path/to/file.js
+    if (firstPoRef < secondPoRef) {
+        return -1;
+    } else if (firstPoRef > secondPoRef) {
+        return 1;
+    }
+    return 0;
+}

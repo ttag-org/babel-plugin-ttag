@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import template from 'babel-template';
 import { template2Msgid, msgid2Orig, isInDisabledScope,
-    hasDisablingComment, dedentStr, getMsgid } from 'src/utils';
+    hasDisablingComment, dedentStr, getMsgid, poReferenceComparator } from 'src/utils';
 import { DISABLE_COMMENT } from 'src/defaults';
 
 
@@ -102,5 +102,49 @@ describe('utils getMsgid', () => {
         const a = 0;
         const [strs, exprs] = getStrsExprs`test ${a}`;
         expect(getMsgid(strs, exprs)).to.be.eql('test ${ 0 }');
+    });
+});
+
+describe('utils poReferenceComparator', () => {
+    it('# path/a.js should be less than # path/b.js', () => {
+        expect(poReferenceComparator(
+            '# path/a.js',
+            '# path/b.js'
+        )).to.be.eql(-1);
+    });
+
+    it('# path/b.js should be less than # path/a.js', () => {
+        expect(poReferenceComparator(
+            '# path/b.js',
+            '# path/a.js'
+        )).to.be.eql(1);
+    });
+
+    it('# path/a.js should be equal to # path/a.js', () => {
+        expect(poReferenceComparator(
+            '# path/a.js',
+            '# path/a.js'
+        )).to.be.eql(0);
+    });
+
+    it('# path/a.js:5 should be less than # path/a.js:10', () => {
+        expect(poReferenceComparator(
+            '# path/a.js:5',
+            '# path/a.js:10'
+        )).to.be.eql(-1);
+    });
+
+    it('# path/a.js:10 should be less than # path/a.js:5', () => {
+        expect(poReferenceComparator(
+            '# path/a.js:10',
+            '# path/a.js:5'
+        )).to.be.eql(1);
+    });
+
+    it('# path/a.js:10 should be less than # path/a.js:10', () => {
+        expect(poReferenceComparator(
+            '# path/a.js:10',
+            '# path/a.js:10'
+        )).to.be.eql(0);
     });
 });
