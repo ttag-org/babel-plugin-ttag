@@ -19,6 +19,9 @@ test_extract_developer_comments:
 test_extract_developer_comments_by_tag:
 	$(MOCHA_CMD) ./tests/functional/test_extract_developer_comments_by_tag.js
 
+test_extract_ngettext:
+	$(MOCHA_CMD) ./tests/functional/test_extract_ngettext.js
+
 test_resolve_gettext:
 	$(MOCHA_CMD) ./tests/functional/test_resolve_gettext.js
 
