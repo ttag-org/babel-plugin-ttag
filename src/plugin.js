@@ -23,6 +23,9 @@ export default function () {
     let imports = new Set();
 
     function extractOrResolve(nodePath, state) {
+        if (nodePath.node._C3PO_visited) { // Should visit each node only once
+            return;
+        }
         if (isInDisabledScope(nodePath, disabledScopes)) {
             return;
         }
@@ -63,6 +66,7 @@ export default function () {
             if (context.isResolveMode()) {
                 resolveEntries(extractor, nodePath, context, state);
             }
+            nodePath.node._C3PO_visited = true;
         } catch (err) {
             // TODO: handle specific instances of errors
             throw nodePath.buildCodeFrameError(err.message);
