@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import template from 'babel-template';
 import { template2Msgid, msgid2Orig, isInDisabledScope,
     hasDisablingComment, dedentStr, getMsgid, poReferenceComparator,
-    getMembersPath} from 'src/utils';
+    getMembersPath } from 'src/utils';
 import { DISABLE_COMMENT } from 'src/defaults';
 
 
