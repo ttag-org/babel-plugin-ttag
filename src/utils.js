@@ -41,8 +41,17 @@ export function stripTag(nodePath) {
     }
 }
 
-function getMembersPath(node) {
-    const obj = t.isMemberExpression(node.object) ? getMembersPath(node.object) : node.object.name;
+export function getMembersPath(node) {
+    let obj;
+
+    if (t.isMemberExpression(node.object)) {
+        obj = getMembersPath(node.object);
+    } else if (t.isThisExpression(node.object)) {
+        obj = 'this';
+    } else {
+        obj = node.object.name;
+    }
+
     const prop = node.property.name;
     return `${obj}.${prop}`;
 }

@@ -14,6 +14,20 @@ describe('ngettext extract', () => {
         expect(result[MSGID]).to.eql('${ n } banana');
     });
 
+    it('should extract proper msgid1 for member expressions', () => {
+        const node = template('ngettext(msgid`${ state.n } banana`, `${ state.n } bananas`, state.n)'
+        )().expression;
+        const result = ngettext.extract(node, enConfig);
+        expect(result[MSGID]).to.eql('${ state.n } banana');
+    });
+
+    it('should extract proper msgid1 for member expressions with this', () => {
+        const node = template('ngettext(msgid`${ this.state.n } banana`, `${ this.state.n } bananas`, this.state.n)'
+        )().expression;
+        const result = ngettext.extract(node, enConfig);
+        expect(result[MSGID]).to.eql('${ this.state.n } banana');
+    });
+
     it('should extract proper msgidplural', () => {
         const node = template('ngettext(msgid`${ n } banana`, `${ n } bananas`, n)')().expression;
         const result = ngettext.extract(node, enConfig);

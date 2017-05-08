@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import template from 'babel-template';
 import { template2Msgid, msgid2Orig, isInDisabledScope,
-    hasDisablingComment, dedentStr, getMsgid, poReferenceComparator } from 'src/utils';
+    hasDisablingComment, dedentStr, getMsgid, poReferenceComparator,
+    getMembersPath} from 'src/utils';
 import { DISABLE_COMMENT } from 'src/defaults';
 
 
@@ -12,10 +13,30 @@ describe('utils template2Msgid', () => {
         expect(template2Msgid(node)).to.eql(expected);
     });
 
-    it('should extract msgid with expressions', () => {
+    it('should extract msgid without expressions', () => {
         const node = template('t`banana`')().expression;
         const expected = 'banana';
         expect(template2Msgid(node)).to.eql(expected);
+    });
+
+    it('should extract msgid with this in expressions', () => {
+        const node = template('t`${this.user.name} test`')().expression;
+        const expected = '${ this.user.name } test';
+        expect(template2Msgid(node)).to.eql(expected);
+    });
+});
+
+describe('utils getMembersPath', () => {
+    it('should get members path', () => {
+        const node = template('user.name')().expression;
+        const mPath = getMembersPath(node);
+        expect(mPath).to.eql('user.name');
+    });
+
+    it('should get members path with "this"', () => {
+        const node = template('this.user.name')().expression;
+        const mPath = getMembersPath(node);
+        expect(mPath).to.eql('this.user.name');
     });
 });
 
