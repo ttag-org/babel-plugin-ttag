@@ -24,6 +24,12 @@ describe('utils template2Msgid', () => {
         const expected = '${ this.user.name } test';
         expect(template2Msgid(node)).to.eql(expected);
     });
+
+    it('should extract msgid from a computed properties', () => {
+        const node = template('t`${ arr[0].name }`')().expression;
+        const expected = '${ arr[0].name }';
+        expect(template2Msgid(node)).to.eql(expected);
+    });
 });
 
 describe('utils getMembersPath', () => {

@@ -43,7 +43,6 @@ export function stripTag(nodePath) {
 
 export function getMembersPath(node) {
     let obj;
-
     if (t.isMemberExpression(node.object)) {
         obj = getMembersPath(node.object);
     } else if (t.isThisExpression(node.object)) {
@@ -52,8 +51,11 @@ export function getMembersPath(node) {
         obj = node.object.name;
     }
 
-    const prop = node.property.name;
-    return `${obj}.${prop}`;
+    if (node.computed) {
+        return `${obj}[${node.property.value}]`;
+    }
+
+    return `${obj}.${node.property.name}`;
 }
 
 export const getMsgid = (str, exprs) => str.reduce((s, l, i) => {
