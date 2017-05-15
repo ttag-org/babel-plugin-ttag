@@ -87,4 +87,12 @@ describe('Resolve tag-gettext', () => {
         const result = babel.transform(input, options).code;
         expect(result).to.contain('console.log(a + " spaces test [translated]");');
     });
+
+    it('should throw if expression contains typo', () => {
+        const input = 'console.log(t`Typo test ${ mississipi }`);';
+        const func = () => babel.transform(input, options).code;
+        expect(func).to.throw(
+            'unknown: Expression \'mississipi\' is not found in the localized string \'Typo test ${ missingpi }\'.'
+        );
+    });
 });

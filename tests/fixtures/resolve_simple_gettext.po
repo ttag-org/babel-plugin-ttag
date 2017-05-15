@@ -82,3 +82,13 @@ msgid_plural ""
 "second line plural"
 msgstr[0] "translation plural"
 msgstr[1] "translation plurals"
+
+#: tests/fixtures/fixture.js:20
+msgid "Typo test ${ mississipi }"
+msgstr "Typo test ${ missingpi }"
+
+#: tests/fixtures/fixture.js:20
+msgid "${ appleCount } apple"
+msgid_plural "${ appleCount } apple"
+msgstr[0] "${ appleCount } apple (translated)"
+msgstr[1] "${ count } apples (translated)"

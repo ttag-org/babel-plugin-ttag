@@ -19,3 +19,12 @@ export function NoTranslationError(message) {
 
 NoTranslationError.prototype = Object.create(Error.prototype);
 NoTranslationError.prototype.constructor = NoTranslationError;
+
+
+export function NoExpressionError(message) {
+    this.name = 'NoExpressionError';
+    this.message = message;
+    this.stack = (new Error()).stack;
+}
+NoExpressionError.prototype = Object.create(Error.prototype);
+NoExpressionError.prototype.constructor = NoExpressionError;

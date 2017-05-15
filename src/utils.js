@@ -3,6 +3,7 @@ import { execSync } from 'child_process';
 import * as t from 'babel-types';
 import { DISABLE_COMMENT, C3POID } from './defaults';
 import dedent from 'dedent';
+import { NoExpressionError } from './errors';
 
 const disableRegExp = new RegExp(`\\b${DISABLE_COMMENT}\\b`);
 
@@ -86,6 +87,12 @@ const memReg = memoize1(reg);
 
 export const msgid2Orig = (msgid, exprs) => {
     return strToQuasi(exprs.reduce((r, expr, i) => r.replace(memReg(i), `\${ ${expr} }`), msgid));
+};
+
+export const assertExpressionExists = (transStr, expr) => {
+    if (!transStr.match(memReg(expr))) {
+        throw new NoExpressionError(`Expression '${expr}' is not found in the localized string '${transStr}'.`);
+    }
 };
 
 export function template2Msgid(node) {
