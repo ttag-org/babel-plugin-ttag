@@ -54,7 +54,7 @@ describe('utils msgid2Orig', () => {
             'NoExpressionError: Expression \'appleCount\' is not found in the localized string ' +
             '\'${ count } apples (translated)\'.'
         );
-    })
+    });
 
     it.skip('should ignore left space inside expressions', () => {
         const input = '${0 } banana ${  1}';
