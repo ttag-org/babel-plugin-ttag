@@ -86,13 +86,13 @@ const reg = (i) => new RegExp(`\\$\\{([\\s]+?|\\s?)${i}([\\s]+?|\\s?)}`);
 const memReg = memoize1(reg);
 
 export const msgid2Orig = (msgid, exprs) => {
-    return strToQuasi(exprs.reduce((r, expr, i) => r.replace(memReg(i), `\${ ${expr} }`), msgid));
-};
+    exprs.forEach((expr) => {
+        if (!msgid.match(memReg(expr))) {
+            throw new NoExpressionError(`Expression '${expr}' is not found in the localized string '${msgid}'.`);
+        }
+    });
 
-export const assertExpressionExists = (transStr, expr) => {
-    if (!transStr.match(memReg(expr))) {
-        throw new NoExpressionError(`Expression '${expr}' is not found in the localized string '${transStr}'.`);
-    }
+    return strToQuasi(exprs.reduce((r, expr, i) => r.replace(memReg(i), `\${ ${expr} }`), msgid));
 };
 
 export function template2Msgid(node) {
