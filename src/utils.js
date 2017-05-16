@@ -3,6 +3,7 @@ import { execSync } from 'child_process';
 import * as t from 'babel-types';
 import { DISABLE_COMMENT, C3POID } from './defaults';
 import dedent from 'dedent';
+import { ValidationError } from './errors';
 
 const disableRegExp = new RegExp(`\\b${DISABLE_COMMENT}\\b`);
 
@@ -49,6 +50,8 @@ function expr2str(expr) {
         str = expr.extra.raw;
     } else if (t.isThisExpression(expr)) {
         str = 'this';
+    } else {
+        throw new ValidationError(`You can not use ${expr.type} '\${${ast2Str(expr)}}' in localized strings`);
     }
 
     return str;

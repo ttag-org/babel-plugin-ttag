@@ -43,6 +43,12 @@ describe('utils template2Msgid', () => {
         expect(template2Msgid(node)).to.eql(expected);
     });
 
+    it('should throw if has not supported expression type in computed properties', () => {
+        const node = template('t`${ arr[fn()].name }`')().expression;
+        const fn = () => template2Msgid(node);
+        expect(fn).to.throw('You can not use CallExpression \'${fn()}\' in localized strings');
+    });
+
     it('should extract msgid with a numeric literal', () => {
         const node = template('t`${ 1 }`')().expression;
         const expected = '${ 1 }';
