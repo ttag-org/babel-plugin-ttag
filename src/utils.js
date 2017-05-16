@@ -88,10 +88,6 @@ export function template2Msgid(node) {
     return node.quasi.quasis[0].value.raw;
 }
 
-export function isValidQuasiExpression(expr) {
-    return t.isIdentifier(expr) || t.isLiteral(expr) || t.isNumericLiteral(expr) || t.isMemberExpression(expr);
-}
-
 export function isInDisabledScope(node, disabledScopes) {
     let scope = node.scope;
     while (scope) {
