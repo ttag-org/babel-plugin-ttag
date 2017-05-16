@@ -107,7 +107,8 @@ describe('Resolve ngettext', () => {
         const input = 'console.log(ngettext(msgid`${ appleCount } apple`, `${ appleCount } apples`, appleCount));';
         const func = () => babel.transform(input, options).code;
         expect(func).to.throw(
-            'unknown: Expression \'appleCount\' is not found in the localized string \'${ count } apples (translated)\'.'
+            'unknown: Expression \'appleCount\' is not found in the localized string \'${ count }' +
+            ' apples (translated)\'.'
         );
     });
 });
