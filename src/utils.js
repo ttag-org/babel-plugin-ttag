@@ -30,17 +30,6 @@ export function hasExpressions(node) {
     return Boolean(node.quasi.expressions.length);
 }
 
-export function stripTag(nodePath) {
-    const { node } = nodePath;
-    const transStr = getQuasiStr(node);
-
-    if (hasExpressions(node)) {
-        nodePath.replaceWithSourceString(strToQuasi(transStr));
-    } else {
-        nodePath.replaceWith(t.stringLiteral(transStr));
-    }
-}
-
 export function getMembersPath(node) {
     let obj;
     if (t.isMemberExpression(node.object)) {
