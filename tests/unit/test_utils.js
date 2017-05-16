@@ -30,6 +30,36 @@ describe('utils template2Msgid', () => {
         const expected = '${ arr[0].name }';
         expect(template2Msgid(node)).to.eql(expected);
     });
+
+    it('should extract msgid from a computed properties with string literals', () => {
+        const node = template('t`${ arr["test"].name }`')().expression;
+        const expected = '${ arr["test"].name }';
+        expect(template2Msgid(node)).to.eql(expected);
+    });
+
+    it('should extract msgid from a computed properties with member expressions', () => {
+        const node = template('t`${ arr[this.user.id].name }`')().expression;
+        const expected = '${ arr[this.user.id].name }';
+        expect(template2Msgid(node)).to.eql(expected);
+    });
+
+    it('should extract msgid with a numeric literal', () => {
+        const node = template('t`${ 1 }`')().expression;
+        const expected = '${ 1 }';
+        expect(template2Msgid(node)).to.eql(expected);
+    });
+
+    it('should extract msgid with a string literal', () => {
+        const node = template('t`${ "test" }`')().expression;
+        const expected = '${ "test" }';
+        expect(template2Msgid(node)).to.eql(expected);
+    });
+
+    it('should extract msgid with this', () => {
+        const node = template('t`${ this }`')().expression;
+        const expected = '${ this }';
+        expect(template2Msgid(node)).to.eql(expected);
+    });
 });
 
 describe('utils getMembersPath', () => {
@@ -114,21 +144,22 @@ describe('utils dedentStr', () => {
     });
 });
 
-function getStrsExprs(strs, ...exprs) {
+function getStrsExprs(node) {
+    const strs = node.quasis.map(({ value: { raw } }) => raw);
+    const exprs = node.expressions;
     return [strs, exprs];
 }
 
 describe('utils getMsgid', () => {
-    it('should extract msgid', () => {
-        const a = 1;
-        const [strs, exprs] = getStrsExprs`test ${a}`;
-        expect(getMsgid(strs, exprs)).to.be.eql('test ${ 0 }');
+    it('should extract msgid with expressions', () => {
+        const node = template('`test ${ a }`')().expression;
+        const [strs, exprs] = getStrsExprs(node);
+        expect(getMsgid(strs, exprs)).to.be.eql('test ${ a }');
     });
-
-    it('should extract msgid with 0', () => {
-        const a = 0;
-        const [strs, exprs] = getStrsExprs`test ${a}`;
-        expect(getMsgid(strs, exprs)).to.be.eql('test ${ 0 }');
+    it('should extract msgid without expressions', () => {
+        const node = template('`test`')().expression;
+        const [strs, exprs] = getStrsExprs(node);
+        expect(getMsgid(strs, exprs)).to.be.eql('test');
     });
 });
 

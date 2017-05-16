@@ -30,37 +30,33 @@ export function hasExpressions(node) {
     return Boolean(node.quasi.expressions.length);
 }
 
-export function getMembersPath(node) {
-    let obj;
-    if (t.isMemberExpression(node.object)) {
-        obj = getMembersPath(node.object);
-    } else if (t.isThisExpression(node.object)) {
-        obj = 'this';
-    } else {
-        obj = node.object.name;
+export function getMembersPath({ object, computed, property }) {
+    /* eslint-disable no-use-before-define */
+    const obj = t.isMemberExpression(object) ? getMembersPath(object) : expr2str(object);
+
+    return computed ? `${obj}[${expr2str(property)}]` : `${obj}.${property.name}`;
+}
+
+function expr2str(expr) {
+    let str;
+    if (t.isIdentifier(expr)) {
+        str = expr.name;
+    } else if (t.isMemberExpression(expr)) {
+        str = getMembersPath(expr);
+    } else if (t.isNumericLiteral(expr)) {
+        str = expr.value;
+    } else if (t.isStringLiteral(expr)) {
+        str = expr.extra.raw;
+    } else if (t.isThisExpression(expr)) {
+        str = 'this';
     }
 
-    if (node.computed) {
-        return `${obj}[${node.property.value}]`;
-    }
-
-    return `${obj}.${node.property.name}`;
+    return str;
 }
 
 export const getMsgid = (str, exprs) => str.reduce((s, l, i) => {
     const expr = exprs[i];
-    if (expr === undefined) {
-        return s + l;
-    }
-    let name;
-    if (t.isIdentifier(expr)) {
-        name = expr.name;
-    } else if (t.isMemberExpression(expr)) {
-        name = getMembersPath(expr);
-    } else {
-        name = i;
-    }
-    return `${s}${l}\${ ${name} }`;
+    return (expr === undefined) ? s + l : `${s}${l}\${ ${expr2str(expr)} }`;
 }, '');
 
 const mem = {};
@@ -82,6 +78,7 @@ export const msgid2Orig = (msgid, exprs) => {
 export function template2Msgid(node) {
     const strs = node.quasi.quasis.map(({ value: { raw } }) => raw);
     const exprs = node.quasi.expressions || [];
+
     if (exprs.length) {
         return getMsgid(strs, exprs);
     }
