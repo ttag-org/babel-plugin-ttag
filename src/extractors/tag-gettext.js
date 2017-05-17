@@ -1,7 +1,6 @@
 import * as t from 'babel-types';
 import tpl from 'babel-template';
-import { template2Msgid, msgid2Orig, hasExpressions,
-    isValidQuasiExpression, ast2Str, getQuasiStr, dedentStr } from '../utils';
+import { template2Msgid, msgid2Orig, hasExpressions, ast2Str, getQuasiStr, dedentStr } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import { ValidationError } from '../errors';
 import { hasUsefulInfo } from '../po-helpers';
@@ -9,16 +8,7 @@ import { hasUsefulInfo } from '../po-helpers';
 const { MSGSTR } = PO_PRIMITIVES;
 const NAME = 'tag-gettext';
 
-function validateExpresssions(expressions) {
-    expressions.forEach((exp) => {
-        if (!isValidQuasiExpression(exp)) {
-            throw new ValidationError(`You can not use ${exp.type} '\${${ast2Str(exp)}}' in localized strings`);
-        }
-    });
-}
-
 const validate = (node) => {
-    validateExpresssions(node.quasi.expressions);
     const msgid = template2Msgid(node);
     if (! hasUsefulInfo(msgid)) {
         throw new ValidationError(`Can not translate '${getQuasiStr(node)}'`);
