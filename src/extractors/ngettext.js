@@ -1,7 +1,6 @@
 import * as t from 'babel-types';
 import { PO_PRIMITIVES } from '../defaults';
-import { dedentStr, template2Msgid, isValidQuasiExpression, ast2Str, msgid2Orig,
-    getQuasiStr, strToQuasi } from '../utils';
+import { dedentStr, template2Msgid, ast2Str, msgid2Orig, getQuasiStr, strToQuasi } from '../utils';
 import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc, hasUsefulInfo } from '../po-helpers';
 import { ValidationError } from '../errors';
 import tpl from 'babel-template';
@@ -12,14 +11,6 @@ const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 function getMsgid(node) {
     const [msgidTag, ..._] = node.arguments.slice(0, -1);
     return template2Msgid(msgidTag);
-}
-
-function validateExpresssions(expressions) {
-    expressions.forEach((exp) => {
-        if (!isValidQuasiExpression(exp)) {
-            throw new ValidationError(`You can not use ${exp.type} '\${${ast2Str(exp)}}' in localized strings`);
-        }
-    });
 }
 
 function validateNPlural(exp) {
@@ -39,9 +30,11 @@ const validate = (node, context) => {
         throw new ValidationError(
             `Expected '${msgidAlias}' for the first argument but not '${msgidTag.tag.name}'`);
     }
-    validateExpresssions(msgidTag.quasi.expressions);
     const tags = node.arguments.slice(1, -1);
-    tags.forEach(({ expressions }) => validateExpresssions(expressions));
+
+    // will throw validation error if tags has expressions with wrong format
+    tags.forEach((quasi) => template2Msgid({ quasi }));
+
     validateNPlural(node.arguments[node.arguments.length - 1]);
     const msgid = template2Msgid(msgidTag);
     if (!hasUsefulInfo(msgid)) {

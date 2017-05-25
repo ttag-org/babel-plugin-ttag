@@ -3,7 +3,7 @@ import { execSync } from 'child_process';
 import * as t from 'babel-types';
 import { DISABLE_COMMENT, C3POID } from './defaults';
 import dedent from 'dedent';
-import { NoExpressionError } from './errors';
+import { ValidationError, NoExpressionError } from './errors';
 
 const disableRegExp = new RegExp(`\\b${DISABLE_COMMENT}\\b`);
 
@@ -31,46 +31,35 @@ export function hasExpressions(node) {
     return Boolean(node.quasi.expressions.length);
 }
 
-export function stripTag(nodePath) {
-    const { node } = nodePath;
-    const transStr = getQuasiStr(node);
+export function getMembersPath({ object, computed, property }) {
+    /* eslint-disable no-use-before-define */
+    const obj = t.isMemberExpression(object) ? getMembersPath(object) : expr2str(object);
 
-    if (hasExpressions(node)) {
-        nodePath.replaceWithSourceString(strToQuasi(transStr));
-    } else {
-        nodePath.replaceWith(t.stringLiteral(transStr));
-    }
+    return computed ? `${obj}[${expr2str(property)}]` : `${obj}.${property.name}`;
 }
 
-export function getMembersPath(node) {
-    let obj;
-
-    if (t.isMemberExpression(node.object)) {
-        obj = getMembersPath(node.object);
-    } else if (t.isThisExpression(node.object)) {
-        obj = 'this';
+function expr2str(expr) {
+    let str;
+    if (t.isIdentifier(expr)) {
+        str = expr.name;
+    } else if (t.isMemberExpression(expr)) {
+        str = getMembersPath(expr);
+    } else if (t.isNumericLiteral(expr)) {
+        str = expr.value;
+    } else if (t.isStringLiteral(expr)) {
+        str = expr.extra.raw;
+    } else if (t.isThisExpression(expr)) {
+        str = 'this';
     } else {
-        obj = node.object.name;
+        throw new ValidationError(`You can not use ${expr.type} '\${${ast2Str(expr)}}' in localized strings`);
     }
 
-    const prop = node.property.name;
-    return `${obj}.${prop}`;
+    return str;
 }
 
 export const getMsgid = (str, exprs) => str.reduce((s, l, i) => {
     const expr = exprs[i];
-    if (expr === undefined) {
-        return s + l;
-    }
-    let name;
-    if (t.isIdentifier(expr)) {
-        name = expr.name;
-    } else if (t.isMemberExpression(expr)) {
-        name = getMembersPath(expr);
-    } else {
-        name = i;
-    }
-    return `${s}${l}\${ ${name} }`;
+    return (expr === undefined) ? s + l : `${s}${l}\${ ${expr2str(expr)} }`;
 }, '');
 
 const mem = {};
@@ -98,14 +87,11 @@ export const msgid2Orig = (msgid, exprs) => {
 export function template2Msgid(node) {
     const strs = node.quasi.quasis.map(({ value: { raw } }) => raw);
     const exprs = node.quasi.expressions || [];
+
     if (exprs.length) {
         return getMsgid(strs, exprs);
     }
     return node.quasi.quasis[0].value.raw;
-}
-
-export function isValidQuasiExpression(expr) {
-    return t.isIdentifier(expr) || t.isLiteral(expr) || t.isNumericLiteral(expr) || t.isMemberExpression(expr);
 }
 
 export function isInDisabledScope(node, disabledScopes) {
