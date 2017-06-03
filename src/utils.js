@@ -74,14 +74,14 @@ const memoize1 = (f) => (arg) => {
 const reg = (i) => new RegExp(`\\$\\{([\\s]+?|\\s?)${i}([\\s]+?|\\s?)}`);
 const memReg = memoize1(reg);
 
-export const msgid2Orig = (msgid, exprs) => {
-    exprs.forEach((expr) => {
-        if (!msgid.match(memReg(expr))) {
-            throw new NoExpressionError(`Expression '${expr}' is not found in the localized string '${msgid}'.`);
+export const msgid2Orig = (msgid, exprNames) => {
+    exprNames.forEach((exprName) => {
+        if (!msgid.match(memReg(exprName))) {
+            throw new NoExpressionError(`Expression '${exprName}' is not found in the localized string '${msgid}'.`);
         }
     });
 
-    return strToQuasi(exprs.reduce((r, expr, i) => r.replace(memReg(i), `\${ ${expr} }`), msgid));
+    return strToQuasi(exprNames.reduce((r, expr) => r.replace(memReg(expr), `\${ ${expr} }`), msgid));
 };
 
 export function template2Msgid(node) {

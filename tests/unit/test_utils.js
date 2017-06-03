@@ -98,14 +98,14 @@ describe('utils msgid2Orig', () => {
         );
     });
 
-    it.skip('should ignore left space inside expressions', () => {
-        const input = '${0 } banana ${  1}';
+    it('should ignore left space inside expressions', () => {
+        const input = '${a } banana ${  b}';
         const expected = '`${ a } banana ${ b }`';
         expect(msgid2Orig(input, ['a', 'b'])).to.eql(expected);
     });
 
-    it.skip('should ignore white spaces inside expressions', () => {
-        const input = '${0} banana ${ 1    }';
+    it('should ignore white spaces inside expressions', () => {
+        const input = '${a} banana ${ b    }';
         const expected = '`${ a } banana ${ b }`';
         expect(msgid2Orig(input, ['a', 'b'])).to.eql(expected);
     });
