@@ -102,4 +102,13 @@ describe('Resolve ngettext', () => {
         expect(result).to.contain('translation plural');
         expect(result).to.contain('translation plurals');
     });
+
+    it('should throw if expression contains typo', () => {
+        const input = 'console.log(ngettext(msgid`${ appleCount } apple`, `${ appleCount } apples`, appleCount));';
+        const func = () => babel.transform(input, options).code;
+        expect(func).to.throw(
+            'unknown: Expression \'appleCount\' is not found in the localized string \'${ count }' +
+            ' apples (translated)\'.'
+        );
+    });
 });
