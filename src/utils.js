@@ -74,7 +74,7 @@ const memoize1 = (f) => (arg) => {
 const reg = (i) => new RegExp(`\\$\\{([\\s]+?|\\s?)${i}([\\s]+?|\\s?)}`);
 const memReg = memoize1(reg);
 
-export const msgid2Orig = (msgid, exprNames) => {
+export const validateAndFormatMsgid = (msgid, exprNames) => {
     exprNames.forEach((exprName) => {
         if (!msgid.match(memReg(exprName))) {
             throw new NoExpressionError(`Expression '${exprName}' is not found in the localized string '${msgid}'.`);

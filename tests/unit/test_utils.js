@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import template from 'babel-template';
-import { template2Msgid, msgid2Orig, isInDisabledScope,
+import { template2Msgid, validateAndFormatMsgid, isInDisabledScope,
     hasDisablingComment, dedentStr, getMsgid, poReferenceComparator,
     getMembersPath } from 'src/utils';
 import { DISABLE_COMMENT } from 'src/defaults';
@@ -82,16 +82,16 @@ describe('utils getMembersPath', () => {
     });
 });
 
-describe('utils msgid2Orig', () => {
+describe('utils validateAndFormatMsgid', () => {
     it('should extract original template with expressions', () => {
         const input = '${ a } banana ${ b }';
         const expected = '`${ a } banana ${ b }`';
-        expect(msgid2Orig(input, ['a', 'b'])).to.eql(expected);
+        expect(validateAndFormatMsgid(input, ['a', 'b'])).to.eql(expected);
     });
 
     it('should throw if not all expressions exist in translated strings', () => {
         const input = '${ count } apples (translated)';
-        const func = () => msgid2Orig(input, ['appleCount']);
+        const func = () => validateAndFormatMsgid(input, ['appleCount']);
         expect(func).to.throw(
             'NoExpressionError: Expression \'appleCount\' is not found in the localized string ' +
             '\'${ count } apples (translated)\'.'
@@ -101,13 +101,13 @@ describe('utils msgid2Orig', () => {
     it('should ignore left space inside expressions', () => {
         const input = '${a } banana ${  b}';
         const expected = '`${ a } banana ${ b }`';
-        expect(msgid2Orig(input, ['a', 'b'])).to.eql(expected);
+        expect(validateAndFormatMsgid(input, ['a', 'b'])).to.eql(expected);
     });
 
     it('should ignore white spaces inside expressions', () => {
         const input = '${a} banana ${ b    }';
         const expected = '`${ a } banana ${ b }`';
-        expect(msgid2Orig(input, ['a', 'b'])).to.eql(expected);
+        expect(validateAndFormatMsgid(input, ['a', 'b'])).to.eql(expected);
     });
 });
 

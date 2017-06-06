@@ -1,6 +1,6 @@
 import * as t from 'babel-types';
 import { PO_PRIMITIVES } from '../defaults';
-import { dedentStr, template2Msgid, ast2Str, msgid2Orig, getQuasiStr, strToQuasi } from '../utils';
+import { dedentStr, template2Msgid, ast2Str, validateAndFormatMsgid, getQuasiStr, strToQuasi } from '../utils';
 import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc, hasUsefulInfo } from '../po-helpers';
 import { ValidationError } from '../errors';
 import tpl from 'babel-template';
@@ -123,7 +123,7 @@ function resolve(node, translationObj, context, state) {
             NGETTEXT: getNgettextUID(state, getPluralFunc(context.getHeaders())),
             N: tagArg,
             ARGS: t.arrayExpression(args.map((l) => {
-                const { expression: { quasis, expressions } } = tpl(msgid2Orig(l, exprs))();
+                const { expression: { quasis, expressions } } = tpl(validateAndFormatMsgid(l, exprs))();
                 return t.templateLiteral(quasis, expressions);
             })),
         });
@@ -131,7 +131,7 @@ function resolve(node, translationObj, context, state) {
 
     if (t.isLiteral(tagArg)) {
         const pluralFn = makePluralFunc(getPluralFunc(context.getHeaders()));
-        const orig = msgid2Orig(pluralFn(tagArg.value, args), exprs);
+        const orig = validateAndFormatMsgid(pluralFn(tagArg.value, args), exprs);
         return tpl(orig)();
     }
     return undefined;
