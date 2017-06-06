@@ -1,6 +1,6 @@
 import * as t from 'babel-types';
 import tpl from 'babel-template';
-import { template2Msgid, msgid2Orig, hasExpressions, ast2Str, getQuasiStr, dedentStr } from '../utils';
+import { template2Msgid, validateAndFormatMsgid, hasExpressions, ast2Str, getQuasiStr, dedentStr } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import { ValidationError } from '../errors';
 import { hasUsefulInfo } from '../po-helpers';
@@ -32,7 +32,7 @@ function resolve(node, translation) {
 
     if (hasExpressions(node)) {
         const exprs = node.quasi.expressions.map(ast2Str);
-        return tpl(msgid2Orig(transStr, exprs))();
+        return tpl(validateAndFormatMsgid(transStr, exprs))();
     }
     return t.stringLiteral(transStr);
 }
