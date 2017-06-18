@@ -92,3 +92,7 @@ msgid "${ appleCount } apple"
 msgid_plural "${ appleCount } apple"
 msgstr[0] "${ appleCount } apple (translated)"
 msgstr[1] "${ count } apples (translated)"
+
+#: tests/fixtures/fixture.js:22
+msgid "test computed ${ a['computed'] }"
+msgstr "test computed ${ a['computed'] } translated"

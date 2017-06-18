@@ -4,6 +4,7 @@ import * as t from 'babel-types';
 import { DISABLE_COMMENT, C3POID } from './defaults';
 import dedent from 'dedent';
 import { ValidationError, NoExpressionError } from './errors';
+import escapeRegExp from 'escape-string-regexp';
 
 const disableRegExp = new RegExp(`\\b${DISABLE_COMMENT}\\b`);
 
@@ -72,7 +73,7 @@ const memoize1 = (f) => (arg) => {
 };
 
 const reg = (i) => new RegExp(`\\$\\{([\\s]+?|\\s?)${i}([\\s]+?|\\s?)}`);
-const memReg = memoize1(reg);
+const memReg = memoize1((i) => reg(escapeRegExp(i)));
 
 export const validateAndFormatMsgid = (msgid, exprNames) => {
     exprNames.forEach((exprName) => {

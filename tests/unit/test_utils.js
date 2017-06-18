@@ -109,6 +109,12 @@ describe('utils validateAndFormatMsgid', () => {
         const expected = '`${ a } banana ${ b }`';
         expect(validateAndFormatMsgid(input, ['a', 'b'])).to.eql(expected);
     });
+
+    it('should support computed properties', () => {
+        const input = '${ a[value] } banana ${ b[value] }';
+        const expected = '`${ a[value] } banana ${ b[value] }`';
+        expect(validateAndFormatMsgid(input, ['a[value]', 'b[value]'])).to.eql(expected);
+    });
 });
 
 describe('utils isInDisabledScope', () => {
