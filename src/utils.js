@@ -72,7 +72,7 @@ const memoize1 = (f) => (arg) => {
     return mem[arg];
 };
 
-const reg = (i) => new RegExp(`\\$\\{([\\s]+?|\\s?)${i}([\\s]+?|\\s?)}`);
+const reg = (i) => new RegExp(`\\$\\{\\s*${ i }\\s*}`);
 const memReg = memoize1((i) => reg(escapeRegExp(i)));
 
 export const validateAndFormatMsgid = (msgid, exprNames) => {
