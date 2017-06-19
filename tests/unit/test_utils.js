@@ -115,6 +115,33 @@ describe('utils validateAndFormatMsgid', () => {
         const expected = '`${ a[value] } banana ${ b[value] }`';
         expect(validateAndFormatMsgid(input, ['a[value]', 'b[value]'])).to.eql(expected);
     });
+
+    it('should throw if not all expressions exist in translated strings', () => {
+        const input = '${ fooxbar } apples (translated)';
+        const func = () => validateAndFormatMsgid(input, ['foo.bar']);
+        expect(func).to.throw(
+            'NoExpressionError: Expression \'foo.bar\' is not found in the localized string ' +
+            '\'${ fooxbar } apples (translated)\'.'
+        );
+    });
+
+    it('should support [] in computed properties', () => {
+        const input = "${ a[value[3]] } banana ${ b['[key]'] }";
+        const expected = "`${ a[value[3]] } banana ${ b['[key]'] }`";
+        expect(validateAndFormatMsgid(input, ['a[value[3]]', "b['[key]']"])).to.eql(expected);
+    });
+
+    it('should support string in computed properties', () => {
+        const input = "${ a['^[a]$'] } banana";
+        const expected = "`${ a['^[a]$'] } banana`";
+        expect(validateAndFormatMsgid(input, ["a['^[a]$']"])).to.eql(expected);
+    });
+
+    it('should support template strings in computed properties', () => {
+        const input = '${ a[`foo-${ value }`] } banana';
+        const expected = '`${ a[`foo-${ value }`] } banana`';
+        expect(validateAndFormatMsgid(input, ['a[`foo-${ value }`]'])).to.eql(expected);
+    });
 });
 
 describe('utils isInDisabledScope', () => {
