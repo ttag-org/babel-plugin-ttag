@@ -1,4 +1,5 @@
 import generate from 'babel-generator';
+import tpl from 'babel-template';
 import { execSync } from 'child_process';
 import * as t from 'babel-types';
 import { DISABLE_COMMENT, C3POID } from './defaults';
@@ -62,26 +63,18 @@ export const getMsgid = (str, exprs) => str.reduce((s, l, i) => {
     return (expr === undefined) ? s + l : `${s}${l}\${ ${expr2str(expr)} }`;
 }, '');
 
-const mem = {};
-const memoize1 = (f) => (arg) => {
-    if (mem[arg]) {
-        return mem[arg];
-    }
-    mem[arg] = f(arg);
-    return mem[arg];
-};
-
-const reg = (i) => new RegExp(`\\$\\{([\\s]+?|\\s?)${i}([\\s]+?|\\s?)}`);
-const memReg = memoize1(reg);
-
 export const validateAndFormatMsgid = (msgid, exprNames) => {
+    const msgidAST = tpl(strToQuasi(msgid))();
+    const msgidExprs = new Set(msgidAST.expression.expressions.map(ast2Str));
     exprNames.forEach((exprName) => {
-        if (!msgid.match(memReg(exprName))) {
+        if (!msgidExprs.has(exprName)) {
             throw new NoExpressionError(`Expression '${exprName}' is not found in the localized string '${msgid}'.`);
         }
     });
 
-    return strToQuasi(exprNames.reduce((r, expr) => r.replace(memReg(expr), `\${ ${expr} }`), msgid));
+    // need to regenerate template to fix spaces between in ${}
+    // because translator can accidentally add extra space or remove
+    return generate(msgidAST).code.replace(/;$/, '');
 };
 
 export function template2Msgid(node) {

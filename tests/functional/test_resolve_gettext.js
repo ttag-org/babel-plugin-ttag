@@ -95,4 +95,9 @@ describe('Resolve tag-gettext', () => {
             'unknown: Expression \'mississipi\' is not found in the localized string \'Typo test ${ missingpi }\'.'
         );
     });
+    it('should resolve computed properties', () => {
+        const input = 'console.log(t`test computed ${ a[\'computed\'] }`);';
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain('console.log(\'test computed \' + a[\'computed\'] + \' translated\');');
+    });
 });
