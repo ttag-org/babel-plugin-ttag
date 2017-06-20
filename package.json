@@ -20,7 +20,7 @@
     "type": "git",
     "url": "git+https://github.com/c-3po-org/babel-plugin-c-3po.git"
   },
-  "author": "",
+  "author": "alexander",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/c-3po-org/babel-plugin-c-3po/issues"
