@@ -22,4 +22,11 @@ describe('Resolve default', () => {
         const expected = fs.readFileSync(expectedPath).toString();
         expect(result).to.eql(expected);
     });
+
+    it('should not resolve fuzzy translations', () => {
+        const input = 'console.log(t`{name} fuzzy name`);';
+        const result = babel.transform(input, options).code;
+        expect(result).to.not.contain('{surname} fuzzy name');
+        expect(result).to.contain('{name} fuzzy name');
+    });
 });

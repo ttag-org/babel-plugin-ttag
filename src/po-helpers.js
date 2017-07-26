@@ -123,6 +123,12 @@ export function hasTranslations(translationObj) {
     return translationObj[PO_PRIMITIVES.MSGSTR].reduce((r, t) => r && t.length, true);
 }
 
+export function isFuzzy(translationObj) {
+    return (
+        translationObj && translationObj.comments &&
+        translationObj.comments.flag === 'fuzzy');
+}
+
 export function pluralFnBody(pluralStr) {
     return `return args[+ (${pluralStr})];`;
 }
