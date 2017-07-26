@@ -1,6 +1,6 @@
 import { NoTranslationError } from './errors';
 import { dedentStr } from './utils';
-import { hasTranslations } from './po-helpers';
+import { hasTranslations, isFuzzy } from './po-helpers';
 
 export function resolveEntries(extractor, nodePath, context, state) {
     try {
@@ -13,7 +13,7 @@ export function resolveEntries(extractor, nodePath, context, state) {
             throw new NoTranslationError(`No "${msgid}" in "${context.getPoFilePath()}" file`);
         }
 
-        if (!hasTranslations(translationObj)) {
+        if (!hasTranslations(translationObj) || isFuzzy(translationObj)) {
             throw new NoTranslationError(`No translation for "${msgid}" in "${context.getPoFilePath()}" file`);
         }
 
