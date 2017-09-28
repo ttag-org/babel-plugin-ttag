@@ -96,3 +96,8 @@ msgstr[1] "${ count } apples (translated)"
 #: tests/fixtures/fixture.js:22
 msgid "test computed ${ a['computed'] }"
 msgstr "test computed ${ a['computed'] } translated"
+
+#: tests/fixtures/fixture.js:223
+#, fuzzy
+msgid "{name} fuzzy name"
+msgstr "{surname} fuzzy name"
