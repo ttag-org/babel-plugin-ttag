@@ -67,7 +67,7 @@ Output in .po files:
 ```po
 #: src/PluralDemo.js:18
 msgid "Mike has ${ n } banana"
-msgid_plural "Mike has ${ n } banana"
+msgid_plural "Mike has ${ n } bananas"
 msgstr[0] ""
 msgstr[1] ""
 ```
