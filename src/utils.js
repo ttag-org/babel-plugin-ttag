@@ -1,10 +1,12 @@
+import { execSync } from 'child_process';
+import * as bt from 'babel-types';
+import dedent from 'dedent';
 import generate from 'babel-generator';
 import tpl from 'babel-template';
-import { execSync } from 'child_process';
-import * as t from 'babel-types';
+
 import { DISABLE_COMMENT, C3POID } from './defaults';
-import dedent from 'dedent';
 import { ValidationError, NoExpressionError } from './errors';
+
 
 const disableRegExp = new RegExp(`\\b${DISABLE_COMMENT}\\b`);
 
@@ -34,22 +36,22 @@ export function hasExpressions(node) {
 
 export function getMembersPath({ object, computed, property }) {
     /* eslint-disable no-use-before-define */
-    const obj = t.isMemberExpression(object) ? getMembersPath(object) : expr2str(object);
+    const obj = bt.isMemberExpression(object) ? getMembersPath(object) : expr2str(object);
 
     return computed ? `${obj}[${expr2str(property)}]` : `${obj}.${property.name}`;
 }
 
 function expr2str(expr) {
     let str;
-    if (t.isIdentifier(expr)) {
+    if (bt.isIdentifier(expr)) {
         str = expr.name;
-    } else if (t.isMemberExpression(expr)) {
+    } else if (bt.isMemberExpression(expr)) {
         str = getMembersPath(expr);
-    } else if (t.isNumericLiteral(expr)) {
+    } else if (bt.isNumericLiteral(expr)) {
         str = expr.value;
-    } else if (t.isStringLiteral(expr)) {
+    } else if (bt.isStringLiteral(expr)) {
         str = expr.extra.raw;
-    } else if (t.isThisExpression(expr)) {
+    } else if (bt.isThisExpression(expr)) {
         str = 'this';
     } else {
         throw new ValidationError(`You can not use ${expr.type} '\${${ast2Str(expr)}}' in localized strings`);
@@ -120,7 +122,7 @@ export function isC3poImport(node) {
 }
 
 export function hasImportSpecifier(node) {
-    return node.specifiers && node.specifiers.some(({ type }) => type === 'ImportSpecifier');
+    return node.specifiers && node.specifiers.some(bt.isImportSpecifier);
 }
 
 export function dedentStr(str) {
