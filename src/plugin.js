@@ -1,14 +1,17 @@
+import * as bt from 'babel-types';
 import fs from 'fs';
-import path from 'path';
 import mkdirp from 'mkdirp';
-import C3poContext from './context';
-import { extractPoEntry, getExtractor } from './extract';
-import { resolveEntries } from './resolve';
+import path from 'path';
+
+import { ALIASES } from './defaults';
 import { buildPotData, makePotStr } from './po-helpers';
+import { extractPoEntry, getExtractor } from './extract';
 import { hasDisablingComment, isInDisabledScope, isC3poImport,
     hasImportSpecifier, poReferenceComparator } from './utils';
-import { ALIASES } from './defaults';
+import { resolveEntries } from './resolve';
 import { ValidationError } from './errors';
+import C3poContext from './context';
+
 
 const reverseAliases = {};
 for (const key of Object.keys(ALIASES)) {
@@ -140,7 +143,7 @@ export default function () {
                 }
                 if (isC3poImport(node) && hasImportSpecifier(node)) {
                     node.specifiers
-                    .filter((s) => s.type === 'ImportSpecifier')
+                    .filter(bt.isImportSpecifier)
                     .filter(({ imported: { name } }) => reverseAliases[name])
                     .forEach(({ imported, local }) => {
                         aliases[reverseAliases[imported.name]] = local.name;
