@@ -10,6 +10,31 @@ const options = {
     plugins: [[c3po, { extract: { output } }]],
 };
 
+const expect1 = `import { c, t } from 'c-3po';
+c('email').t\`test\`;
+console.log(t\`test\`);
+c('email').t\`test2\`;
+console.log(t\`test2\`);`;
+
+const expect2 = `msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\\n"
+
+msgid "test"
+msgstr ""
+
+msgid "test2"
+msgstr ""
+
+msgctxt "email"
+msgid "test"
+msgstr ""
+
+msgctxt "email"
+msgid "test2"
+msgstr ""`;
+
 describe('Contexts extract', () => {
     before(() => {
         rmDirSync('debug');
@@ -19,10 +44,15 @@ describe('Contexts extract', () => {
         const input = dedent(`
             import { c, t } from 'c-3po';
             c('email').t\`test\`;
+            console.log(t\`test\`);
+            c('email').t\`test2\`;
+            console.log(t\`test2\`);
         `);
-        babel.transform(input, options);
+
+        const babelResult = babel.transform(input, options);
+        expect(babelResult.code).to.eql(expect1);
+
         const result = fs.readFileSync(output).toString();
-        console.log(result);
-        // expect(result).to.contain('#. test1');
+        expect(result).to.eql(expect2);
     });
 });

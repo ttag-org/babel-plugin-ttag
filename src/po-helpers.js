@@ -9,18 +9,23 @@ export function buildPotData(translations) {
         charset: 'UTF-8',
         headers: DEFAULT_HEADERS,
         translations: {
-            context: {
+            '': {
             },
         },
     };
 
-    const defaultContext = data.translations.context;
     for (const trans of translations) {
-        if (!defaultContext[trans.msgid]) {
-            defaultContext[trans.msgid] = trans;
+        const ctx = trans[PO_PRIMITIVES.MSGCTXT] || '';
+        if (!data.translations[ctx]) {
+            data.translations[ctx] = {};
+        }
+
+        if (!data.translations[ctx][trans.msgid]) {
+            data.translations[ctx][trans.msgid] = trans;
             continue;
         }
-        const oldTrans = defaultContext[trans.msgid];
+
+        const oldTrans = data.translations[ctx][trans.msgid];
 
         // merge references
         if (oldTrans.comments && oldTrans.comments.reference &&
