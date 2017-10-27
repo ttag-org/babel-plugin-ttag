@@ -111,7 +111,7 @@ describe('po-helpers buildPotData', () => {
                 'content-type': 'text/plain; charset=UTF-8',
                 'plural-forms': 'nplurals=2; plural=(n!=1);',
             },
-            translations: { context: { test: msg1 } },
+            translations: { '': { test: msg1 } },
         };
         const result = buildPotData([msg1]);
         expect(result).to.eql(expected);
@@ -147,7 +147,7 @@ describe('po-helpers buildPotData', () => {
                 'content-type': 'text/plain; charset=UTF-8',
                 'plural-forms': 'nplurals=2; plural=(n!=1);',
             },
-            translations: { context: { test: resultmsg } },
+            translations: { '': { test: resultmsg } },
         };
         const result = buildPotData([msg1, msg2]);
         expect(result).to.eql(expected);
@@ -162,7 +162,7 @@ describe('po-helpers buildPotData', () => {
             },
         };
         const result = buildPotData([msg1, msg1]);
-        const ref = result.translations.context.test.comments.reference;
+        const ref = result.translations[''].test.comments.reference;
         expect(ref).to.not.eql('path/to/file/1.txt:123\npath/to/file/1.txt:123');
     });
 });
