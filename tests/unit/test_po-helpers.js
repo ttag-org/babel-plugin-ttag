@@ -117,6 +117,36 @@ describe('po-helpers buildPotData', () => {
         expect(result).to.eql(expected);
     });
 
+    it('should build po data with multiple contexts', () => {
+        const msg1 = {
+            msgid: 'test',
+            msgstr: 'test1',
+            comments: {
+                reference: 'path/to/file/1.txt:123',
+            },
+        };
+
+        const msg2 = {
+            msgid: 'test2',
+            msgstr: 'test2',
+            msgctxt: 'ctx2',
+            comments: {
+                reference: 'path/to/file/1.txt:123',
+            },
+        };
+
+        const expected = {
+            charset: 'UTF-8',
+            headers: {
+                'content-type': 'text/plain; charset=UTF-8',
+                'plural-forms': 'nplurals=2; plural=(n!=1);',
+            },
+            translations: { '': { test: msg1 }, ctx2: { test2: msg2 } },
+        };
+        const result = buildPotData([msg1, msg2]);
+        expect(result).to.eql(expected);
+    });
+
     it('should accumulate references', () => {
         const msg1 = {
             msgid: 'test',
