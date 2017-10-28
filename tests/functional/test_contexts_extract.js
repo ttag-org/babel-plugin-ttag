@@ -55,4 +55,24 @@ describe('Contexts extract', () => {
         const result = fs.readFileSync(output).toString();
         expect(result).to.eql(expect2);
     });
+
+    it('should throw if context argument is not string', () => {
+        const input = dedent(`
+            import { c, t } from 'c-3po';
+            c(aaa).t\`test\`;
+        `);
+
+        const fn = () => babel.transform(input, options);
+        expect(fn).to.throw('Expected string as a context argument. Actual - "aaa"');
+    });
+
+    it('should throw if has more than 1 argument', () => {
+        const input = dedent(`
+            import { c, t } from 'c-3po';
+            c('email', 'profile').t\`test\`;
+        `);
+
+        const fn = () => babel.transform(input, options);
+        expect(fn).to.throw('Context function accepts only 1 argument but has 2 instead');
+    });
 });
