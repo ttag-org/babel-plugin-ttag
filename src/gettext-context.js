@@ -1,16 +1,16 @@
 import * as t from 'babel-types';
 import { ast2Str } from './utils';
 
-function isContextCall(node) {
+export function isContextCall(node, context) {
     return (
     t.isTaggedTemplateExpression(node) &&
     t.isMemberExpression(node.tag) &&
     t.isCallExpression(node.tag.object) &&
     t.isIdentifier(node.tag.object.callee) &&
-    node.tag.object.callee.name === 'c');
+    node.tag.object.callee.name === context.getAliasFor('context'));
 }
 
-function isValidContext(nodePath) {
+export function isValidContext(nodePath) {
     const node = nodePath.node;
     const argsLength = node.tag.object.arguments.length;
 
@@ -25,15 +25,4 @@ function isValidContext(nodePath) {
     }
 
     return true;
-}
-
-export function tryMatchContext(cb) {
-    return (nodePath, state) => {
-        const node = nodePath.node;
-        if (isContextCall(node) && isValidContext(nodePath)) {
-            nodePath._C3PO_GETTEXT_CONTEXT = node.tag.object.arguments[0].value;
-            nodePath.node = t.taggedTemplateExpression(node.tag.property, node.quasi);
-        }
-        cb(nodePath, state);
-    };
 }

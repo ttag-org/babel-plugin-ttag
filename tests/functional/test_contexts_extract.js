@@ -75,4 +75,14 @@ describe('Contexts extract', () => {
         const fn = () => babel.transform(input, options);
         expect(fn).to.throw('Context function accepts only 1 argument but has 2 instead');
     });
+
+    it('should discover context by alias', () => {
+        const input = dedent(`
+            import { c as msgctxt, t } from 'c-3po';
+            msgctxt('phone').t\`test\`;
+        `);
+        babel.transform(input, options);
+        const result = fs.readFileSync(output).toString();
+        expect(result).to.contain('msgctxt "phone"');
+    });
 });

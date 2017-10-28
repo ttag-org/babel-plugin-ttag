@@ -11,7 +11,7 @@ import { hasDisablingComment, isInDisabledScope, isC3poImport,
 import { resolveEntries } from './resolve';
 import { ValidationError } from './errors';
 import C3poContext from './context';
-import { tryMatchContext } from './gettext-context';
+import { isContextCall, isValidContext } from './gettext-context';
 
 
 const reverseAliases = {};
@@ -26,6 +26,24 @@ export default function () {
     let aliases = {};
     let imports = new Set();
 
+    function tryMatchContext(cb) {
+        return (nodePath, state) => {
+            if (!context) {
+                context = new C3poContext(state.opts);
+            }
+            // TODO: move this logic to imports
+            context.setAliases(aliases);
+            context.setImports(imports);
+
+            const node = nodePath.node;
+            if (isContextCall(node, context) && isValidContext(nodePath)) {
+                nodePath._C3PO_GETTEXT_CONTEXT = node.tag.object.arguments[0].value;
+                nodePath.node = bt.taggedTemplateExpression(node.tag.property, node.quasi);
+            }
+            cb(nodePath, state);
+        };
+    }
+
     function extractOrResolve(nodePath, state) {
         if (nodePath.node._C3PO_visited) { // Should visit each node only once
             return;
@@ -37,6 +55,7 @@ export default function () {
         if (!context) {
             context = new C3poContext(state.opts);
         }
+        // TODO: move this logic to imports
         context.setAliases(aliases);
         context.setImports(imports);
 
