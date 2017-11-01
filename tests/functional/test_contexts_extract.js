@@ -116,4 +116,15 @@ describe('Contexts extract', () => {
         const fn = () => babel.transform(input, options);
         expect(fn).to.throw('Expected string as a context argument. Actual - "aaa"');
     });
+
+    it('should extract gettext', () => {
+        const input = dedent(`
+            import { c, gettext } from 'c-3po';
+            c('gettext_ctx').gettext('gettext test');
+        `);
+        babel.transform(input, options);
+        const result = fs.readFileSync(output).toString();
+        expect(result).to.contain('msgctxt "gettext_ctx"');
+        expect(result).to.contain('msgid "gettext test"');
+    });
 });
