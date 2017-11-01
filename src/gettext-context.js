@@ -20,7 +20,24 @@ export function isContextFnCall(node, context) {
     );
 }
 
-export function isValidContext(nodePath) {
+export function isValidFnCallContext(nodePath) {
+    const node = nodePath.node;
+    const argsLength = node.callee.object.arguments.length;
+
+    if (argsLength !== 1) {
+        throw nodePath.buildCodeFrameError(`Context function accepts only 1 argument but has ${argsLength} instead.`);
+    }
+
+    const contextStr = node.callee.object.arguments[0];
+
+    if (!t.isLiteral(contextStr)) {
+        throw nodePath.buildCodeFrameError(`Expected string as a context argument. Actual - "${ast2Str(contextStr)}".`);
+    }
+
+    return true;
+}
+
+export function isValidTagContext(nodePath) {
     const node = nodePath.node;
     const argsLength = node.tag.object.arguments.length;
 

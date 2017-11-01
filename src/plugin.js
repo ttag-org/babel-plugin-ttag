@@ -11,7 +11,8 @@ import { hasDisablingComment, isInDisabledScope, isC3poImport,
 import { resolveEntries } from './resolve';
 import { ValidationError } from './errors';
 import C3poContext from './context';
-import { isContextTagCall, isValidContext, isContextFnCall } from './gettext-context';
+import { isContextTagCall, isValidTagContext, isContextFnCall,
+    isValidFnCallContext } from './gettext-context';
 
 
 const reverseAliases = {};
@@ -27,7 +28,7 @@ export default function () {
     function tryMatchTag(cb) {
         return (nodePath, state) => {
             const node = nodePath.node;
-            if (isContextTagCall(node, context) && isValidContext(nodePath)) {
+            if (isContextTagCall(node, context) && isValidTagContext(nodePath)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.tag.object.arguments[0].value;
                 nodePath.node = bt.taggedTemplateExpression(node.tag.property, node.quasi);
             }
@@ -38,7 +39,7 @@ export default function () {
     function tryMatchCall(cb) {
         return (nodePath, state) => {
             const node = nodePath.node;
-            if (isContextFnCall(node, context)) {
+            if (isContextFnCall(node, context) && isValidFnCallContext(nodePath)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.callee.object.arguments[0].value;
                 nodePath.node = bt.callExpression(node.callee.property, node.arguments);
             }
