@@ -95,6 +95,5 @@ describe('Contexts extract', () => {
         const result = fs.readFileSync(output).toString();
         expect(result).to.contain('msgctxt "ngettext_ctx"');
         expect(result).to.contain('msgid_plural "bananas"');
-
     });
 });

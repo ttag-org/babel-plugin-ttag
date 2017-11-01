@@ -23,18 +23,9 @@ export default function () {
     let context;
     let disabledScopes = new Set();
     const potEntries = [];
-    let aliases = {};
-    let imports = new Set();
 
     function tryMatchTag(cb) {
         return (nodePath, state) => {
-            if (!context) {
-                context = new C3poContext(state.opts);
-            }
-            // TODO: move this logic to imports
-            context.setAliases(aliases);
-            context.setImports(imports);
-
             const node = nodePath.node;
             if (isContextTagCall(node, context) && isValidContext(nodePath)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.tag.object.arguments[0].value;
@@ -46,13 +37,6 @@ export default function () {
 
     function tryMatchCall(cb) {
         return (nodePath, state) => {
-            if (!context) {
-                context = new C3poContext(state.opts);
-            }
-            // TODO: move this logic to imports
-            context.setAliases(aliases);
-            context.setImports(imports);
-
             const node = nodePath.node;
             if (isContextFnCall(node, context)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.callee.object.arguments[0].value;
@@ -69,13 +53,6 @@ export default function () {
         if (isInDisabledScope(nodePath, disabledScopes)) {
             return;
         }
-
-        if (!context) {
-            context = new C3poContext(state.opts);
-        }
-        // TODO: move this logic to imports
-        context.setAliases(aliases);
-        context.setImports(imports);
 
         const extractor = getExtractor(nodePath, context);
         if (!extractor) {
@@ -164,10 +141,13 @@ export default function () {
         visitor: {
             TaggedTemplateExpression: tryMatchTag(extractOrResolve),
             CallExpression: tryMatchCall(extractOrResolve),
-            Program: (nodePath) => {
+            Program: (nodePath, state) => {
+                if (!context) {
+                    context = new C3poContext(state.opts);
+                } else {
+                    context.clear();
+                }
                 disabledScopes = new Set();
-                aliases = {};
-                imports = new Set();
                 if (hasDisablingComment(nodePath.node)) {
                     disabledScopes.add(nodePath.scope.uid);
                 }
@@ -182,15 +162,15 @@ export default function () {
                 if (isC3poImport(node)) {
                     node.specifiers
                     .filter(({ local: { name } }) => reverseAliases[name])
-                    .map((s) => imports.add(s.local.name));
+                    .map((s) => context.addImport(s.local.name));
                 }
                 if (isC3poImport(node) && hasImportSpecifier(node)) {
                     node.specifiers
                     .filter(bt.isImportSpecifier)
                     .filter(({ imported: { name } }) => reverseAliases[name])
                     .forEach(({ imported, local }) => {
-                        aliases[reverseAliases[imported.name]] = local.name;
-                        imports.add(local.name);
+                        context.addAlias(reverseAliases[imported.name], local.name);
+                        context.addImport(local.name);
                     });
                 }
             },
