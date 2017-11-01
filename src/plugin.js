@@ -11,6 +11,8 @@ import { hasDisablingComment, isInDisabledScope, isC3poImport,
 import { resolveEntries } from './resolve';
 import { ValidationError } from './errors';
 import C3poContext from './context';
+import { isContextTagCall, isValidTagContext, isContextFnCall,
+    isValidFnCallContext } from './gettext-context';
 
 
 const reverseAliases = {};
@@ -22,8 +24,28 @@ export default function () {
     let context;
     let disabledScopes = new Set();
     const potEntries = [];
-    let aliases = {};
-    let imports = new Set();
+
+    function tryMatchTag(cb) {
+        return (nodePath, state) => {
+            const node = nodePath.node;
+            if (isContextTagCall(node, context) && isValidTagContext(nodePath)) {
+                nodePath._C3PO_GETTEXT_CONTEXT = node.tag.object.arguments[0].value;
+                nodePath.node = bt.taggedTemplateExpression(node.tag.property, node.quasi);
+            }
+            cb(nodePath, state);
+        };
+    }
+
+    function tryMatchCall(cb) {
+        return (nodePath, state) => {
+            const node = nodePath.node;
+            if (isContextFnCall(node, context) && isValidFnCallContext(nodePath)) {
+                nodePath._C3PO_GETTEXT_CONTEXT = node.callee.object.arguments[0].value;
+                nodePath.node = bt.callExpression(node.callee.property, node.arguments);
+            }
+            cb(nodePath, state);
+        };
+    }
 
     function extractOrResolve(nodePath, state) {
         if (nodePath.node._C3PO_visited) { // Should visit each node only once
@@ -32,12 +54,6 @@ export default function () {
         if (isInDisabledScope(nodePath, disabledScopes)) {
             return;
         }
-
-        if (!context) {
-            context = new C3poContext(state.opts);
-        }
-        context.setAliases(aliases);
-        context.setImports(imports);
 
         const extractor = getExtractor(nodePath, context);
         if (!extractor) {
@@ -85,31 +101,36 @@ export default function () {
                 // with conf. options extract.location: 'file' and sortByMsgid
                 // which simplifies merge of .po files from different
                 // branches of SCM such as git or mercurial.
-                const poEntries = poData.translations.context;
-                Object.keys(poEntries).forEach((k) => {
-                    const poEntry = poEntries[k];
-                    // poEntry has a form:
-                    // {
-                    //     msgid: 'message identifier',
-                    //     msgstr: 'translation string',
-                    //     comments: {
-                    //         reference: 'path/to/file.js:line_number\npath/to/other/file.js:line_number'
-                    //     }
-                    // }
-                    if (poEntry.comments && poEntry.comments.reference) {
-                        poEntry.comments.reference = poEntry.comments.reference
-                            .split('\n')
-                            .sort(poReferenceComparator)
-                            .join('\n');
-                    }
-                });
+                const ctxs = Object.keys(poData.translations);
+                for (const ctx of ctxs) {
+                    const poEntries = poData.translations[ctx];
+                    Object.keys(poEntries).forEach((k) => {
+                        const poEntry = poEntries[k];
+                        // poEntry has a form:
+                        // {
+                        //     msgid: 'message identifier',
+                        //     msgstr: 'translation string',
+                        //     comments: {
+                        //         reference: 'path/to/file.js:line_number\npath/to/other/file.js:line_number'
+                        //     }
+                        // }
+                        if (poEntry.comments && poEntry.comments.reference) {
+                            poEntry.comments.reference = poEntry.comments.reference
+                                .split('\n')
+                                .sort(poReferenceComparator)
+                                .join('\n');
+                        }
+                    });
 
-                if (context.isSortedByMsgid()) {
-                    const oldPoData = poData.translations.context;
-                    const newContext = {};
-                    const keys = Object.keys(oldPoData).sort();
-                    keys.forEach((k) => { newContext[k] = oldPoData[k]; });
-                    poData.translations.context = newContext;
+                    if (context.isSortedByMsgid()) {
+                        const oldPoData = poData.translations[ctx];
+                        const newContext = {};
+                        const keys = Object.keys(oldPoData).sort();
+                        keys.forEach((k) => {
+                            newContext[k] = oldPoData[k];
+                        });
+                        poData.translations[ctx] = newContext;
+                    }
                 }
                 const potStr = makePotStr(poData);
                 const filepath = context.getOutputFilepath();
@@ -119,12 +140,15 @@ export default function () {
             }
         },
         visitor: {
-            TaggedTemplateExpression: extractOrResolve,
-            CallExpression: extractOrResolve,
-            Program: (nodePath) => {
+            TaggedTemplateExpression: tryMatchTag(extractOrResolve),
+            CallExpression: tryMatchCall(extractOrResolve),
+            Program: (nodePath, state) => {
+                if (!context) {
+                    context = new C3poContext(state.opts);
+                } else {
+                    context.clear();
+                }
                 disabledScopes = new Set();
-                aliases = {};
-                imports = new Set();
                 if (hasDisablingComment(nodePath.node)) {
                     disabledScopes.add(nodePath.scope.uid);
                 }
@@ -139,15 +163,15 @@ export default function () {
                 if (isC3poImport(node)) {
                     node.specifiers
                     .filter(({ local: { name } }) => reverseAliases[name])
-                    .map((s) => imports.add(s.local.name));
+                    .map((s) => context.addImport(s.local.name));
                 }
                 if (isC3poImport(node) && hasImportSpecifier(node)) {
                     node.specifiers
                     .filter(bt.isImportSpecifier)
                     .filter(({ imported: { name } }) => reverseAliases[name])
                     .forEach(({ imported, local }) => {
-                        aliases[reverseAliases[imported.name]] = local.name;
-                        imports.add(local.name);
+                        context.addAlias(reverseAliases[imported.name], local.name);
+                        context.addImport(local.name);
                     });
                 }
             },
