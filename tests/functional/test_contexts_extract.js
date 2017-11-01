@@ -85,4 +85,16 @@ describe('Contexts extract', () => {
         const result = fs.readFileSync(output).toString();
         expect(result).to.contain('msgctxt "phone"');
     });
+
+    it('should extract ngettext', () => {
+        const input = dedent(`
+            import { c, ngettext, msgid } from 'c-3po';
+            c('ngettext_ctx').ngettext(msgid\`banana\`, \`bananas\`, n);
+        `);
+        babel.transform(input, options);
+        const result = fs.readFileSync(output).toString();
+        expect(result).to.contain('msgctxt "ngettext_ctx"');
+        expect(result).to.contain('msgid_plural "bananas"');
+
+    });
 });

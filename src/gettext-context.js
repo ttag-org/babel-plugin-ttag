@@ -1,13 +1,23 @@
 import * as t from 'babel-types';
 import { ast2Str } from './utils';
 
-export function isContextCall(node, context) {
+export function isContextTagCall(node, context) {
     return (
     t.isTaggedTemplateExpression(node) &&
     t.isMemberExpression(node.tag) &&
     t.isCallExpression(node.tag.object) &&
     t.isIdentifier(node.tag.object.callee) &&
     node.tag.object.callee.name === context.getAliasFor('context'));
+}
+
+export function isContextFnCall(node, context) {
+    return (
+        t.isCallExpression(node) &&
+        t.isMemberExpression(node.callee) &&
+        t.isCallExpression(node.callee.object) &&
+        t.isIdentifier(node.callee.object.callee) &&
+        node.callee.object.callee.name === context.getAliasFor('context')
+    );
 }
 
 export function isValidContext(nodePath) {

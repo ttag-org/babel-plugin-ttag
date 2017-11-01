@@ -11,7 +11,7 @@ import { hasDisablingComment, isInDisabledScope, isC3poImport,
 import { resolveEntries } from './resolve';
 import { ValidationError } from './errors';
 import C3poContext from './context';
-import { isContextCall, isValidContext } from './gettext-context';
+import { isContextTagCall, isValidContext, isContextFnCall } from './gettext-context';
 
 
 const reverseAliases = {};
@@ -26,7 +26,7 @@ export default function () {
     let aliases = {};
     let imports = new Set();
 
-    function tryMatchContext(cb) {
+    function tryMatchTag(cb) {
         return (nodePath, state) => {
             if (!context) {
                 context = new C3poContext(state.opts);
@@ -36,9 +36,27 @@ export default function () {
             context.setImports(imports);
 
             const node = nodePath.node;
-            if (isContextCall(node, context) && isValidContext(nodePath)) {
+            if (isContextTagCall(node, context) && isValidContext(nodePath)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.tag.object.arguments[0].value;
                 nodePath.node = bt.taggedTemplateExpression(node.tag.property, node.quasi);
+            }
+            cb(nodePath, state);
+        };
+    }
+
+    function tryMatchCall(cb) {
+        return (nodePath, state) => {
+            if (!context) {
+                context = new C3poContext(state.opts);
+            }
+            // TODO: move this logic to imports
+            context.setAliases(aliases);
+            context.setImports(imports);
+
+            const node = nodePath.node;
+            if (isContextFnCall(node, context)) {
+                nodePath._C3PO_GETTEXT_CONTEXT = node.callee.object.arguments[0].value;
+                nodePath.node = bt.callExpression(node.callee.property, node.arguments);
             }
             cb(nodePath, state);
         };
@@ -144,8 +162,8 @@ export default function () {
             }
         },
         visitor: {
-            TaggedTemplateExpression: tryMatchContext(extractOrResolve),
-            CallExpression: extractOrResolve,
+            TaggedTemplateExpression: tryMatchTag(extractOrResolve),
+            CallExpression: tryMatchCall(extractOrResolve),
             Program: (nodePath) => {
                 disabledScopes = new Set();
                 aliases = {};
