@@ -105,7 +105,7 @@ export function makePotStr(data) {
 export function parsePoData(filepath) {
     const poRaw = fs.readFileSync(filepath);
     const parsedPo = gettextParser.po.parse(poRaw.toString());
-    const translations = parsedPo.translations[''];
+    const translations = parsedPo.translations;
     const headers = parsedPo.headers;
     return { translations, headers };
 }
