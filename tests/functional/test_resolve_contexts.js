@@ -40,7 +40,7 @@ describe('Context resolve', () => {
         'c("email").ngettext(msgid`${ a } banana`, `${ a } bananas`, a);\n';
 
         const result = babel.transform(input, options).code;
-        console.log(result);
-        // expect(result).to.contain('test email context');
+        expect(result).to.contain('${ a } banana email context');
+        expect(result).to.contain('${ a } bananas email context');
     });
 });

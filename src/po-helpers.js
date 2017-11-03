@@ -112,11 +112,15 @@ export function parsePoData(filepath) {
 
 const pluralRegex = /\splural ?=?([\s\S]*);?/;
 export function getPluralFunc(headers) {
-    let pluralFn = pluralRegex.exec(headers['plural-forms'])[1];
-    if (pluralFn[pluralFn.length - 1] === ';') {
-        pluralFn = pluralFn.slice(0, -1);
+    try {
+        let pluralFn = pluralRegex.exec(headers['plural-forms'])[1];
+        if (pluralFn[pluralFn.length - 1] === ';') {
+            pluralFn = pluralFn.slice(0, -1);
+        }
+        return pluralFn;
+    } catch (err) {
+        throw new Error(`Failed to parse plural func from headers "${JSON.stringify(headers)}"\n`);
     }
-    return pluralFn;
 }
 
 export function getNPlurals(headers) {
