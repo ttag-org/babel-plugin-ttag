@@ -39,6 +39,11 @@ describe('po-helpers getPluralFunc', () => {
         };
         expect(getPluralFunc(headers)).to.eql('(n!=1)');
     });
+    it('should throw useful error message when headers are in wrong format', () => {
+        const headers = {};
+        const fn = () => getPluralFunc(headers);
+        expect(fn).to.throw('Failed to parse plural func');
+    });
 });
 
 describe('po-helpers makePluralFunc', () => {

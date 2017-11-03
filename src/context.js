@@ -152,8 +152,8 @@ class C3poContext {
         this.poData = poFilePath === 'default' ? getDefaultPoData(this.getHeaders()) : parsePoData(poFilePath);
     }
 
-    getTranslations() {
-        return this.poData.translations;
+    getTranslations(gettextContext = '') {
+        return this.poData.translations[gettextContext];
     }
 
 }

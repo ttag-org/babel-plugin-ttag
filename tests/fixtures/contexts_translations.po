@@ -1,0 +1,22 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgid "test"
+msgstr "test default context"
+
+msgctxt "email"
+msgid "test"
+msgstr "test email context"
+
+msgid "${ a } banana"
+msgid_plural "${ a } bananas"
+msgstr[0] "${ a } banana default"
+msgstr[1] "${ a } bananas default"
+
+msgctxt "email"
+msgid "${ a } banana"
+msgid_plural "${ a } bananas"
+msgstr[0] "${ a } banana email context"
+msgstr[1] "${ a } bananas email context"
