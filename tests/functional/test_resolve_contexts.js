@@ -43,4 +43,13 @@ describe('Context resolve', () => {
         expect(result).to.contain('${ a } banana email context');
         expect(result).to.contain('${ a } bananas email context');
     });
+
+    it('should resolve jt', () => {
+        const input = `
+        import { jt, c } from 'c-3po';
+        c('email').jt\`test\`
+        `;
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain('test email context');
+    });
 });
