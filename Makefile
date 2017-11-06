@@ -82,6 +82,12 @@ test_sorted_entries_without_reference_line_num:
 test_empty_config:
 	$(MOCHA_CMD) ./tests/functional/test_empty_config_mode.js
 
+test_contexts_extract:
+	$(MOCHA_CMD) ./tests/functional/test_contexts_extract.js
+
+test_resolve_contexts:
+	$(MOCHA_CMD) ./tests/functional/test_resolve_contexts.js
+
 test_fun: test_extract_gettext
 test_fun: test_extract_gettext_with_formatting
 test_fun: test_extract_filename
@@ -106,6 +112,8 @@ test_fun: test_alias_discover
 test_fun: test_entries_sort
 test_fun: test_sorted_entries_sort
 test_fun: test_empty_config
+test_fun: test_contexts_extract
+test_fun: test_resolve_contexts
 
 test: test_fun
 test: test_unit

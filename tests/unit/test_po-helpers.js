@@ -39,6 +39,11 @@ describe('po-helpers getPluralFunc', () => {
         };
         expect(getPluralFunc(headers)).to.eql('(n!=1)');
     });
+    it('should throw useful error message when headers are in wrong format', () => {
+        const headers = {};
+        const fn = () => getPluralFunc(headers);
+        expect(fn).to.throw('Failed to parse plural func');
+    });
 });
 
 describe('po-helpers makePluralFunc', () => {
@@ -111,9 +116,39 @@ describe('po-helpers buildPotData', () => {
                 'content-type': 'text/plain; charset=UTF-8',
                 'plural-forms': 'nplurals=2; plural=(n!=1);',
             },
-            translations: { context: { test: msg1 } },
+            translations: { '': { test: msg1 } },
         };
         const result = buildPotData([msg1]);
+        expect(result).to.eql(expected);
+    });
+
+    it('should build po data with multiple contexts', () => {
+        const msg1 = {
+            msgid: 'test',
+            msgstr: 'test1',
+            comments: {
+                reference: 'path/to/file/1.txt:123',
+            },
+        };
+
+        const msg2 = {
+            msgid: 'test2',
+            msgstr: 'test2',
+            msgctxt: 'ctx2',
+            comments: {
+                reference: 'path/to/file/1.txt:123',
+            },
+        };
+
+        const expected = {
+            charset: 'UTF-8',
+            headers: {
+                'content-type': 'text/plain; charset=UTF-8',
+                'plural-forms': 'nplurals=2; plural=(n!=1);',
+            },
+            translations: { '': { test: msg1 }, ctx2: { test2: msg2 } },
+        };
+        const result = buildPotData([msg1, msg2]);
         expect(result).to.eql(expected);
     });
 
@@ -147,7 +182,7 @@ describe('po-helpers buildPotData', () => {
                 'content-type': 'text/plain; charset=UTF-8',
                 'plural-forms': 'nplurals=2; plural=(n!=1);',
             },
-            translations: { context: { test: resultmsg } },
+            translations: { '': { test: resultmsg } },
         };
         const result = buildPotData([msg1, msg2]);
         expect(result).to.eql(expected);
@@ -162,7 +197,7 @@ describe('po-helpers buildPotData', () => {
             },
         };
         const result = buildPotData([msg1, msg1]);
-        const ref = result.translations.context.test.comments.reference;
+        const ref = result.translations[''].test.comments.reference;
         expect(ref).to.not.eql('path/to/file/1.txt:123\npath/to/file/1.txt:123');
     });
 });

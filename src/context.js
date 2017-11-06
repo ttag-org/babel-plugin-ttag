@@ -35,14 +35,18 @@ class C3poContext {
         if (!validationResult) {
             throw new ConfigValidationError(errorsText);
         }
-        this.aliases = {};
-        this.imports = new Set();
+        this.clear();
         if (this.config.defaultHeaders && typeof this.config.defaultHeaders === 'string') {
             const { headers } = parsePoData(this.config.defaultHeaders);
             this.config.defaultHeaders = headers;
         }
         this.setPoData();
         Object.freeze(this.config);
+    }
+
+    clear() {
+        this.aliases = {};
+        this.imports = new Set();
     }
 
     getAliasFor(funcName) {
@@ -59,6 +63,10 @@ class C3poContext {
         this.aliases = aliases;
     }
 
+    addAlias(funcName, alias) {
+        this.aliases[funcName] = alias;
+    }
+
     setImports(imports) {
         this.imports = imports;
     }
@@ -66,6 +74,10 @@ class C3poContext {
     hasImport(alias) {
         const isInDiscover = this.config.discover && this.config.discover.indexOf(alias) !== -1;
         return this.imports.has(alias) || isInDiscover;
+    }
+
+    addImport(importName) {
+        this.imports.add(importName);
     }
 
     getExtractors() {
@@ -140,8 +152,8 @@ class C3poContext {
         this.poData = poFilePath === 'default' ? getDefaultPoData(this.getHeaders()) : parsePoData(poFilePath);
     }
 
-    getTranslations() {
-        return this.poData.translations;
+    getTranslations(gettextContext = '') {
+        return this.poData.translations[gettextContext];
     }
 
 }

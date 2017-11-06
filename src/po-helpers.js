@@ -9,18 +9,23 @@ export function buildPotData(translations) {
         charset: 'UTF-8',
         headers: DEFAULT_HEADERS,
         translations: {
-            context: {
+            '': {
             },
         },
     };
 
-    const defaultContext = data.translations.context;
     for (const trans of translations) {
-        if (!defaultContext[trans.msgid]) {
-            defaultContext[trans.msgid] = trans;
+        const ctx = trans[PO_PRIMITIVES.MSGCTXT] || '';
+        if (!data.translations[ctx]) {
+            data.translations[ctx] = {};
+        }
+
+        if (!data.translations[ctx][trans.msgid]) {
+            data.translations[ctx][trans.msgid] = trans;
             continue;
         }
-        const oldTrans = defaultContext[trans.msgid];
+
+        const oldTrans = data.translations[ctx][trans.msgid];
 
         // merge references
         if (oldTrans.comments && oldTrans.comments.reference &&
@@ -100,18 +105,22 @@ export function makePotStr(data) {
 export function parsePoData(filepath) {
     const poRaw = fs.readFileSync(filepath);
     const parsedPo = gettextParser.po.parse(poRaw.toString());
-    const translations = parsedPo.translations[''];
+    const translations = parsedPo.translations;
     const headers = parsedPo.headers;
     return { translations, headers };
 }
 
 const pluralRegex = /\splural ?=?([\s\S]*);?/;
 export function getPluralFunc(headers) {
-    let pluralFn = pluralRegex.exec(headers['plural-forms'])[1];
-    if (pluralFn[pluralFn.length - 1] === ';') {
-        pluralFn = pluralFn.slice(0, -1);
+    try {
+        let pluralFn = pluralRegex.exec(headers['plural-forms'])[1];
+        if (pluralFn[pluralFn.length - 1] === ';') {
+            pluralFn = pluralFn.slice(0, -1);
+        }
+        return pluralFn;
+    } catch (err) {
+        throw new Error(`Failed to parse plural func from headers "${JSON.stringify(headers)}"\n`);
     }
-    return pluralFn;
 }
 
 export function getNPlurals(headers) {

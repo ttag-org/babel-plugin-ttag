@@ -3,7 +3,7 @@ import { dedentStr } from './utils';
 import path from 'path';
 
 import { PO_PRIMITIVES } from './defaults';
-const { MSGID, MSGSTR } = PO_PRIMITIVES;
+const { MSGID, MSGSTR, MSGCTXT } = PO_PRIMITIVES;
 
 function defaultExtract(msgid) {
     return {
@@ -29,6 +29,11 @@ export const extractPoEntry = (extractor, nodePath, context, state) => {
             extractor.getMsgid(nodePath.node);
         poEntry = defaultExtract(msgid);
     }
+
+    if (nodePath._C3PO_GETTEXT_CONTEXT) {
+        poEntry[MSGCTXT] = nodePath._C3PO_GETTEXT_CONTEXT;
+    }
+
     const location = context.getLocation();
 
     if (filename !== 'unknown') {

@@ -4,11 +4,11 @@ import { hasTranslations, isFuzzy } from './po-helpers';
 
 export function resolveEntries(extractor, nodePath, context, state) {
     try {
-        const translations = context.getTranslations();
+        const gettextContext = nodePath._C3PO_GETTEXT_CONTEXT || '';
+        const translations = context.getTranslations(gettextContext);
         const msgid = context.isDedent() ? dedentStr(extractor.getMsgid(nodePath.node)) :
             extractor.getMsgid(nodePath.node);
         const translationObj = translations[msgid];
-
         if (!translationObj) {
             throw new NoTranslationError(`No "${msgid}" in "${context.getPoFilePath()}" file`);
         }
@@ -19,7 +19,11 @@ export function resolveEntries(extractor, nodePath, context, state) {
 
         const resultNode = extractor.resolve(nodePath.node, translationObj, context, state);
         if (resultNode !== undefined) {
-            nodePath.replaceWith(resultNode);
+            if (gettextContext !== '') {
+                nodePath.parentPath.replaceWith(resultNode);
+            } else {
+                nodePath.replaceWith(resultNode);
+            }
         }
     } catch (err) {
         if (err instanceof NoTranslationError) {

@@ -8,6 +8,6 @@
     "no-unused-expressions": "off",
     "no-unused-vars": ["error", { "varsIgnorePattern": "^_$" }],
     "prefer-const": ["error", {"destructuring": "all"}],
-    "no-underscore-dangle": ["error", {"allow": ["_C3PO_visited"]}]
+    "no-underscore-dangle": ["error", {"allow": ["_C3PO_visited", "_C3PO_GETTEXT_CONTEXT"]}]
   }
 }

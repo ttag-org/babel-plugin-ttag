@@ -10,11 +10,13 @@ export const ALIASES = {
     gettext: 'gettext',
     ngettext: 'ngettext',
     msgid: 'msgid',
+    context: 'c',
 };
 
 export const PO_PRIMITIVES = {
     MSGSTR: 'msgstr',
     MSGID: 'msgid',
+    MSGCTXT: 'msgctxt',
     MSGID_PLURAL: 'msgid_plural',
 };
 
