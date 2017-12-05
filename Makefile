@@ -85,6 +85,9 @@ test_empty_config:
 test_contexts_extract:
 	$(MOCHA_CMD) ./tests/functional/test_contexts_extract.js
 
+test_contexts_extract_from_file:
+	$(MOCHA_CMD) ./tests/functional/test_contexts_extract_from_file.js
+
 test_resolve_contexts:
 	$(MOCHA_CMD) ./tests/functional/test_resolve_contexts.js
 
@@ -114,6 +117,7 @@ test_fun: test_sorted_entries_sort
 test_fun: test_empty_config
 test_fun: test_contexts_extract
 test_fun: test_resolve_contexts
+test_fun: test_contexts_extract_from_file
 
 test: test_fun
 test: test_unit
