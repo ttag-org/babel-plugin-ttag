@@ -31,6 +31,7 @@ export default function () {
             if (isContextTagCall(node, context) && isValidTagContext(nodePath)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.tag.object.arguments[0].value;
                 nodePath.node = bt.taggedTemplateExpression(node.tag.property, node.quasi);
+                nodePath.node.loc = node.loc;
             }
             cb(nodePath, state);
         };
@@ -42,6 +43,7 @@ export default function () {
             if (isContextFnCall(node, context) && isValidFnCallContext(nodePath)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.callee.object.arguments[0].value;
                 nodePath.node = bt.callExpression(node.callee.property, node.arguments);
+                nodePath.node.loc = node.loc;
             }
             cb(nodePath, state);
         };
@@ -61,8 +63,9 @@ export default function () {
         }
 
         const alias = context.getAliasFor(extractor.name);
-
-        if (!context.hasImport(alias)) {
+        if (!context.hasImport(alias)
+            // can be used in scope of context without import
+            && !nodePath._C3PO_GETTEXT_CONTEXT) {
             return;
         }
 
@@ -88,7 +91,7 @@ export default function () {
             nodePath.node._C3PO_visited = true;
         } catch (err) {
             // TODO: handle specific instances of errors
-            throw nodePath.buildCodeFrameError(err.message);
+            throw nodePath.buildCodeFrameError(`${err.message}\n${err.stack}`);
         }
     }
 
@@ -163,7 +166,7 @@ export default function () {
                 if (isC3poImport(node)) {
                     node.specifiers
                     .filter(({ local: { name } }) => reverseAliases[name])
-                    .map((s) => context.addImport(s.local.name));
+                    .forEach((s) => context.addImport(s.local.name));
                 }
                 if (isC3poImport(node) && hasImportSpecifier(node)) {
                     node.specifiers
