@@ -4,3 +4,4 @@ npm-debug.log
 debug
 dist
 coverage
+.DS_Store
