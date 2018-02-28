@@ -105,6 +105,10 @@ class C3poContext {
         return Boolean(this.config.extract);
     }
 
+    isNumberedExpressions() {
+        return Boolean(this.config.numberedExpressions);
+    }
+
     isResolveMode() {
         return Boolean(this.config.resolve);
     }

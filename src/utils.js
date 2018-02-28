@@ -65,6 +65,12 @@ export const getMsgid = (str, exprs) => str.reduce((s, l, i) => {
     return (expr === undefined) ? s + l : `${s}${l}\${ ${expr2str(expr)} }`;
 }, '');
 
+
+export const getMsgidNumbered = (str, exprs) => str.reduce((s, l, i) => {
+    const expr = exprs[i];
+    return (expr === undefined) ? s + l : `${s}${l}\${ ${i} }`;
+}, '');
+
 export const validateAndFormatMsgid = (msgid, exprNames) => {
     const msgidAST = tpl(strToQuasi(msgid))();
     const msgidExprs = new Set(msgidAST.expression.expressions.map(ast2Str));
@@ -79,12 +85,14 @@ export const validateAndFormatMsgid = (msgid, exprNames) => {
     return generate(msgidAST).code.replace(/;$/, '');
 };
 
-export function template2Msgid(node) {
+export function template2Msgid(node, context) {
     const strs = node.quasi.quasis.map(({ value: { raw } }) => raw);
     const exprs = node.quasi.expressions || [];
 
     if (exprs.length) {
-        return getMsgid(strs, exprs);
+        return context.isNumberedExpressions() ?
+            getMsgidNumbered(strs, exprs) :
+            getMsgid(strs, exprs);
     }
     return node.quasi.quasis[0].value.raw;
 }

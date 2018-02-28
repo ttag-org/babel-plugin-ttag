@@ -61,6 +61,7 @@ export const configSchema = {
         defaultHeaders: defaultHeadersSchema,
         addComments: { oneOf: [{ type: 'boolean' }, { type: 'string' }] },
         sortByMsgid: { type: 'boolean' },
+        numberedExpressions: { type: 'boolean' },
     },
     additionalProperties: false,
 };

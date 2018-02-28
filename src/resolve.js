@@ -6,8 +6,8 @@ export function resolveEntries(extractor, nodePath, context, state) {
     try {
         const gettextContext = nodePath._C3PO_GETTEXT_CONTEXT || '';
         const translations = context.getTranslations(gettextContext);
-        const msgid = context.isDedent() ? dedentStr(extractor.getMsgid(nodePath.node)) :
-            extractor.getMsgid(nodePath.node);
+        const msgid = context.isDedent() ? dedentStr(extractor.getMsgid(nodePath.node, context)) :
+            extractor.getMsgid(nodePath.node, context);
         const translationObj = translations[msgid];
         if (!translationObj) {
             throw new NoTranslationError(`No "${msgid}" in "${context.getPoFilePath()}" file`);

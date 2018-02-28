@@ -8,8 +8,8 @@ import { hasUsefulInfo } from '../po-helpers';
 const { MSGSTR } = PO_PRIMITIVES;
 const NAME = 'tag-gettext';
 
-const validate = (node) => {
-    const msgid = template2Msgid(node);
+const validate = (node, context) => {
+    const msgid = template2Msgid(node, context);
     if (! hasUsefulInfo(msgid)) {
         throw new ValidationError(`Can not translate '${getQuasiStr(node)}'`);
     }

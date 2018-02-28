@@ -8,9 +8,9 @@ import tpl from 'babel-template';
 const NAME = 'ngettext';
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
-function getMsgid(node) {
+function getMsgid(node, context) {
     const [msgidTag, ..._] = node.arguments.slice(0, -1);
-    return template2Msgid(msgidTag);
+    return template2Msgid(msgidTag, context);
 }
 
 function validateNPlural(exp) {
@@ -33,10 +33,12 @@ const validate = (node, context) => {
     const tags = node.arguments.slice(1, -1);
 
     // will throw validation error if tags has expressions with wrong format
-    tags.forEach((quasi) => template2Msgid({ quasi }));
+    tags.forEach((quasi) => template2Msgid({ quasi }, context));
 
-    validateNPlural(node.arguments[node.arguments.length - 1]);
-    const msgid = template2Msgid(msgidTag);
+    if (!context.isNumberedExpressions()) {
+        validateNPlural(node.arguments[node.arguments.length - 1]);
+    }
+    const msgid = template2Msgid(msgidTag, context);
     if (!hasUsefulInfo(msgid)) {
         throw new ValidationError(`Can not translate '${getQuasiStr(msgidTag)}'`);
     }
@@ -51,14 +53,17 @@ function match(node, context) {
 
 function extract(node, context) {
     const tags = node.arguments.slice(0, -1);
-    const msgid = context.isDedent() ? dedentStr(template2Msgid(tags[0])) : template2Msgid(tags[0]);
+    const msgid = context.isDedent() ?
+        dedentStr(template2Msgid(tags[0], context)) :
+        template2Msgid(tags[0], context);
     const nplurals = getNPlurals(context.getHeaders());
     if (tags.length !== nplurals) {
         throw new ValidationError(`Expected to have ${nplurals} plural forms but have ${tags.length} instead`);
     }
     // TODO: handle case when only 1 plural form
-    const msgidPlural = context.isDedent() ? dedentStr(template2Msgid({ quasi: tags[1] })) :
-        template2Msgid({ quasi: tags[1] });
+    const msgidPlural = context.isDedent() ?
+        dedentStr(template2Msgid({ quasi: tags[1] }, context)) :
+        template2Msgid({ quasi: tags[1] }, context);
     const translate = {
         [MSGID]: msgid,
         [MSGID_PLURAL]: msgidPlural,
