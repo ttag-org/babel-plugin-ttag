@@ -30,10 +30,10 @@ function resolveDefault(node, context) {
     return t.arrayExpression([resolved]);
 }
 
-function resolve(node, translation) {
-    const resolved = gettext.resolve(node, translation);
-    if (t.isExpressionStatement(resolved)) {
-        return t.arrayExpression(templateLiteral2Array(resolved.expression));
+function resolve(node, translation, context) {
+    const resolved = gettext.resolve(node, translation, context);
+    if (t.isTemplateLiteral(resolved)) {
+        return t.arrayExpression(templateLiteral2Array(resolved));
     }
     return t.arrayExpression([resolved]);
 }

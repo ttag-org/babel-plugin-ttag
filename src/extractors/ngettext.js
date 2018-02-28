@@ -123,23 +123,32 @@ function resolve(node, translationObj, context, state) {
     const tagArg = node.arguments[node.arguments.length - 1];
     const exprs = msgidTag.quasi.expressions.map(ast2Str);
 
-    if (t.isIdentifier(tagArg) || t.isMemberExpression(tagArg)) {
-        return tpl('NGETTEXT(N, ARGS)')({
-            NGETTEXT: getNgettextUID(state, getPluralFunc(context.getHeaders())),
-            N: tagArg,
-            ARGS: t.arrayExpression(args.map((l) => {
-                const { expression: { quasis, expressions } } = tpl(validateAndFormatMsgid(l, exprs))();
-                return t.templateLiteral(quasis, expressions);
-            })),
-        });
-    }
-
     if (t.isLiteral(tagArg)) {
         const pluralFn = makePluralFunc(getPluralFunc(context.getHeaders()));
         const orig = validateAndFormatMsgid(pluralFn(tagArg.value, args), exprs);
         return tpl(orig)();
     }
-    return undefined;
+
+    return tpl('NGETTEXT(N, ARGS)')({
+        NGETTEXT: getNgettextUID(state, getPluralFunc(context.getHeaders())),
+        N: tagArg,
+        ARGS: t.arrayExpression(args.map((l) => {
+            let quasis;
+            let expressions;
+            if (context.isNumberedExpressions()) {
+                const transNode = tpl(strToQuasi(l))();
+                quasis = transNode.expression.quasis;
+                expressions = transNode.expression.expressions
+                    .map(({ value }) => value)
+                    .map((i) => msgidTag.quasi.expressions[i]);
+            } else {
+                const transNode = tpl(validateAndFormatMsgid(l, exprs))();
+                quasis = transNode.expression.quasis;
+                expressions = transNode.expression.expressions;
+            }
+            return t.templateLiteral(quasis, expressions);
+        })),
+    });
 }
 
 export default { match, extract, resolve, name: NAME, validate, resolveDefault, getMsgid };

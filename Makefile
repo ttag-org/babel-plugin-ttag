@@ -94,6 +94,9 @@ test_resolve_contexts:
 test_extract_numbered_expressions:
 	$(MOCHA_CMD) ./tests/functional/test_extract_numbered_expressions.js
 
+test_resolve_numbered_expressions:
+	$(MOCHA_CMD) ./tests/functional/test_resolve_numbered_expressions.js
+
 test_fun: test_extract_gettext
 test_fun: test_extract_gettext_with_formatting
 test_fun: test_extract_filename
@@ -122,6 +125,7 @@ test_fun: test_contexts_extract
 test_fun: test_resolve_contexts
 test_fun: test_contexts_extract_from_file
 test_fun: test_extract_numbered_expressions
+test_fun: test_resolve_numbered_expressions
 
 test: test_fun
 test: test_unit
