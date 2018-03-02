@@ -85,10 +85,6 @@ class C3poContext {
         return DEFAULT_EXTRACTORS;
     }
 
-    // getHeaders() {
-    //     return (this.poData && this.poData.headers) || this.config.defaultHeaders || DEFAULT_HEADERS;
-    // }
-
     getDefaultHeaders() {
         const headers = { ...DEFAULT_HEADERS };
         headers['plural-forms'] = getPluralFormsHeader(this.config.defaultLang);
