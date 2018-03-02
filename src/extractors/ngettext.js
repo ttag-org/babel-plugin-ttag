@@ -1,7 +1,7 @@
 import * as t from 'babel-types';
 import { PO_PRIMITIVES } from '../defaults';
 import { dedentStr, template2Msgid, ast2Str, validateAndFormatMsgid, getQuasiStr, strToQuasi } from '../utils';
-import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc, hasUsefulInfo } from '../po-helpers';
+import { pluralFnBody, makePluralFunc, hasUsefulInfo } from '../po-helpers';
 import { ValidationError } from '../errors';
 import tpl from 'babel-template';
 
@@ -56,7 +56,7 @@ function extract(node, context) {
     const msgid = context.isDedent() ?
         dedentStr(template2Msgid(tags[0], context)) :
         template2Msgid(tags[0], context);
-    const nplurals = getNPlurals(context.getHeaders());
+    const nplurals = context.getPluralsCount();
     if (tags.length !== nplurals) {
         throw new ValidationError(`Expected to have ${nplurals} plural forms but have ${tags.length} instead`);
     }
@@ -93,7 +93,6 @@ function getNgettextUID(state, pluralFunc) {
 }
 
 function resolveDefault(node, context, state) {
-    const headers = context.getHeaders();
     const tagArg = node.arguments[node.arguments.length - 1];
     node.arguments[0] = node.arguments[0].quasi;
     const args = node.arguments.slice(0, -1).map((quasi) => {
@@ -102,7 +101,7 @@ function resolveDefault(node, context, state) {
         return tpl(strToQuasi(dedentedStr))().expression;
     });
 
-    const nplurals = getNPlurals(headers);
+    const nplurals = context.getPluralsCount();
 
     while (nplurals > args.length) {
         const last = args[args.length - 1];
@@ -110,7 +109,7 @@ function resolveDefault(node, context, state) {
     }
 
     return tpl('NGETTEXT(N, ARGS)')({
-        NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
+        NGETTEXT: getNgettextUID(state, context.getPluralFormula()),
         N: tagArg,
         ARGS: t.arrayExpression(args),
     });
@@ -124,13 +123,13 @@ function resolve(node, translationObj, context, state) {
     const exprs = msgidTag.quasi.expressions.map(ast2Str);
 
     if (t.isLiteral(tagArg)) {
-        const pluralFn = makePluralFunc(getPluralFunc(context.getHeaders()));
+        const pluralFn = makePluralFunc(context.getPluralFormula());
         const orig = validateAndFormatMsgid(pluralFn(tagArg.value, args), exprs);
         return tpl(orig)();
     }
 
     return tpl('NGETTEXT(N, ARGS)')({
-        NGETTEXT: getNgettextUID(state, getPluralFunc(context.getHeaders())),
+        NGETTEXT: getNgettextUID(state, context.getPluralFormula()),
         N: tagArg,
         ARGS: t.arrayExpression(args.map((l) => {
             let quasis;

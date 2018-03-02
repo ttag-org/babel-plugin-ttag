@@ -1,37 +1,30 @@
 import { expect } from 'chai';
 import C3poContext from 'src/context';
-import { parsePoData } from 'src/po-helpers';
-import { DEFAULT_HEADERS } from 'src/defaults';
 
-const DEFAULT_PO_DATA = { headers:
-    { 'content-type': 'text/plain; charset=UTF-8', 'plural-forms': 'nplurals=2; plural=(n!=1);' },
+const DEFAULT_PO_DATA = {
+    headers:
+    {
+        'content-type': 'text/plain; charset=UTF-8',
+        'plural-forms': 'nplurals = 2; plural = (n !== 1)',
+    },
     translations: { '': {} },
 };
 
-describe('C3poContext.getHeaders', () => {
-    it('should resolve proper headers if defaultHeaders is set as object', () => {
-        const config = {
-            defaultHeaders: {
-                'plural-forms': 'plural-forms',
-            },
-        };
-        const contextInstance = new C3poContext(config);
-        expect(contextInstance.getHeaders()).to.eql(config.defaultHeaders);
-    });
+const ukHeaders = {
+    'content-type': 'text/plain; charset=UTF-8',
+    'plural-forms': 'nplurals = 3; plural = (n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2)' // eslint-disable-line
+};
 
-    it('should resolve default headers if defaultHeaders is missing', () => {
-        const config = {};
-        const configInstance = new C3poContext(config);
-        expect(configInstance.getHeaders()).to.eql(DEFAULT_HEADERS);
-    });
+const ukPoData = {
+    headers: ukHeaders,
+    translations: { '': {} },
+};
 
-    it('should read headers from file if defaultHeaders is a string', () => {
-        const config = {
-            defaultHeaders: 'tests/fixtures/ua.po',
-        };
-        const { headers } = parsePoData('tests/fixtures/ua.po');
-        const contextInstance = new C3poContext(config);
-        expect(contextInstance.getHeaders()).to.eql(headers);
+describe('C3poContext.getDefaultHeaders', () => {
+    it('should set correct default plural headers', () => {
+        const config = { defaultLang: 'uk' };
+        const context = new C3poContext(config);
+        expect(context.getDefaultHeaders()).to.eql(ukHeaders);
     });
 
     it('should set default po data if translations: "default"', () => {
@@ -42,12 +35,12 @@ describe('C3poContext.getHeaders', () => {
         expect(context.poData).to.eql(DEFAULT_PO_DATA);
     });
 
-    it('should get proper headers with translations: "default"', () => {
+    it('should get proper headers with translations: "default" and defaultLang', () => {
         const config = {
-            defaultHeaders: { 'plural-forms': 'test' },
+            defaultLang: 'uk',
             resolve: { translations: 'default' },
         };
         const context = new C3poContext(config);
-        expect(context.getHeaders()).to.eql(config.defaultHeaders);
+        expect(context.poData).to.eql(ukPoData);
     });
 });
