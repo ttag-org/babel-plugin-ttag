@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-c-3po",
-  "version": "0.7.3",
+  "version": "0.8.0-0",
   "description": "",
   "main": "dist/plugin.js",
   "keywords": [
@@ -33,7 +33,8 @@
     "babel-types": "6.18.0",
     "dedent": "0.6.0",
     "gettext-parser": "1.2.0",
-    "mkdirp": "0.5.1"
+    "mkdirp": "0.5.1",
+    "plural-forms": "^0.2.0"
   },
   "devDependencies": {
     "@evo/eslint-config-uaprom": "1.0.7",
