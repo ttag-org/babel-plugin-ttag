@@ -5,9 +5,10 @@ import tagGettext from './extractors/tag-gettext';
 import jsxtagGettext from './extractors/jsxtag-gettext';
 import gettext from './extractors/gettext';
 import ngettext from './extractors/ngettext';
-import { parsePoData, getDefaultPoData } from './po-helpers';
+import { parsePoData, getDefaultPoData, getNPlurals, getPluralFunc } from './po-helpers';
 import { ConfigValidationError, ConfigError } from './errors';
 import { validateConfig, configSchema } from './config';
+import { getNPlurals as getPluralsNumForLang, getPluralFormsHeader, getFormula } from 'plural-forms';
 
 const DEFAULT_EXTRACTORS = [tagGettext, jsxtagGettext, gettext, ngettext];
 
@@ -29,16 +30,15 @@ function logAction(message, level = SKIP) {
 }
 
 class C3poContext {
-    constructor(config = {}) {
-        this.config = config;
+    constructor(config) {
+        this.config = config || {};
         const [validationResult, errorsText] = validateConfig(this.config, configSchema);
         if (!validationResult) {
             throw new ConfigValidationError(errorsText);
         }
         this.clear();
-        if (this.config.defaultHeaders && typeof this.config.defaultHeaders === 'string') {
-            const { headers } = parsePoData(this.config.defaultHeaders);
-            this.config.defaultHeaders = headers;
+        if (!this.config.defaultLang) {
+            this.config.defaultLang = 'en';
         }
         this.setPoData();
         Object.freeze(this.config);
@@ -85,8 +85,24 @@ class C3poContext {
         return DEFAULT_EXTRACTORS;
     }
 
-    getHeaders() {
-        return (this.poData && this.poData.headers) || this.config.defaultHeaders || DEFAULT_HEADERS;
+    getDefaultHeaders() {
+        const headers = { ...DEFAULT_HEADERS };
+        headers['plural-forms'] = getPluralFormsHeader(this.config.defaultLang);
+        return headers;
+    }
+
+    getPluralsCount() {
+        if (this.poData && this.poData.headers) {
+            return getNPlurals(this.poData.headers);
+        }
+        return getPluralsNumForLang(this.config.defaultLang);
+    }
+
+    getPluralFormula() {
+        if (this.poData && this.poData.headers) {
+            return getPluralFunc(this.poData.headers);
+        }
+        return getFormula(this.config.defaultLang);
     }
 
     getLocation() {
@@ -103,6 +119,10 @@ class C3poContext {
 
     isExtractMode() {
         return Boolean(this.config.extract);
+    }
+
+    isNumberedExpressions() {
+        return Boolean(this.config.numberedExpressions);
     }
 
     isResolveMode() {
@@ -145,11 +165,11 @@ class C3poContext {
 
     setPoData() {
         const poFilePath = this.getPoFilePath();
-        if (!poFilePath) {
-            this.poData = getDefaultPoData(this.getHeaders());
+        if (!poFilePath || poFilePath === 'default') {
+            this.poData = getDefaultPoData(this.getDefaultHeaders());
             return;
         }
-        this.poData = poFilePath === 'default' ? getDefaultPoData(this.getHeaders()) : parsePoData(poFilePath);
+        this.poData = parsePoData(poFilePath);
     }
 
     getTranslations(gettextContext = '') {

@@ -45,11 +45,7 @@ describe('ngettext extract', () => {
     });
 
     it('should extract valid number of msgstrs', () => {
-        const defaultHeaders = {
-            'content-type': 'text/plain; charset=UTF-8',
-            'plural-forms': 'nplurals=3; plural=(n!=1);',
-        };
-        const config = new Context({ defaultHeaders });
+        const config = new Context({ defaultLang: 'uk' });
         const node = template('ngettext(msgid`${ n } банан`, `${ n } банана`, `бананів`, n)')().expression;
         const result = ngettext.extract(node, config);
         const msgStr = result[MSGSTR];

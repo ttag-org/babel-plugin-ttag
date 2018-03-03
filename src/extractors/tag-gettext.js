@@ -1,6 +1,7 @@
 import * as t from 'babel-types';
 import tpl from 'babel-template';
-import { template2Msgid, validateAndFormatMsgid, hasExpressions, ast2Str, getQuasiStr, dedentStr } from '../utils';
+import { template2Msgid, validateAndFormatMsgid,
+    hasExpressions, ast2Str, getQuasiStr, dedentStr, strToQuasi } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import { ValidationError } from '../errors';
 import { hasUsefulInfo } from '../po-helpers';
@@ -8,8 +9,8 @@ import { hasUsefulInfo } from '../po-helpers';
 const { MSGSTR } = PO_PRIMITIVES;
 const NAME = 'tag-gettext';
 
-const validate = (node) => {
-    const msgid = template2Msgid(node);
+const validate = (node, context) => {
+    const msgid = template2Msgid(node, context);
     if (! hasUsefulInfo(msgid)) {
         throw new ValidationError(`Can not translate '${getQuasiStr(node)}'`);
     }
@@ -27,12 +28,19 @@ function resolveDefault(node, context) {
     return t.stringLiteral(transStr);
 }
 
-function resolve(node, translation) {
+function resolve(node, translation, context) {
     const transStr = translation[MSGSTR][0];
 
     if (hasExpressions(node)) {
+        const transExpr = tpl(strToQuasi(transStr))();
+        if (context.isNumberedExpressions()) {
+            const exprs = transExpr.expression.expressions
+                .map(({ value }) => value)
+                .map((i) => node.quasi.expressions[i]);
+            return t.templateLiteral(transExpr.expression.quasis, exprs);
+        }
         const exprs = node.quasi.expressions.map(ast2Str);
-        return tpl(validateAndFormatMsgid(transStr, exprs))();
+        return tpl(validateAndFormatMsgid(transStr, exprs))().expression;
     }
     return t.stringLiteral(transStr);
 }

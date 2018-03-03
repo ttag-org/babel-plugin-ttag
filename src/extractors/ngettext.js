@@ -1,16 +1,16 @@
 import * as t from 'babel-types';
 import { PO_PRIMITIVES } from '../defaults';
 import { dedentStr, template2Msgid, ast2Str, validateAndFormatMsgid, getQuasiStr, strToQuasi } from '../utils';
-import { getNPlurals, getPluralFunc, pluralFnBody, makePluralFunc, hasUsefulInfo } from '../po-helpers';
+import { pluralFnBody, makePluralFunc, hasUsefulInfo } from '../po-helpers';
 import { ValidationError } from '../errors';
 import tpl from 'babel-template';
 
 const NAME = 'ngettext';
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
-function getMsgid(node) {
+function getMsgid(node, context) {
     const [msgidTag, ..._] = node.arguments.slice(0, -1);
-    return template2Msgid(msgidTag);
+    return template2Msgid(msgidTag, context);
 }
 
 function validateNPlural(exp) {
@@ -33,10 +33,12 @@ const validate = (node, context) => {
     const tags = node.arguments.slice(1, -1);
 
     // will throw validation error if tags has expressions with wrong format
-    tags.forEach((quasi) => template2Msgid({ quasi }));
+    tags.forEach((quasi) => template2Msgid({ quasi }, context));
 
-    validateNPlural(node.arguments[node.arguments.length - 1]);
-    const msgid = template2Msgid(msgidTag);
+    if (!context.isNumberedExpressions()) {
+        validateNPlural(node.arguments[node.arguments.length - 1]);
+    }
+    const msgid = template2Msgid(msgidTag, context);
     if (!hasUsefulInfo(msgid)) {
         throw new ValidationError(`Can not translate '${getQuasiStr(msgidTag)}'`);
     }
@@ -51,14 +53,17 @@ function match(node, context) {
 
 function extract(node, context) {
     const tags = node.arguments.slice(0, -1);
-    const msgid = context.isDedent() ? dedentStr(template2Msgid(tags[0])) : template2Msgid(tags[0]);
-    const nplurals = getNPlurals(context.getHeaders());
+    const msgid = context.isDedent() ?
+        dedentStr(template2Msgid(tags[0], context)) :
+        template2Msgid(tags[0], context);
+    const nplurals = context.getPluralsCount();
     if (tags.length !== nplurals) {
         throw new ValidationError(`Expected to have ${nplurals} plural forms but have ${tags.length} instead`);
     }
     // TODO: handle case when only 1 plural form
-    const msgidPlural = context.isDedent() ? dedentStr(template2Msgid({ quasi: tags[1] })) :
-        template2Msgid({ quasi: tags[1] });
+    const msgidPlural = context.isDedent() ?
+        dedentStr(template2Msgid({ quasi: tags[1] }, context)) :
+        template2Msgid({ quasi: tags[1] }, context);
     const translate = {
         [MSGID]: msgid,
         [MSGID_PLURAL]: msgidPlural,
@@ -88,7 +93,6 @@ function getNgettextUID(state, pluralFunc) {
 }
 
 function resolveDefault(node, context, state) {
-    const headers = context.getHeaders();
     const tagArg = node.arguments[node.arguments.length - 1];
     node.arguments[0] = node.arguments[0].quasi;
     const args = node.arguments.slice(0, -1).map((quasi) => {
@@ -97,7 +101,7 @@ function resolveDefault(node, context, state) {
         return tpl(strToQuasi(dedentedStr))().expression;
     });
 
-    const nplurals = getNPlurals(headers);
+    const nplurals = context.getPluralsCount();
 
     while (nplurals > args.length) {
         const last = args[args.length - 1];
@@ -105,7 +109,7 @@ function resolveDefault(node, context, state) {
     }
 
     return tpl('NGETTEXT(N, ARGS)')({
-        NGETTEXT: getNgettextUID(state, getPluralFunc(headers)),
+        NGETTEXT: getNgettextUID(state, context.getPluralFormula()),
         N: tagArg,
         ARGS: t.arrayExpression(args),
     });
@@ -118,23 +122,32 @@ function resolve(node, translationObj, context, state) {
     const tagArg = node.arguments[node.arguments.length - 1];
     const exprs = msgidTag.quasi.expressions.map(ast2Str);
 
-    if (t.isIdentifier(tagArg) || t.isMemberExpression(tagArg)) {
-        return tpl('NGETTEXT(N, ARGS)')({
-            NGETTEXT: getNgettextUID(state, getPluralFunc(context.getHeaders())),
-            N: tagArg,
-            ARGS: t.arrayExpression(args.map((l) => {
-                const { expression: { quasis, expressions } } = tpl(validateAndFormatMsgid(l, exprs))();
-                return t.templateLiteral(quasis, expressions);
-            })),
-        });
-    }
-
     if (t.isLiteral(tagArg)) {
-        const pluralFn = makePluralFunc(getPluralFunc(context.getHeaders()));
+        const pluralFn = makePluralFunc(context.getPluralFormula());
         const orig = validateAndFormatMsgid(pluralFn(tagArg.value, args), exprs);
         return tpl(orig)();
     }
-    return undefined;
+
+    return tpl('NGETTEXT(N, ARGS)')({
+        NGETTEXT: getNgettextUID(state, context.getPluralFormula()),
+        N: tagArg,
+        ARGS: t.arrayExpression(args.map((l) => {
+            let quasis;
+            let expressions;
+            if (context.isNumberedExpressions()) {
+                const transNode = tpl(strToQuasi(l))();
+                quasis = transNode.expression.quasis;
+                expressions = transNode.expression.expressions
+                    .map(({ value }) => value)
+                    .map((i) => msgidTag.quasi.expressions[i]);
+            } else {
+                const transNode = tpl(validateAndFormatMsgid(l, exprs))();
+                quasis = transNode.expression.quasis;
+                expressions = transNode.expression.expressions;
+            }
+            return t.templateLiteral(quasis, expressions);
+        })),
+    });
 }
 
 export default { match, extract, resolve, name: NAME, validate, resolveDefault, getMsgid };
