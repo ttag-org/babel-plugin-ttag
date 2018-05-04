@@ -1,16 +1,16 @@
 import { expect } from 'chai';
 import * as babel from 'babel-core';
 import fs from 'fs';
-import c3po from 'src/plugin';
+import ttag from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 import dedent from 'dedent';
 
 const output = 'debug/translations.pot';
 const options = {
-    plugins: [[c3po, { extract: { output } }]],
+    plugins: [[ttag, { extract: { output } }]],
 };
 
-const expect1 = `import { c, t } from 'c-3po';
+const expect1 = `import { c, t } from 'ttag';
 c('email').t\`test\`;
 console.log(t\`test\`);
 c('email').t\`test2\`;
@@ -42,7 +42,7 @@ describe('Contexts extract', () => {
 
     it('should extract "t" with context', () => {
         const input = dedent(`
-            import { c, t } from 'c-3po';
+            import { c, t } from 'ttag';
             c('email').t\`test\`;
             console.log(t\`test\`);
             c('email').t\`test2\`;
@@ -58,7 +58,7 @@ describe('Contexts extract', () => {
 
     it('should throw if context argument is not string', () => {
         const input = dedent(`
-            import { c, t } from 'c-3po';
+            import { c, t } from 'ttag';
             c(aaa).t\`test\`;
         `);
 
@@ -68,7 +68,7 @@ describe('Contexts extract', () => {
 
     it('should throw if has more than 1 argument', () => {
         const input = dedent(`
-            import { c, t } from 'c-3po';
+            import { c, t } from 'ttag';
             c('email', 'profile').t\`test\`;
         `);
 
@@ -78,7 +78,7 @@ describe('Contexts extract', () => {
 
     it('should discover context by alias', () => {
         const input = dedent(`
-            import { c as msgctxt, t } from 'c-3po';
+            import { c as msgctxt, t } from 'ttag';
             msgctxt('phone').t\`test\`;
         `);
         babel.transform(input, options);
@@ -88,7 +88,7 @@ describe('Contexts extract', () => {
 
     it('should extract ngettext', () => {
         const input = dedent(`
-            import { c, ngettext, msgid } from 'c-3po';
+            import { c, ngettext, msgid } from 'ttag';
             c('ngettext_ctx').ngettext(msgid\`banana\`, \`bananas\`, n);
         `);
         babel.transform(input, options);
@@ -99,7 +99,7 @@ describe('Contexts extract', () => {
 
     it('fn call should throw if has more than 1 argument', () => {
         const input = dedent(`
-        import { c, ngettext, msgid } from 'c-3po';
+        import { c, ngettext, msgid } from 'ttag';
         c('ngettext_ctx', 1).ngettext(msgid\`banana\`, \`bananas\`, n);
         `);
 
@@ -109,7 +109,7 @@ describe('Contexts extract', () => {
 
     it('fn call should throw if context argument is not string', () => {
         const input = dedent(`
-        import { c, ngettext, msgid } from 'c-3po';
+        import { c, ngettext, msgid } from 'ttag';
         c(aaa).ngettext(msgid\`banana\`, \`bananas\`, n);
         `);
 
@@ -119,7 +119,7 @@ describe('Contexts extract', () => {
 
     it('should extract gettext', () => {
         const input = dedent(`
-            import { c, gettext } from 'c-3po';
+            import { c, gettext } from 'ttag';
             c('gettext_ctx').gettext('gettext test');
         `);
         babel.transform(input, options);

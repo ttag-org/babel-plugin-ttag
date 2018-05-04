@@ -26,9 +26,9 @@ export const UNRESOLVED_ACTION = {
     SKIP: 'skip',
 };
 
-export const DISABLE_COMMENT = 'disable c-3po';
+export const DISABLE_COMMENT = 'disable ttag';
 
-export const C3POID = 'c-3po';
+export const C3POID = 'ttag';
 
 export const DEFAULT_POT_OUTPUT = 'polyglot_result.pot';
 

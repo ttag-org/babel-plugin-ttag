@@ -1,2 +1,2 @@
-import { c } from 'c-3po';
+import { c } from 'ttag';
 c('test ctx').t`test`;

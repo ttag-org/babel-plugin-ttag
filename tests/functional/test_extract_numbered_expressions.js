@@ -20,7 +20,7 @@ describe('Numbered expressions extract', () => {
 
     it('should extract from t tag', () => {
         const input = `
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
         console.log(t\`Hello \${ fn() } \${ fn2() }\`);
         `;
         babel.transform(input, options);
@@ -30,7 +30,7 @@ describe('Numbered expressions extract', () => {
 
     it('should extract from ngettext func', () => {
         const input = `
-        import { ngettext, msgid } from 'c-3po';
+        import { ngettext, msgid } from 'ttag';
         ngettext(msgid\`\${ fn() } banana\`, \`\${ fn2() }\ bananas\`, fn());
         `;
         babel.transform(input, options);
@@ -40,7 +40,7 @@ describe('Numbered expressions extract', () => {
     });
     it('should extract from jt tag', () => {
         const input = `
-        import { jt } from 'c-3po';
+        import { jt } from 'ttag';
         import React from 'react';
         const component = () => {
             return <div>{ jt\`react comp - \${fn()}\` }</div>

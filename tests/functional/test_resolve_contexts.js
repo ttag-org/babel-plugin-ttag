@@ -18,7 +18,7 @@ describe('Context resolve', () => {
 
     it('should resolve simple gettext with the context', () => {
         const input = `
-        import { gettext, c } from 'c-3po';
+        import { gettext, c } from 'ttag';
         c('email').gettext('test');
         `;
         const result = babel.transform(input, options).code;
@@ -27,7 +27,7 @@ describe('Context resolve', () => {
 
     it('should resolve t tag', () => {
         const input = `
-        import { t, c } from 'c-3po';
+        import { t, c } from 'ttag';
         c('email').t\`test\`
         `;
         const result = babel.transform(input, options).code;
@@ -35,7 +35,7 @@ describe('Context resolve', () => {
     });
 
     it('should resolve ngettext', () => {
-        const input = 'import { ngettext, msgid, c } from "c-3po";\n' +
+        const input = 'import { ngettext, msgid, c } from "ttag";\n' +
         'const a = 2;\n' +
         'c("email").ngettext(msgid`${ a } banana`, `${ a } bananas`, a);\n';
 
@@ -46,7 +46,7 @@ describe('Context resolve', () => {
 
     it('should resolve jt', () => {
         const input = `
-        import { jt, c } from 'c-3po';
+        import { jt, c } from 'ttag';
         c('email').jt\`test\`
         `;
         const result = babel.transform(input, options).code;

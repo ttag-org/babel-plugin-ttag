@@ -1,6 +1,6 @@
 {
-  "name": "babel-plugin-c-3po",
-  "version": "0.8.1",
+  "name": "babel-plugin-ttag",
+  "version": "1.0.1-0",
   "description": "",
   "main": "dist/plugin.js",
   "keywords": [
@@ -10,6 +10,7 @@
     "i18n"
   ],
   "scripts": {
+    "test": "make test",
     "lint": "eslint ./src ./tests",
     "fix": "eslint --fix ./src ./tests",
     "build": "babel src --out-dir dist",
@@ -18,14 +19,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/c-3po-org/babel-plugin-c-3po.git"
+    "url": "git+https://github.com/ttag-org/babel-plugin-ttag.git"
   },
   "author": "alexander",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/c-3po-org/babel-plugin-c-3po/issues"
+    "url": "https://github.com/ttag-org/babel-plugin-ttag/issues"
   },
-  "homepage": "https://github.com/c-3po-org/babel-plugin-c-3po#readme",
+  "homepage": "https://github.com/ttag-org/babel-plugin-ttag#readme",
   "dependencies": {
     "ajv": "4.9.0",
     "babel-generator": "6.18.0",

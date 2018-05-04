@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import * as babel from 'babel-core';
 import fs from 'fs';
-import c3po from 'src/plugin';
+import ttag from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 import dedent from 'dedent';
 
 const output = 'debug/translations.pot';
 const options = {
-    plugins: [[c3po, { extract: { output }, addComments: 'translator:' }]],
+    plugins: [[ttag, { extract: { output }, addComments: 'translator:' }]],
 };
 
 describe('Extract developer comments by tag', () => {
@@ -17,7 +17,7 @@ describe('Extract developer comments by tag', () => {
 
     it('should extract comment comment', () => {
         const input = dedent(`
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
         
         //translator: test1
         t\`test\`
@@ -29,7 +29,7 @@ describe('Extract developer comments by tag', () => {
 
     it('should not extract comment', () => {
         const input = dedent(`
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
         
         //comment2
         t\`test2\`
