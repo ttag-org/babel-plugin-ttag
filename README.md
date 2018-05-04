@@ -4,6 +4,9 @@
 
 [![NPM](https://nodei.co/npm/babel-plugin-ttag.png?downloads=true)](https://nodei.co/npm/babel-plugin-ttag/)
 
+> :warning: This project [was previously named `babel-plugin-c-3po`](https://github.com/ttag-org/ttag/issues/105).
+> Some of the talks, presentations, and documentation _may_ reference it with both names.
+
 ## project description
 Solution for providing gettext like translations into your project. Uses es6 native template syntax.
 
