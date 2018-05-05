@@ -20,7 +20,7 @@ describe('Resolve tag-gettext', () => {
 
     it('should resolve t tag', () => {
         const input = `
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
         console.log(t\`Hello \${ name }\`);
         `;
         const result = babel.transform(input, options).code;
@@ -29,7 +29,7 @@ describe('Resolve tag-gettext', () => {
 
     it('should resolve t tag default', () => {
         const input = `
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
         console.log(t\`Hello not translated \${ name }\`);
         `;
         const result = babel.transform(input, options).code;
@@ -38,7 +38,7 @@ describe('Resolve tag-gettext', () => {
 
     it('should resolve correct positions for expressions in t tag', () => {
         const input = `
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
         console.log(t\`reverse \${ name }\ \${ surname }\`);
         `;
         const result = babel.transform(input, options).code;
@@ -47,7 +47,7 @@ describe('Resolve tag-gettext', () => {
 
     it('should resolve ngettext func', () => {
         const input = `
-        import { ngettext, msgid } from 'c-3po';
+        import { ngettext, msgid } from 'ttag';
         ngettext(msgid\`\${ fn() } banana\`, \`\${ fn() }\ bananas\`, fn());
         `;
         const result = babel.transform(input, options).code;
@@ -57,7 +57,7 @@ describe('Resolve tag-gettext', () => {
 
     it('should resolve correct positions for ngettext func', () => {
         const input = `
-        import { ngettext, msgid } from 'c-3po';
+        import { ngettext, msgid } from 'ttag';
         ngettext(msgid\`\${ a() } \${ b() } banana\`, 
         \`\${ a() }\ \${ b() }\ bananas\`, n());
         `;
@@ -68,7 +68,7 @@ describe('Resolve tag-gettext', () => {
 
     it('should resolve jt func', () => {
         const input = `
-        import { jt } from 'c-3po';
+        import { jt } from 'ttag';
         import React from 'react';
         const component = () => {
             return <div>{ jt\`react comp - \${fn()}\` }</div>
@@ -80,7 +80,7 @@ describe('Resolve tag-gettext', () => {
 
     it('should resolve jt func default', () => {
         const input = `
-        import { jt } from 'c-3po';
+        import { jt } from 'ttag';
         import React from 'react';
         const component = () => {
             return <div>{ jt\`react comp2 - \${fn()}\` }</div>

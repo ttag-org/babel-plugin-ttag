@@ -13,7 +13,7 @@ describe('Empty config', () => {
     });
     it('should not resolve if no resolve option', () => {
         const input = `
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
         fun1(t\`test\`);
         `;
         const result = babel.transform(input, options).code;
@@ -21,7 +21,7 @@ describe('Empty config', () => {
     });
     it('validation should work for empty config', () => {
         const input = `
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
         fun1(t\`test \${ a() }\`);
         `;
         const fn = () => babel.transform(input, options).code;

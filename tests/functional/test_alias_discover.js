@@ -27,7 +27,7 @@ describe('Alias discover', () => {
     });
     it('should translate with import', () => {
         const input = `
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
         console.log(t\`simple string literal\`);
         `;
         const result = babel.transform(input, options).code;

@@ -1,8 +1,11 @@
-# babel-plugin-c-3po
-[![travis](https://api.travis-ci.org/c-3po-org/babel-plugin-c-3po.svg)](https://travis-ci.org/c-3po-org)
-[![codecov](https://codecov.io/gh/c-3po-org/babel-plugin-c-3po/branch/master/graph/badge.svg)](https://codecov.io/gh/c-3po-org/babel-plugin-c-3po)
+# babel-plugin-ttag
+[![travis](https://api.travis-ci.org/ttag-org/babel-plugin-ttag.svg)](https://travis-ci.org/ttag-org)
+[![codecov](https://codecov.io/gh/ttag-org/babel-plugin-ttag/branch/master/graph/badge.svg)](https://codecov.io/gh/ttag-org/babel-plugin-ttag)
 
-[![NPM](https://nodei.co/npm/babel-plugin-c-3po.png?downloads=true)](https://nodei.co/npm/babel-plugin-c-3po/)
+[![NPM](https://nodei.co/npm/babel-plugin-ttag.png?downloads=true)](https://nodei.co/npm/babel-plugin-ttag/)
+
+> :warning: This project [was previously named `babel-plugin-c-3po`](https://github.com/ttag-org/ttag/issues/105).
+> Some of the talks, presentations, and documentation _may_ reference it with both names.
 
 ## project description
 Solution for providing gettext like translations into your project. Uses es6 native template syntax.
@@ -26,12 +29,12 @@ The core features of this tool are:
 
 ## Tutorials
 * [Quick Start](https://c-3po.js.org/quick-start.html)
-* [Localization with webpack and c-3po](https://c-3po.js.org/localization-with-webpack-and-c-3po.html)
+* [Localization with webpack and ttag](https://c-3po.js.org/localization-with-webpack-and-c-3po.html)
 
 Installation
 ============
 
-`npm install --save-dev babel-plugin-c-3po && npm install --save c-3po`
+`npm install --save-dev babel-plugin-ttag && npm install --save ttag`
 
 
 gettext example
@@ -39,7 +42,7 @@ gettext example
 Here is how you code will look like while using this plugin:
 
 ```javascript
-import { t } from 'c-3po';
+import { t } from 'ttag';
 const name = 'Mike';
 console.log(t`Hello ${name}`);
 ```
@@ -57,7 +60,7 @@ Here is how you can handle plural forms:
 > This function has something similar with standart ngettext but behaves a little bit different. It assumes that you have only one form in your sources and other forms will be added in .po files. This is because different languages has different number of plural forms, and there are cases when your default language is not english, so it doesn't make sense to specify 2 plural forms at all.
 
 ```javascript
-import { ngettext, msgid } from 'c-3po';
+import { ngettext, msgid } from 'ttag';
 const name = 'Mike';
 const n = 5;
 console.log(ngettext(msgid`Mike has ${n} banana`, `Mike has ${n} bananas`, n));
@@ -78,7 +81,7 @@ There are no additional setup for making this plugin work inside jsx. (just add 
 
 ```javascript
 import React from 'react';
-import { t, ngettext, msgid } from 'c-3po';
+import { t, ngettext, msgid } from 'ttag';
 
 class PluralDemo extends React.Component {
     constructor(props) {
@@ -106,14 +109,14 @@ export default PluralDemo;
 
 Disabling some code parts
 =========================
-If for some reason you need to disable c-3po plugin transformation for some code block
+If for some reason you need to disable ttag plugin transformation for some code block
 you can use special comment globally to disable the whole file or inside some code block (function):
 ```javascript
-/* disable c-3po */
+/* disable ttag */
 
 // or
 function test() {
-    /* disable c-3po */
+    /* disable ttag */
 }
 ```
 

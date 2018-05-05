@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { t } from 'c-3po';
+import { t } from 'ttag';
 function test() {
     return t`test`;
 }

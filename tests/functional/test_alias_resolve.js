@@ -19,7 +19,7 @@ describe('Alias resolve', () => {
 
     it('should be able to create alias on import for tag-gettext', () => {
         const input = `
-        import { t as i18n } from 'c-3po';
+        import { t as i18n } from 'ttag';
         console.log(i18n\`simple string literal\`);
         `;
         const result = babel.transform(input, options).code;
@@ -28,7 +28,7 @@ describe('Alias resolve', () => {
 
     it('should be able to create alias on import for tag-ngettext', () => {
         const input = `
-        import { ngettext as ungettext } from 'c-3po';
+        import { ngettext as ungettext } from 'ttag';
         console.log(ungettext(msgid\`plural form with \${ n } plural\`, \`plural form with \${ n } plural\`, n));
         `;
         const result = babel.transform(input, options).code;
@@ -38,7 +38,7 @@ describe('Alias resolve', () => {
 
     it('should be able to create alias on import for gettext', () => {
         const input = `
-        import { gettext as i18n } from 'c-3po';
+        import { gettext as i18n } from 'ttag';
         console.log(i18n('simple string literal'));
         `;
         const result = babel.transform(input, options).code;

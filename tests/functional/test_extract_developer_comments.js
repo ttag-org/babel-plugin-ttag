@@ -17,7 +17,7 @@ describe('Extract developer comments', () => {
 
     it('should extract single comment', () => {
         const input = dedent(`
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
         
         //test1
         t\`test\`
@@ -29,7 +29,7 @@ describe('Extract developer comments', () => {
 
     it('should extract multiple comments', () => {
         const input = dedent(`
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
         
         //comment1
         //comment2
@@ -42,7 +42,7 @@ describe('Extract developer comments', () => {
 
     it('should extract each level of comments', () => {
         const input = dedent(`
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
 
         //comment3-3
         dispatch( /*comment3-2*/ someAction( /*comment3-1*/ t\`test3-1\` ));
@@ -70,7 +70,7 @@ describe('Extract developer comments', () => {
 
     it('should not fail if no comments', () => {
         const input = dedent(`
-        import { t } from 'c-3po';
+        import { t } from 'ttag';
 
         t\`test4\`
         `);
