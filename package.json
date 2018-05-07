@@ -26,6 +26,7 @@
     "url": "https://github.com/c-3po-org/babel-plugin-c-3po/issues"
   },
   "homepage": "https://github.com/c-3po-org/babel-plugin-c-3po#readme",
+  "deprecated": "🙌  Thanks for using babel-plugin-c-3po: the plugin was renamed to babel-plugin-ttag. New features will be added to babel-plugin-ttag package. Please, follow the migration guide - https://c-3po.js.org/MIGRATION.html#101",
   "dependencies": {
     "ajv": "4.9.0",
     "babel-generator": "6.18.0",
