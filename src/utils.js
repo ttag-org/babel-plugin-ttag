@@ -129,6 +129,14 @@ export function isC3poImport(node) {
     return node.source.value === C3POID;
 }
 
+export function isC3poRequire(node) {
+    return bt.isCallExpression(node.init) &&
+        node.init.callee.name === 'require' &&
+        bt.isObjectPattern(node.id) &&
+        node.init.arguments.length === 1 &&
+        node.init.arguments[0].value === C3POID;
+}
+
 export function hasImportSpecifier(node) {
     return node.specifiers && node.specifiers.some(bt.isImportSpecifier);
 }

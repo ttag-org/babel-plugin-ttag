@@ -7,7 +7,7 @@ import { ALIASES } from './defaults';
 import { buildPotData, makePotStr } from './po-helpers';
 import { extractPoEntry, getExtractor } from './extract';
 import { hasDisablingComment, isInDisabledScope, isC3poImport,
-    hasImportSpecifier, poReferenceComparator } from './utils';
+    hasImportSpecifier, poReferenceComparator, isC3poRequire } from './utils';
 import { resolveEntries } from './resolve';
 import { ValidationError } from './errors';
 import C3poContext from './context';
@@ -160,6 +160,14 @@ export default function () {
                 if (hasDisablingComment(nodePath.node)) {
                     disabledScopes.add(nodePath.scope.uid);
                 }
+            },
+            VariableDeclarator: (nodePath) => {
+                const { node } = nodePath;
+                if (!isC3poRequire(node)) return;
+                node.id.properties
+                    .map(({ key: { name } }) => name)
+                    .filter((fnName) => reverseAliases[fnName])
+                    .forEach((fnName) => context.addImport(fnName));
             },
             ImportDeclaration: (nodePath) => {
                 const { node } = nodePath;
