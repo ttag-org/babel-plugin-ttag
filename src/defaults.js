@@ -28,7 +28,7 @@ export const UNRESOLVED_ACTION = {
 
 export const DISABLE_COMMENT = 'disable ttag';
 
-export const C3POID = 'ttag';
+export const TTAGID = 'ttag';
 
 export const DEFAULT_POT_OUTPUT = 'polyglot_result.pot';
 
