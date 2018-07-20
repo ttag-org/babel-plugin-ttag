@@ -4,7 +4,7 @@ import dedent from 'dedent';
 import generate from 'babel-generator';
 import tpl from 'babel-template';
 
-import { DISABLE_COMMENT, C3POID } from './defaults';
+import { DISABLE_COMMENT, TTAGID } from './defaults';
 import { ValidationError, NoExpressionError } from './errors';
 
 
@@ -125,8 +125,16 @@ export function hasDisablingComment(node) {
     return false;
 }
 
-export function isC3poImport(node) {
-    return node.source.value === C3POID;
+export function isTtagImport(node) {
+    return node.source.value === TTAGID;
+}
+
+export function isTtagRequire(node) {
+    return bt.isCallExpression(node.init) &&
+        node.init.callee.name === 'require' &&
+        bt.isObjectPattern(node.id) &&
+        node.init.arguments.length === 1 &&
+        node.init.arguments[0].value === TTAGID;
 }
 
 export function hasImportSpecifier(node) {

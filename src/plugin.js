@@ -6,11 +6,11 @@ import path from 'path';
 import { ALIASES } from './defaults';
 import { buildPotData, makePotStr } from './po-helpers';
 import { extractPoEntry, getExtractor } from './extract';
-import { hasDisablingComment, isInDisabledScope, isC3poImport,
-    hasImportSpecifier, poReferenceComparator } from './utils';
+import { hasDisablingComment, isInDisabledScope, isTtagImport,
+    hasImportSpecifier, poReferenceComparator, isTtagRequire } from './utils';
 import { resolveEntries } from './resolve';
 import { ValidationError } from './errors';
-import C3poContext from './context';
+import TtagContext from './context';
 import { isContextTagCall, isValidTagContext, isContextFnCall,
     isValidFnCallContext } from './gettext-context';
 
@@ -147,7 +147,7 @@ export default function () {
             CallExpression: tryMatchCall(extractOrResolve),
             Program: (nodePath, state) => {
                 if (!context) {
-                    context = new C3poContext(state.opts);
+                    context = new TtagContext(state.opts);
                 } else {
                     context.clear();
                 }
@@ -161,14 +161,22 @@ export default function () {
                     disabledScopes.add(nodePath.scope.uid);
                 }
             },
+            VariableDeclarator: (nodePath) => {
+                const { node } = nodePath;
+                if (!isTtagRequire(node)) return;
+                node.id.properties
+                    .map(({ key: { name } }) => name)
+                    .filter((fnName) => reverseAliases[fnName])
+                    .forEach((fnName) => context.addImport(fnName));
+            },
             ImportDeclaration: (nodePath) => {
                 const { node } = nodePath;
-                if (isC3poImport(node)) {
+                if (isTtagImport(node)) {
                     node.specifiers
                     .filter(({ local: { name } }) => reverseAliases[name])
                     .forEach((s) => context.addImport(s.local.name));
                 }
-                if (isC3poImport(node) && hasImportSpecifier(node)) {
+                if (isTtagImport(node) && hasImportSpecifier(node)) {
                     node.specifiers
                     .filter(bt.isImportSpecifier)
                     .filter(({ imported: { name } }) => reverseAliases[name])
