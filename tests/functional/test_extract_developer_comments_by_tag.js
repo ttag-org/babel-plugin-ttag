@@ -11,7 +11,7 @@ const options = {
 };
 
 describe('Extract developer comments by tag', () => {
-    before(() => {
+    beforeEach(() => {
         rmDirSync('debug');
     });
 
@@ -37,5 +37,17 @@ describe('Extract developer comments by tag', () => {
         babel.transform(input, options);
         const result = fs.readFileSync(output).toString();
         expect(result).to.not.contain('#. comment2');
+    });
+
+    it('should match with spaces after //', () => {
+        const input = dedent(`
+        import { t } from 'ttag';
+        
+        // translator: test-comment
+        t\`test3\`
+        `);
+        babel.transform(input, options);
+        const result = fs.readFileSync(output).toString();
+        expect(result).to.contain('#. test-comment');
     });
 });

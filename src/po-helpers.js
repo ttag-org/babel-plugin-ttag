@@ -80,7 +80,7 @@ export function applyExtractedComments(poEntry, nodePath, tag) {
     let transComments = comments ? comments.map((c) => c.value) : [];
     if (tag) {
         if (!tagRegex[tag]) {
-            tagRegex[tag] = new RegExp(`^\s*${tag}\s*(.*?)\s*$`);
+            tagRegex[tag] = new RegExp(`^\\s*${tag}\\s*(.*?)\\s*$`);
         }
         transComments = transComments
             .map((c) => c.match(tagRegex[tag]))
