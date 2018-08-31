@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import gettext from 'src/extractors/tag-gettext';
-import template from 'babel-template';
+import template from '@babel/template';
 import Context from 'src/context';
 
 const enConfig = new Context();
@@ -33,7 +33,7 @@ describe('tag-gettext validate', () => {
     it('should throw if has no meaningful information', () => {
         const node = template('t`${user} ${name}`')().expression;
         const fn = () => gettext.validate(node, enConfig);
-        expect(fn).to.throw('Can not translate \'${ user } ${ name }\'');
+        expect(fn).to.throw('Can not translate \'${user} ${name}\'');
     });
 });
 
