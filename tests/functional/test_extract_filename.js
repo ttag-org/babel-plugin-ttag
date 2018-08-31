@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as babel from 'babel-core';
+import * as babel from '@babel/core';
 import fs from 'fs';
 import path from 'path';
 import c3poPlugin from 'src/plugin';
@@ -14,7 +14,7 @@ describe('Extract comments', () => {
     it('should extract relative filename path to source file in comments', () => {
         const output = 'debug/translations.pot';
         const options = {
-            presets: ['es2015'],
+            presets: ['@babel/preset-env'],
             plugins: [[c3poPlugin, { extract: { output } }]],
         };
         const inputFile = 'tests/fixtures/test_file_with_gettext.js';

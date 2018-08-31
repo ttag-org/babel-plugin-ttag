@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as babel from 'babel-core';
+import * as babel from '@babel/core';
 import c3poPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
@@ -40,8 +40,8 @@ describe('Context resolve', () => {
         'c("email").ngettext(msgid`${ a } banana`, `${ a } bananas`, a);\n';
 
         const result = babel.transform(input, options).code;
-        expect(result).to.contain('${ a } banana email context');
-        expect(result).to.contain('${ a } bananas email context');
+        expect(result).to.contain('${a} banana email context');
+        expect(result).to.contain('${a} bananas email context');
     });
 
     it('should resolve jt', () => {

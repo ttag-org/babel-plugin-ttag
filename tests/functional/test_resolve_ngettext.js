@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as babel from 'babel-core';
+import * as babel from '@babel/core';
 import fs from 'fs';
 import c3poPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
@@ -9,7 +9,6 @@ import childProcess from 'child_process';
 const translations = 'tests/fixtures/resolve_simple_gettext.po';
 
 const options = {
-    presets: ['es2015'],
     plugins: [[c3poPlugin, {
         resolve: { translations },
         discover: ['ngettext'],
@@ -22,8 +21,8 @@ describe('Resolve ngettext', () => {
     });
 
     it('should resolve proper plural form of n', () => {
-        const expected = '_tag_ngettext(n, ' +
-            '["plural form with " + n + " plural [translated]", "plural form with " + n + " plurals [translated]"])';
+        const expected =
+        '_tag_ngettext(n, [`plural form with ${n} plural [translated]`, `plural form with ${n} plurals [translated]`])';
         const input = 'const n = 1; ' +
             'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, n));';
         const result = babel.transform(input, options).code;
@@ -31,9 +30,8 @@ describe('Resolve ngettext', () => {
     });
 
     it('should resolve proper plural form for member expression', () => {
-        const expected = '_ngettext(item.n, ' +
-            '["plural form with " + item.n + " plural [translated]", ' +
-            '"plural form with " + item.n + " plurals [translated]"])';
+        const expected = '_tag_ngettext(item.n, [`plural form with ${item.n} plural [translated]`,' +
+        ' `plural form with ${item.n} plurals [translated]`])';
         const input = 'const n = 1; ' +
             'console.log(ngettext(msgid`plural form with ${item.n} plural`, ' +
             '`plural form with ${item.n} plurals`, item.n));';
@@ -50,12 +48,12 @@ describe('Resolve ngettext', () => {
     });
 
     it('should work when n is Literal', () => {
-        const expected = 'console.log("plural form with " + n + " plural [translated]")';
+        const expected = 'plural [translated]';
         const input = 'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, 1));';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(expected);
 
-        const expected2 = 'console.log("plural form with " + n + " plurals [translated]")';
+        const expected2 = 'plurals [translated]';
         const input2 = 'console.log(ngettext(msgid`plural form with ${n} plural`, ' +
             '`plural form with ${n} plurals`, 2));';
         const result2 = babel.transform(input2, options).code;
@@ -107,7 +105,7 @@ describe('Resolve ngettext', () => {
         const input = 'console.log(ngettext(msgid`${ appleCount } apple`, `${ appleCount } apples`, appleCount));';
         const func = () => babel.transform(input, options).code;
         expect(func).to.throw(
-            'unknown: Expression \'appleCount\' is not found in the localized string \'${ count }' +
+            'Expression \'appleCount\' is not found in the localized string \'${ count }' +
             ' apples (translated)\'.'
         );
     });

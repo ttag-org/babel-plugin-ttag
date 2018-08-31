@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import * as babel from 'babel-core';
+import * as babel from '@babel/core';
 import c3poPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
 const translations = 'tests/fixtures/resolve_numbered_expressions.po';
 
 const options = {
-    presets: ['react'],
+    presets: ['@babel/preset-react'],
     plugins: [[c3poPlugin, {
         resolve: { translations },
         numberedExpressions: true,
@@ -24,7 +24,7 @@ describe('Resolve tag-gettext', () => {
         console.log(t\`Hello \${ name }\`);
         `;
         const result = babel.transform(input, options).code;
-        expect(result).to.contain('Hello ${ name } [translated]');
+        expect(result).to.contain('Hello ${name} [translated]');
     });
 
     it('should resolve t tag default', () => {
@@ -33,7 +33,7 @@ describe('Resolve tag-gettext', () => {
         console.log(t\`Hello not translated \${ name }\`);
         `;
         const result = babel.transform(input, options).code;
-        expect(result).to.contain('`Hello not translated ${ name }`');
+        expect(result).to.contain('`Hello not translated ${name}`');
     });
 
     it('should resolve correct positions for expressions in t tag', () => {
@@ -42,7 +42,7 @@ describe('Resolve tag-gettext', () => {
         console.log(t\`reverse \${ name }\ \${ surname }\`);
         `;
         const result = babel.transform(input, options).code;
-        expect(result).to.contain('reverse ${ surname } ${ name } [translated]');
+        expect(result).to.contain('reverse ${surname} ${name} [translated]');
     });
 
     it('should resolve ngettext func', () => {
@@ -51,8 +51,8 @@ describe('Resolve tag-gettext', () => {
         ngettext(msgid\`\${ fn() } banana\`, \`\${ fn() }\ bananas\`, fn());
         `;
         const result = babel.transform(input, options).code;
-        expect(result).to.contain('${ fn() } banana [translated]');
-        expect(result).to.contain('${ fn() } bananas [translated]');
+        expect(result).to.contain('${fn()} banana [translated]');
+        expect(result).to.contain('${fn()} bananas [translated]');
     });
 
     it('should resolve correct positions for ngettext func', () => {
@@ -62,8 +62,8 @@ describe('Resolve tag-gettext', () => {
         \`\${ a() }\ \${ b() }\ bananas\`, n());
         `;
         const result = babel.transform(input, options).code;
-        expect(result).to.contain('${ b() } ${ a() } banana [translated]');
-        expect(result).to.contain('${ b() } ${ a() } bananas [translated]');
+        expect(result).to.contain('${b()} ${a()} banana [translated]');
+        expect(result).to.contain('${b()} ${a()} bananas [translated]');
     });
 
     it('should resolve jt func', () => {
@@ -75,7 +75,7 @@ describe('Resolve tag-gettext', () => {
         }
         `;
         const result = babel.transform(input, options).code;
-        expect(result).to.contain("['react comp - ', fn(), ' [translated]']");
+        expect(result).to.contain('["react comp - ", fn(), " [translated]"]');
     });
 
     it('should resolve jt func default', () => {
@@ -87,6 +87,6 @@ describe('Resolve tag-gettext', () => {
         }
         `;
         const result = babel.transform(input, options).code;
-        expect(result).to.contain("['react comp2 - ', fn()]");
+        expect(result).to.contain('["react comp2 - ", fn()]');
     });
 });

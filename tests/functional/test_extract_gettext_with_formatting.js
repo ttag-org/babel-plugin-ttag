@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import * as babel from 'babel-core';
+import * as babel from '@babel/core';
 import fs from 'fs';
 import c3poPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
 const output = 'debug/translations.pot';
 const options = {
-    presets: ['es2015'],
+    presets: ['@babel/preset-env'],
     plugins: [[c3poPlugin, { extract: { output }, discover: ['t'] }]],
 };
 

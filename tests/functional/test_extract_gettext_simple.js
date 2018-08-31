@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as babel from 'babel-core';
+import * as babel from '@babel/core';
 import fs from 'fs';
 import c3poPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
@@ -14,7 +14,7 @@ describe('Extract tag-gettext', () => {
         const output = 'debug/translations.pot';
         const expectedPath = 'tests/fixtures/expected_gettext_simple_literal.pot';
         const options = {
-            presets: ['es2015'],
+            presets: ['@babel/preset-env'],
             plugins: [[c3poPlugin, { extract: { output }, discover: ['t'] }]],
         };
         const input = 'console.log(t`simple string literal`);';

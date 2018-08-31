@@ -1,7 +1,2 @@
-"use strict";
-
-var _templateObject = _taggedTemplateLiteral(["simple string literal ", ""], ["simple string literal ", ""]);
-
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-console.log(gtt(_templateObject, a));
+import { t } from "ttag";
+console.log(gtt`simple string literal ${a}`);
