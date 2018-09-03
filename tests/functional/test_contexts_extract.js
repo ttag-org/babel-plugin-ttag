@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as babel from 'babel-core';
+import * as babel from '@babel/core';
 import fs from 'fs';
 import ttag from 'src/plugin';
 import { rmDirSync } from 'src/utils';

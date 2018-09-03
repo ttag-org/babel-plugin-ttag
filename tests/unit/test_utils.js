@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import template from 'babel-template';
+import template from '@babel/template';
 import { template2Msgid, validateAndFormatMsgid, isInDisabledScope,
     hasDisablingComment, dedentStr, getMsgid, poReferenceComparator,
     getMembersPath, getMsgidNumbered } from 'src/utils';
@@ -93,35 +93,35 @@ describe('utils getMembersPath', () => {
 
 describe('utils validateAndFormatMsgid', () => {
     it('should extract original template with expressions', () => {
-        const input = '${ a } banana ${ b }';
-        const expected = '`${ a } banana ${ b }`';
+        const input = '${a} banana ${b}';
+        const expected = '`${a} banana ${b}`';
         expect(validateAndFormatMsgid(input, ['a', 'b'])).to.eql(expected);
     });
 
     it('should throw if not all expressions exist in translated strings', () => {
-        const input = '${ count } apples (translated)';
+        const input = '${count} apples (translated)';
         const func = () => validateAndFormatMsgid(input, ['appleCount']);
         expect(func).to.throw(
             'NoExpressionError: Expression \'appleCount\' is not found in the localized string ' +
-            '\'${ count } apples (translated)\'.'
+            '\'${count} apples (translated)\'.'
         );
     });
 
     it('should ignore left space inside expressions', () => {
         const input = '${a } banana ${  b}';
-        const expected = '`${ a } banana ${ b }`';
+        const expected = '`${a} banana ${b}`';
         expect(validateAndFormatMsgid(input, ['a', 'b'])).to.eql(expected);
     });
 
     it('should ignore white spaces inside expressions', () => {
         const input = '${a} banana ${ b    }';
-        const expected = '`${ a } banana ${ b }`';
+        const expected = '`${a} banana ${b}`';
         expect(validateAndFormatMsgid(input, ['a', 'b'])).to.eql(expected);
     });
 
     it('should support computed properties', () => {
         const input = '${ a[value] } banana ${ b[value] }';
-        const expected = '`${ a[value] } banana ${ b[value] }`';
+        const expected = '`${a[value]} banana ${b[value]}`';
         expect(validateAndFormatMsgid(input, ['a[value]', 'b[value]'])).to.eql(expected);
     });
 
@@ -136,20 +136,20 @@ describe('utils validateAndFormatMsgid', () => {
 
     it('should support [] in computed properties', () => {
         const input = "${ a[value[3]] } banana ${ b['[key]'] }";
-        const expected = "`${ a[value[3]] } banana ${ b['[key]'] }`";
+        const expected = "`${a[value[3]]} banana ${b['[key]']}`";
         expect(validateAndFormatMsgid(input, ['a[value[3]]', "b['[key]']"])).to.eql(expected);
     });
 
     it('should support string in computed properties', () => {
         const input = "${ a['^[a]$'] } banana";
-        const expected = "`${ a['^[a]$'] } banana`";
+        const expected = "`${a['^[a]$']} banana`";
         expect(validateAndFormatMsgid(input, ["a['^[a]$']"])).to.eql(expected);
     });
 
     it('should support template strings in computed properties', () => {
         const input = '${ a[`foo-${ value }`] } banana';
-        const expected = '`${ a[`foo-${ value }`] } banana`';
-        expect(validateAndFormatMsgid(input, ['a[`foo-${ value }`]'])).to.eql(expected);
+        const expected = '`${a[`foo-${value}`]} banana`';
+        expect(validateAndFormatMsgid(input, ['a[`foo-${value}`]'])).to.eql(expected);
     });
 });
 

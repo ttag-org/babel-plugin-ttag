@@ -1,4 +1,4 @@
-import template from 'babel-template';
+import template from '@babel/template';
 import ngettext from 'src/extractors/ngettext';
 import Context from 'src/context';
 import { expect } from 'chai';
@@ -115,6 +115,6 @@ describe('ngettext validate', () => {
     it('should not pass validation if has no meaningful information', () => {
         const node = template('ngettext(msgid`${name} ${n}`, `test`, n)')().expression;
         const fn = () => ngettext.validate(node, enConfig);
-        expect(fn).to.throw('Can not translate \'${ name } ${ n }\'');
+        expect(fn).to.throw('Can not translate \'${name} ${n}\'');
     });
 });

@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import * as babel from 'babel-core';
+import * as babel from '@babel/core';
 import c3poPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
 const translations = 'tests/fixtures/resolve_simple_gettext.po';
 
 const options = {
-    presets: ['es2015'],
+    presets: ['@babel/preset-env'],
     plugins: [[c3poPlugin, {
         resolve: { translations },
         discover: ['t'],
@@ -28,7 +28,7 @@ describe('Resolve tag-gettext', () => {
         const input = 'console.log(t`${ a } simple string ${ b } literal with formatting`);';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(
-            'console.log(a + " simple string " + b + " literal with formatting [translated]");');
+            'console.log("".concat(a, " simple string ").concat(b, " literal with formatting [translated]"))');
     });
 
     it('should resolve gettext literal (with formatting) for member expressions', () => {
@@ -38,8 +38,8 @@ describe('Resolve tag-gettext', () => {
         );
         const result = babel.transform(input, options).code;
         expect(result).to.contain(
-            'console.log(item.name.value + " simple string " + ' +
-            'item.age.value + " literal with formatting [translated]");'
+            'console.log("".concat(item.name.value, " simple string ").concat(item.age.value, " ' +
+            'literal with formatting [translated]"));'
         );
     });
 
@@ -58,7 +58,9 @@ describe('Resolve tag-gettext', () => {
     it('should resolve original formatted string if no translator notes', () => {
         const input = 'console.log(t`simple string literal without translation ${a}`);';
         const result = babel.transform(input, options).code;
-        expect(result).to.contain('console.log("simple string literal without translation " + a);');
+        expect(result).to.contain(
+            'console.log("simple string literal without translation ".concat(a));'
+        );
     });
 
     it('should resolve original formatted string if msgid is not found in po', () => {
@@ -85,19 +87,19 @@ describe('Resolve tag-gettext', () => {
     it('should skip spaces inside expressions', () => {
         const input = 'console.log(t`${ a } spaces test`);';
         const result = babel.transform(input, options).code;
-        expect(result).to.contain('console.log(a + " spaces test [translated]");');
+        expect(result).to.contain('console.log("".concat(a, " spaces test [translated]"));');
     });
 
     it('should throw if expression contains typo', () => {
         const input = 'console.log(t`Typo test ${ mississipi }`);';
         const func = () => babel.transform(input, options).code;
         expect(func).to.throw(
-            'unknown: Expression \'mississipi\' is not found in the localized string \'Typo test ${ missingpi }\'.'
+            'Expression \'mississipi\' is not found in the localized string \'Typo test ${ missingpi }\'.'
         );
     });
     it('should resolve computed properties', () => {
         const input = 'console.log(t`test computed ${ a[\'computed\'] }`);';
         const result = babel.transform(input, options).code;
-        expect(result).to.contain('console.log(\'test computed \' + a[\'computed\'] + \' translated\');');
+        expect(result).to.contain('console.log("test computed ".concat(a[\'computed\'], " translated"));');
     });
 });

@@ -3,7 +3,7 @@ import { PO_PRIMITIVES } from '../defaults';
 import { dedentStr, template2Msgid, ast2Str, validateAndFormatMsgid, getQuasiStr, strToQuasi } from '../utils';
 import { pluralFnBody, makePluralFunc, hasUsefulInfo } from '../po-helpers';
 import { ValidationError } from '../errors';
-import tpl from 'babel-template';
+import tpl from '@babel/template';
 
 const NAME = 'ngettext';
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;

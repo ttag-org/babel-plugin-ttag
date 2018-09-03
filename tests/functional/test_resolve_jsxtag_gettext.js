@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import * as babel from 'babel-core';
+import * as babel from '@babel/core';
 import polyglotPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
 const translations = 'tests/fixtures/resolve_simple_gettext.po';
 
 const options = {
-    presets: ['es2015'],
+    presets: ['@babel/preset-env'],
     plugins: [[polyglotPlugin, {
         resolve: { translations },
         discover: ['jt'],

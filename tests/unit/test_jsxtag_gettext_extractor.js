@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import gettext from 'src/extractors/jsxtag-gettext';
-import template from 'babel-template';
+import template from '@babel/template';
 import Context from 'src/context';
 
 const enConfig = new Context();

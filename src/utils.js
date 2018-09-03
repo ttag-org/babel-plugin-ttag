@@ -1,8 +1,8 @@
 import { execSync } from 'child_process';
 import * as bt from 'babel-types';
 import dedent from 'dedent';
-import generate from 'babel-generator';
-import tpl from 'babel-template';
+import generate from '@babel/generator';
+import tpl from '@babel/template';
 
 import { DISABLE_COMMENT, TTAGID } from './defaults';
 import { ValidationError, NoExpressionError } from './errors';
