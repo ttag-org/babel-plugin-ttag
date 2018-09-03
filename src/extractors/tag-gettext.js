@@ -1,4 +1,4 @@
-import * as t from 'babel-types';
+import * as t from '@babel/types';
 import tpl from '@babel/template';
 import { template2Msgid, validateAndFormatMsgid,
     hasExpressions, ast2Str, getQuasiStr, dedentStr, strToQuasi } from '../utils';

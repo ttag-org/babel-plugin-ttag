@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import * as bt from 'babel-types';
+import * as bt from '@babel/types';
 import dedent from 'dedent';
 import generate from '@babel/generator';
 import tpl from '@babel/template';

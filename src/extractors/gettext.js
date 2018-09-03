@@ -1,4 +1,4 @@
-import * as t from 'babel-types';
+import * as t from '@babel/types';
 import { ast2Str } from '../utils';
 import { ValidationError } from '../errors';
 import { PO_PRIMITIVES } from '../defaults';

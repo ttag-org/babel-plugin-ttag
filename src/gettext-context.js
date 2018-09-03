@@ -1,4 +1,4 @@
-import * as t from 'babel-types';
+import * as t from '@babel/types';
 import { ast2Str } from './utils';
 
 export function isContextTagCall(node, context) {
