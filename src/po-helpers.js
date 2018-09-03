@@ -1,4 +1,4 @@
-import * as bt from 'babel-types';
+import * as bt from '@babel/types';
 import fs from 'fs';
 import gettextParser from 'gettext-parser';
 import { DEFAULT_HEADERS, PO_PRIMITIVES, LOCATION } from './defaults';

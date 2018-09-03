@@ -1,4 +1,4 @@
-import * as t from 'babel-types';
+import * as t from '@babel/types';
 import { PO_PRIMITIVES } from '../defaults';
 import { dedentStr, template2Msgid, ast2Str, validateAndFormatMsgid, getQuasiStr, strToQuasi } from '../utils';
 import { pluralFnBody, makePluralFunc, hasUsefulInfo } from '../po-helpers';
