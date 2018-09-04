@@ -1,4 +1,4 @@
-import * as bt from 'babel-types';
+import * as bt from '@babel/types';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
