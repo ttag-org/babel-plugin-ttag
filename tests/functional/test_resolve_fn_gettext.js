@@ -8,7 +8,7 @@ const translations = 'tests/fixtures/resolve_simple_gettext.po';
 const options = {
     plugins: [[ttagPlugin, {
         resolve: { translations },
-        discover: ['gettext'],
+        discover: ['gettext', '_'],
     }]],
 };
 
@@ -17,8 +17,14 @@ describe('Resolve gettext', () => {
         rmDirSync('debug');
     });
 
-    it('should resolve simple gettext fn', () => {
+    it('should resolve gettext fn', () => {
         const input = 'console.log(gettext("simple string literal"));';
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain('console.log("simple string literal translated");');
+    });
+
+    it('should resolve _ fn', () => {
+        const input = 'console.log(_("simple string literal"));';
         const result = babel.transform(input, options).code;
         expect(result).to.contain('console.log("simple string literal translated");');
     });
