@@ -4,7 +4,7 @@ import gettext from './tag-gettext';
 const NAME = 'jsxtag-gettext';
 
 function match(node, context) {
-    return t.isTaggedTemplateExpression(node) && node.tag.name === context.getAliasFor(NAME);
+    return t.isTaggedTemplateExpression(node) && context.hasAliasForFunc(NAME, node.tag.name);
 }
 
 function templateLiteral2Array({ quasis, expressions }) {

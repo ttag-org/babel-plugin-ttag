@@ -62,8 +62,9 @@ export default function () {
             return;
         }
 
-        const alias = context.getAliasFor(extractor.name);
-        if (!context.hasImport(alias)
+        const aliases = context.getAliasesForFunc(extractor.name);
+        const hasImport = aliases.find(context.hasImport);
+        if (!hasImport
             // can be used in scope of context without import
             && !nodePath._C3PO_GETTEXT_CONTEXT) {
             return;

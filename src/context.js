@@ -49,14 +49,19 @@ class C3poContext {
         this.imports = new Set();
     }
 
-    getAliasFor(funcName) {
+    getAliasesForFunc(ttagFuncName) {
         // TODO: implement possibility to overwrite or add aliases in config;
-        const defaultAlias = ALIASES[funcName];
-        const alias = this.aliases[funcName] || defaultAlias;
+        const defaultAlias = ALIASES[ttagFuncName];
+        const alias = this.aliases[ttagFuncName] || defaultAlias;
         if (!alias) {
-            throw new ConfigError(`Alias for function ${funcName} was not found ${JSON.stringify(ALIASES)}`);
+            throw new ConfigError(`Alias for function ${ttagFuncName} was not found ${JSON.stringify(ALIASES)}`);
         }
-        return alias;
+        return [alias];
+    }
+
+    hasAliasForFunc(ttagFuncName, fn) {
+        const aliases = this.getAliasesForFunc(ttagFuncName);
+        return aliases.includes(fn);
     }
 
     setAliases(aliases) {
@@ -71,7 +76,7 @@ class C3poContext {
         this.imports = imports;
     }
 
-    hasImport(alias) {
+    hasImport = (alias) => {
         const isInDiscover = this.config.discover && this.config.discover.indexOf(alias) !== -1;
         return this.imports.has(alias) || isInDiscover;
     }

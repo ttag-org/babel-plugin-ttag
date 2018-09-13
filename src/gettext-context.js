@@ -1,13 +1,15 @@
 import * as t from '@babel/types';
 import { ast2Str } from './utils';
 
+const NAME = 'context';
+
 export function isContextTagCall(node, context) {
     return (
     t.isTaggedTemplateExpression(node) &&
     t.isMemberExpression(node.tag) &&
     t.isCallExpression(node.tag.object) &&
     t.isIdentifier(node.tag.object.callee) &&
-    node.tag.object.callee.name === context.getAliasFor('context'));
+    context.hasAliasForFunc(NAME, node.tag.object.callee.name));
 }
 
 export function isContextFnCall(node, context) {
@@ -16,7 +18,7 @@ export function isContextFnCall(node, context) {
         t.isMemberExpression(node.callee) &&
         t.isCallExpression(node.callee.object) &&
         t.isIdentifier(node.callee.object.callee) &&
-        node.callee.object.callee.name === context.getAliasFor('context')
+        context.hasAliasForFunc(NAME, node.callee.object.callee.name)
     );
 }
 

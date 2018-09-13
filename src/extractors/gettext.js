@@ -26,7 +26,7 @@ const validate = (node) => {
 function match(node, context) {
     return (t.isCallExpression(node) &&
         t.isIdentifier(node.callee) &&
-        node.callee.name === context.getAliasFor(NAME) &&
+        context.hasAliasForFunc(NAME, node.callee.name) &&
         node.arguments.length > 0);
 }
 

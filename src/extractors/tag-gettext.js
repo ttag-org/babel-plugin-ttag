@@ -17,7 +17,7 @@ const validate = (node, context) => {
 };
 
 function match(node, context) {
-    return t.isTaggedTemplateExpression(node) && node.tag.name === context.getAliasFor(NAME);
+    return t.isTaggedTemplateExpression(node) && context.hasAliasForFunc(NAME, node.tag.name);
 }
 
 function resolveDefault(node, context) {
