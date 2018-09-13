@@ -7,6 +7,9 @@ MOCHA_CMD = mocha --compilers js:@babel/register
 test_extract_gettext:
 	$(MOCHA_CMD) ./tests/functional/test_extract_gettext_simple.js
 
+test_extract_fn_gettext:
+	$(MOCHA_CMD) ./tests/functional/test_extract_fn_gettext.js
+
 test_extract_gettext_with_formatting:
 	$(MOCHA_CMD) ./tests/functional/test_extract_gettext_with_formatting.js
 
@@ -101,6 +104,7 @@ test_discover_by_require:
 	$(MOCHA_CMD) ./tests/functional/test_discover_by_require.js
 
 test_fun: test_extract_gettext
+test_fun: test_extract_fn_gettext
 test_fun: test_extract_gettext_with_formatting
 test_fun: test_extract_filename
 test_fun: test_extract_developer_comments

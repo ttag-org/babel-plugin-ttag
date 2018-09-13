@@ -4,14 +4,26 @@ export const DEFAULT_HEADERS = {
 };
 
 // TODO: setup default aliases from extractors
-export const ALIASES = {
+export const FUNC_TO_ALIAS_MAP = {
     'tag-gettext': 't',
     'jsxtag-gettext': 'jt',
-    gettext: 'gettext',
+    gettext: ['gettext', '_'],
     ngettext: 'ngettext',
     msgid: 'msgid',
     context: 'c',
 };
+
+export const ALIAS_TO_FUNC_MAP = Object.keys(FUNC_TO_ALIAS_MAP).reduce((obj, key) => {
+    const value = FUNC_TO_ALIAS_MAP[key];
+    if (Array.isArray(value)) {
+        value.forEach((alias) => {
+            obj[alias] = key;
+        });
+    } else {
+        obj[value] = key;
+    }
+    return obj;
+}, {});
 
 export const PO_PRIMITIVES = {
     MSGSTR: 'msgstr',

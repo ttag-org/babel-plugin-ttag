@@ -3,7 +3,7 @@ import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
 
-import { ALIASES } from './defaults';
+import { ALIAS_TO_FUNC_MAP } from './defaults';
 import { buildPotData, makePotStr } from './po-helpers';
 import { extractPoEntry, getExtractor } from './extract';
 import { hasDisablingComment, isInDisabledScope, isTtagImport,
@@ -13,12 +13,6 @@ import { ValidationError } from './errors';
 import TtagContext from './context';
 import { isContextTagCall, isValidTagContext, isContextFnCall,
     isValidFnCallContext } from './gettext-context';
-
-
-const reverseAliases = {};
-for (const key of Object.keys(ALIASES)) {
-    reverseAliases[ALIASES[key]] = key;
-}
 
 export default function () {
     let context;
@@ -62,8 +56,9 @@ export default function () {
             return;
         }
 
-        const alias = context.getAliasFor(extractor.name);
-        if (!context.hasImport(alias)
+        const aliases = context.getAliasesForFunc(extractor.name);
+        const hasImport = aliases.find(context.hasImport);
+        if (!hasImport
             // can be used in scope of context without import
             && !nodePath._C3PO_GETTEXT_CONTEXT) {
             return;
@@ -166,22 +161,22 @@ export default function () {
                 if (!isTtagRequire(node)) return;
                 node.id.properties
                     .map(({ key: { name } }) => name)
-                    .filter((fnName) => reverseAliases[fnName])
+                    .filter((fnName) => ALIAS_TO_FUNC_MAP[fnName])
                     .forEach((fnName) => context.addImport(fnName));
             },
             ImportDeclaration: (nodePath) => {
                 const { node } = nodePath;
                 if (isTtagImport(node)) {
                     node.specifiers
-                    .filter(({ local: { name } }) => reverseAliases[name])
+                    .filter(({ local: { name } }) => ALIAS_TO_FUNC_MAP[name])
                     .forEach((s) => context.addImport(s.local.name));
                 }
                 if (isTtagImport(node) && hasImportSpecifier(node)) {
                     node.specifiers
                     .filter(bt.isImportSpecifier)
-                    .filter(({ imported: { name } }) => reverseAliases[name])
+                    .filter(({ imported: { name } }) => ALIAS_TO_FUNC_MAP[name])
                     .forEach(({ imported, local }) => {
-                        context.addAlias(reverseAliases[imported.name], local.name);
+                        context.addAlias(ALIAS_TO_FUNC_MAP[imported.name], local.name);
                         context.addImport(local.name);
                     });
                 }

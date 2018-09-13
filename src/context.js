@@ -1,4 +1,4 @@
-import { ALIASES, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS,
+import { FUNC_TO_ALIAS_MAP, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS,
     UNRESOLVED_ACTION, LOCATION } from './defaults';
 const { FAIL, WARN, SKIP } = UNRESOLVED_ACTION;
 import tagGettext from './extractors/tag-gettext';
@@ -49,14 +49,20 @@ class C3poContext {
         this.imports = new Set();
     }
 
-    getAliasFor(funcName) {
+    getAliasesForFunc(ttagFuncName) {
         // TODO: implement possibility to overwrite or add aliases in config;
-        const defaultAlias = ALIASES[funcName];
-        const alias = this.aliases[funcName] || defaultAlias;
+        const defaultAlias = FUNC_TO_ALIAS_MAP[ttagFuncName];
+        const alias = this.aliases[ttagFuncName] || defaultAlias;
         if (!alias) {
-            throw new ConfigError(`Alias for function ${funcName} was not found ${JSON.stringify(ALIASES)}`);
+            throw new ConfigError(`Alias for function ${ttagFuncName} was not found ${
+                JSON.stringify(FUNC_TO_ALIAS_MAP)}`);
         }
-        return alias;
+        return Array.isArray(alias) ? alias : [alias];
+    }
+
+    hasAliasForFunc(ttagFuncName, fn) {
+        const aliases = this.getAliasesForFunc(ttagFuncName);
+        return aliases.includes(fn);
     }
 
     setAliases(aliases) {
@@ -71,7 +77,7 @@ class C3poContext {
         this.imports = imports;
     }
 
-    hasImport(alias) {
+    hasImport = (alias) => {
         const isInDiscover = this.config.discover && this.config.discover.indexOf(alias) !== -1;
         return this.imports.has(alias) || isInDiscover;
     }

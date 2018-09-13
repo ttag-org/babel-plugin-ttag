@@ -21,14 +21,19 @@ function validateNPlural(exp) {
 
 const validate = (node, context) => {
     const msgidTag = node.arguments[0];
-    const msgidAlias = context.getAliasFor('msgid');
+    const msgidAliases = context.getAliasesForFunc('msgid');
     if (! t.isTaggedTemplateExpression(msgidTag)) {
         throw new ValidationError(
-            `First argument must be tagged template expression. You should use '${msgidAlias}' tag`);
+            msgidAliases.length > 1 ?
+            `First argument must be tagged template expression. You should use one of '${msgidAliases}' tag` :
+            `First argument must be tagged template expression. You should use '${msgidAliases[0]}' tag`
+            );
     }
-    if (msgidTag.tag.name !== msgidAlias) {
+    if (!context.hasAliasForFunc('msgid', msgidTag.tag.name)) {
         throw new ValidationError(
-            `Expected '${msgidAlias}' for the first argument but not '${msgidTag.tag.name}'`);
+            msgidAliases.length > 1 ?
+            `Expected one of '${msgidAliases}' for the first argument but not '${msgidTag.tag.name}'` :
+            `Expected '${msgidAliases[0]}' for the first argument but not '${msgidTag.tag.name}'`);
     }
     const tags = node.arguments.slice(1, -1);
 
@@ -47,7 +52,7 @@ const validate = (node, context) => {
 function match(node, context) {
     return (t.isCallExpression(node) &&
     t.isIdentifier(node.callee) &&
-    node.callee.name === context.getAliasFor(NAME) &&
+    context.hasAliasForFunc(NAME, node.callee.name) &&
     node.arguments.length > 0);
 }
 
