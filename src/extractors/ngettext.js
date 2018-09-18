@@ -103,7 +103,7 @@ function resolveDefault(node, context, state) {
     const args = node.arguments.slice(0, -1).map((quasi) => {
         const quasiStr = getQuasiStr({ quasi });
         const dedentedStr = context.isDedent() ? dedentStr(quasiStr) : quasiStr;
-        return tpl(strToQuasi(dedentedStr))().expression;
+        return tpl.ast(strToQuasi(dedentedStr)).expression;
     });
 
     const nplurals = context.getPluralsCount();
@@ -130,7 +130,7 @@ function resolve(node, translationObj, context, state) {
     if (t.isLiteral(tagArg)) {
         const pluralFn = makePluralFunc(context.getPluralFormula());
         const orig = validateAndFormatMsgid(pluralFn(tagArg.value, args), exprs);
-        return tpl(orig)();
+        return tpl.ast(orig);
     }
 
     return tpl('NGETTEXT(N, ARGS)')({
@@ -140,13 +140,13 @@ function resolve(node, translationObj, context, state) {
             let quasis;
             let expressions;
             if (context.isNumberedExpressions()) {
-                const transNode = tpl(strToQuasi(l))();
+                const transNode = tpl.ast(strToQuasi(l));
                 quasis = transNode.expression.quasis;
                 expressions = transNode.expression.expressions
                     .map(({ value }) => value)
                     .map((i) => msgidTag.quasi.expressions[i]);
             } else {
-                const transNode = tpl(validateAndFormatMsgid(l, exprs))();
+                const transNode = tpl.ast(validateAndFormatMsgid(l, exprs));
                 quasis = transNode.expression.quasis;
                 expressions = transNode.expression.expressions;
             }
