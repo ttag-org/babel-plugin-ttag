@@ -72,7 +72,7 @@ export const getMsgidNumbered = (str, exprs) => str.reduce((s, l, i) => {
 }, '');
 
 export const validateAndFormatMsgid = (msgid, exprNames) => {
-    const msgidAST = tpl(strToQuasi(msgid))();
+    const msgidAST = tpl.ast(strToQuasi(msgid));
     const msgidExprs = new Set(msgidAST.expression.expressions.map(ast2Str));
     exprNames.forEach((exprName) => {
         if (!msgidExprs.has(exprName)) {

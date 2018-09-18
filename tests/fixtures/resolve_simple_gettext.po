@@ -101,3 +101,6 @@ msgstr "test computed ${ a['computed'] } translated"
 #, fuzzy
 msgid "{name} fuzzy name"
 msgstr "{surname} fuzzy name"
+
+msgid "test test ${ MAX_AMOUNT }"
+msgstr "test test ${ MAX_AMOUNT } translate"

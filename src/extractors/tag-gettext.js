@@ -32,7 +32,7 @@ function resolve(node, translation, context) {
     const transStr = translation[MSGSTR][0];
 
     if (hasExpressions(node)) {
-        const transExpr = tpl(strToQuasi(transStr))();
+        const transExpr = tpl.ast(strToQuasi(transStr));
         if (context.isNumberedExpressions()) {
             const exprs = transExpr.expression.expressions
                 .map(({ value }) => value)
@@ -40,7 +40,7 @@ function resolve(node, translation, context) {
             return t.templateLiteral(transExpr.expression.quasis, exprs);
         }
         const exprs = node.quasi.expressions.map(ast2Str);
-        return tpl(validateAndFormatMsgid(transStr, exprs))().expression;
+        return tpl.ast(validateAndFormatMsgid(transStr, exprs)).expression;
     }
     return t.stringLiteral(transStr);
 }

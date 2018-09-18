@@ -31,6 +31,15 @@ describe('Resolve tag-gettext', () => {
             'console.log("".concat(a, " simple string ").concat(b, " literal with formatting [translated]"))');
     });
 
+    it('should work with upper case characters as variables (regression)', () => {
+        // https://github.com/babel/babel/issues/8723
+        const input = 't`test test ${MAX_AMOUNT}`';
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain(
+            '"test test ".concat(MAX_AMOUNT, " translate");'
+        );
+    });
+
     it('should resolve gettext literal (with formatting) for member expressions', () => {
         const input = (
             'console.log(t`${ item.name.value } simple string ' +
