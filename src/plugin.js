@@ -159,10 +159,19 @@ export default function () {
             VariableDeclarator: (nodePath) => {
                 const { node } = nodePath;
                 if (!isTtagRequire(node)) return;
+
+                // require calls
                 node.id.properties
-                    .map(({ key: { name } }) => name)
-                    .filter((fnName) => ALIAS_TO_FUNC_MAP[fnName])
-                    .forEach((fnName) => context.addImport(fnName));
+                    .map(({ key: { name: keyName }, value: { name: valueName } }) => [keyName, valueName])
+                    .filter(([keyName]) => ALIAS_TO_FUNC_MAP[keyName])
+                    .forEach(([keyName, valueName]) => {
+                        if (keyName !== valueName) { // if alias
+                            context.addAlias(ALIAS_TO_FUNC_MAP[keyName], valueName);
+                            context.addImport(valueName);
+                        } else {
+                            context.addImport(keyName);
+                        }
+                    });
             },
             ImportDeclaration: (nodePath) => {
                 const { node } = nodePath;

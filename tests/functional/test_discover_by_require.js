@@ -44,4 +44,14 @@ describe('Extract developer comments', () => {
         const result = fs.readFileSync(output).toString();
         expect(result).to.contain('msgid "test context"');
     });
+
+    it('should recognize alias from require', () => {
+        const input = dedent(`
+        const { t: i18n } = require('ttag');
+        i18n\`test alias\`
+        `);
+        babel.transform(input, options);
+        const result = fs.readFileSync(output).toString();
+        expect(result).to.contain('msgid "test alias"');
+    });
 });
