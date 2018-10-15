@@ -173,8 +173,12 @@ export default function () {
                         }
                     });
             },
-            ImportDeclaration: (nodePath) => {
+            ImportDeclaration: (nodePath, state) => {
                 const { node } = nodePath;
+
+                if (!context) {
+                    context = new TtagContext(state.opts);
+                }
                 if (isTtagImport(node)) {
                     node.specifiers
                     .filter(({ local: { name } }) => ALIAS_TO_FUNC_MAP[name])
