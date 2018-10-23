@@ -103,6 +103,13 @@ test_resolve_numbered_expressions:
 test_discover_by_require:
 	$(MOCHA_CMD) ./tests/functional/test_discover_by_require.js
 
+test_macro_resolve:
+	$(MOCHA_CMD) ./tests/functional/test_macro_resolve.js
+
+test_macro_extract:
+	$(MOCHA_CMD) ./tests/functional/test_macro_extract.js
+
+
 test_fun: test_extract_gettext
 test_fun: test_extract_fn_gettext
 test_fun: test_extract_gettext_with_formatting
@@ -134,6 +141,8 @@ test_fun: test_contexts_extract_from_file
 test_fun: test_extract_numbered_expressions
 test_fun: test_resolve_numbered_expressions
 test_fun: test_discover_by_require
+test_fun: test_macro_resolve
+test_fun: test_macro_extract
 
 test: test_fun
 test: test_unit
