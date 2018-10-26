@@ -22,7 +22,7 @@ function ttagMacro({ references, state, babel: { types: t }, config = {} }) {
 
             throw new MacroError(
                 `Invalid import: ${refName}. You can only import ${
-                    allowedMethods.join(', ')} from 'babel-plugin-ttag/macro'.`
+                    allowedMethods.join(', ')} from 'babel-plugin-ttag/dist/ttag.macro'.`
             );
         }
 

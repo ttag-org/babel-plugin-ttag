@@ -32,4 +32,13 @@ describe('Macro resolve', () => {
         const babelResult = babel.transform(input, options);
         expect(babelResult.code).to.contain('"simple string literal translated"');
     });
+
+    it('should throw if meet unrecognized import', () => {
+        const input = dedent(`
+            import { tt } from "../../src/ttag.macro";
+            console.log(tt\`simple string literal\`);
+        `);
+        const fn = () => babel.transform(input, options);
+        expect(fn).to.throw('Invalid import: tt');
+    });
 });
