@@ -14,12 +14,13 @@ function ttagMacro({ references, state, babel: { types: t }, config = {} }) {
     // { default: [path, path], t: [path], ... }
     Object.keys(references).forEach((refName) => {
         if (!ALIAS_TO_FUNC_MAP[refName]) {
-            const allowedMethods = Object.values(FUNC_TO_ALIAS_MAP).map((funcName) => (
-                Array.isArray(funcName)
-                    ? funcName.join(', ')
-                    : funcName
-            ));
+            const allowedMethods = Object.keys(FUNC_TO_ALIAS_MAP).map((k) => {
+                const funcName = FUNC_TO_ALIAS_MAP[k];
 
+                return Array.isArray(funcName)
+                ? funcName.join(', ')
+                : funcName;
+            });
             throw new MacroError(
                 `Invalid import: ${refName}. You can only import ${
                     allowedMethods.join(', ')} from 'babel-plugin-ttag/dist/ttag.macro'.`
