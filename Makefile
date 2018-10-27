@@ -4,6 +4,9 @@ export NODE_PATH = ./
 
 MOCHA_CMD = mocha --compilers js:@babel/register
 
+build:
+	npm run build
+
 test_extract_gettext:
 	$(MOCHA_CMD) ./tests/functional/test_extract_gettext_simple.js
 
@@ -103,7 +106,7 @@ test_resolve_numbered_expressions:
 test_discover_by_require:
 	$(MOCHA_CMD) ./tests/functional/test_discover_by_require.js
 
-test_macro_resolve:
+test_macro_resolve: build
 	$(MOCHA_CMD) ./tests/functional/test_macro_resolve.js
 
 test_macro_extract:
