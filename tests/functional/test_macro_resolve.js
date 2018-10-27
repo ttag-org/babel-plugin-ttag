@@ -1,5 +1,12 @@
 import { expect } from 'chai';
+import * as babel from '@babel/core';
+import dedent from 'dedent';
 import childProcess from 'child_process';
+
+const options = {
+    plugins: ['macros'],
+    filename: __filename,
+};
 
 describe('Macro resolve', () => {
     it('should resolve translation', () => {
