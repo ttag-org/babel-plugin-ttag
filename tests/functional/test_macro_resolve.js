@@ -1,20 +1,38 @@
+import fs from 'fs';
 import { expect } from 'chai';
 import * as babel from '@babel/core';
 import dedent from 'dedent';
-import childProcess from 'child_process';
+import { rmDirSync } from 'src/utils';
 
 const options = {
     plugins: ['macros'],
     filename: __filename,
 };
 
+const macroConfig = `{
+    "ttag": {
+        "resolve": {
+            "translations": "tests/fixtures/resolve_simple_gettext.po"
+        }
+    }
+}`;
+
 describe('Macro resolve', () => {
+    before(() => {
+        fs.writeFileSync('.babel-plugin-macrosrc', macroConfig);
+    });
+
+    after(() => {
+        rmDirSync('.babel-plugin-macrosrc');
+    });
+
     it('should resolve translation', () => {
-        const out = childProcess.execSync(
-            'babel index.js',
-            { cwd: 'tests/fixtures/macro' }
-        ).toString();
-        expect(out).to.contain('"simple string literal translated"');
+        const input = dedent(`
+            import { t } from "../../src/ttag.macro";
+            console.log(t\`simple string literal\`);
+        `);
+        const babelResult = babel.transform(input, options);
+        expect(babelResult.code).to.contain('"simple string literal translated"');
     });
 
     it('should throw if meet unrecognized import', () => {
