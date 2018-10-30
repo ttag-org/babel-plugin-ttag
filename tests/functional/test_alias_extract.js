@@ -47,5 +47,5 @@ describe('Contexts extract', () => {
         const result = fs.readFileSync(output).toString();
         expect(result).to.contain('alias1 extract test');
         expect(result).to.contain('alias2 extract test');
-  });
+    });
 });
