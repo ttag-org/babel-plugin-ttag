@@ -74,7 +74,7 @@ export default function () {
                 }
                 throw err;
             }
-            
+
             if (context.isExtractMode()) {
                 const poEntry = extractPoEntry(extractor, nodePath, context, state);
                 poEntry && potEntries.push(poEntry);

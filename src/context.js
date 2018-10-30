@@ -70,7 +70,11 @@ class C3poContext {
     }
 
     addAlias(funcName, alias) {
-        this.aliases[funcName] = alias;
+        if (this.aliases[funcName]) {
+            this.aliases[funcName].push(alias);
+        } else {
+            this.aliases[funcName] = [alias];
+        }
     }
 
     setImports(imports) {
