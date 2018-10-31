@@ -109,6 +109,9 @@ test_macro_resolve:
 test_macro_extract:
 	$(MOCHA_CMD) ./tests/functional/test_macro_extract.js
 
+test_alias_extract:
+	$(MOCHA_CMD) ./tests/functional/test_alias_extract.js
+
 
 test_fun: test_extract_gettext
 test_fun: test_extract_fn_gettext
@@ -143,6 +146,7 @@ test_fun: test_resolve_numbered_expressions
 test_fun: test_discover_by_require
 test_fun: test_macro_resolve
 test_fun: test_macro_extract
+test_fun: test_alias_extract
 
 test: test_fun
 test: test_unit

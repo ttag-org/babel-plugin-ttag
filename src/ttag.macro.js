@@ -1,8 +1,12 @@
 import { createMacro, MacroError } from 'babel-plugin-macros';
 import { FUNC_TO_ALIAS_MAP, ALIAS_TO_FUNC_MAP } from './defaults';
-import plugin from './plugin';
+import { default as plugin, isStarted } from './plugin';
 
 function ttagMacro({ references, state, babel: { types: t }, config = {} }) {
+    const babelPluginTtag = plugin();
+    if (isStarted()) {
+        return { keepImports: true };
+    }
     const program = state.file.path;
 
     // replace `babel-plugin-ttag/macro` by `ttag`, add create a node for ttag's imports
@@ -45,7 +49,8 @@ function ttagMacro({ references, state, babel: { types: t }, config = {} }) {
 
     // apply babel-plugin-ttag to the file
     const stateWithOpts = { ...state, opts: config };
-    program.traverse(plugin().visitor, stateWithOpts);
+    program.traverse(babelPluginTtag.visitor, stateWithOpts);
+    return {};
 }
 
 export default createMacro(ttagMacro, { configName: 'ttag' });

@@ -14,6 +14,11 @@ import TtagContext from './context';
 import { isContextTagCall, isValidTagContext, isContextFnCall,
     isValidFnCallContext } from './gettext-context';
 
+let started = false;
+export function isStarted() {
+    return started;
+}
+
 export default function () {
     let context;
     let disabledScopes = new Set();
@@ -78,12 +83,13 @@ export default function () {
             if (context.isExtractMode()) {
                 const poEntry = extractPoEntry(extractor, nodePath, context, state);
                 poEntry && potEntries.push(poEntry);
+                nodePath.node._C3PO_visited = true;
             }
 
             if (context.isResolveMode()) {
                 resolveEntries(extractor, nodePath, context, state);
+                nodePath.node._C3PO_visited = true;
             }
-            nodePath.node._C3PO_visited = true;
         } catch (err) {
             // TODO: handle specific instances of errors
             throw nodePath.buildCodeFrameError(`${err.message}\n${err.stack}`);
@@ -141,6 +147,7 @@ export default function () {
             TaggedTemplateExpression: tryMatchTag(extractOrResolve),
             CallExpression: tryMatchCall(extractOrResolve),
             Program: (nodePath, state) => {
+                started = true;
                 if (!context) {
                     context = new TtagContext(state.opts);
                 } else {
