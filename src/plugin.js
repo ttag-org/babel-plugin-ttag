@@ -14,6 +14,11 @@ import TtagContext from './context';
 import { isContextTagCall, isValidTagContext, isContextFnCall,
     isValidFnCallContext } from './gettext-context';
 
+let started = false;
+export function isStarted() {
+    return started;
+}
+
 export default function () {
     let context;
     let disabledScopes = new Set();
@@ -142,6 +147,7 @@ export default function () {
             TaggedTemplateExpression: tryMatchTag(extractOrResolve),
             CallExpression: tryMatchCall(extractOrResolve),
             Program: (nodePath, state) => {
+                started = true;
                 if (!context) {
                     context = new TtagContext(state.opts);
                 } else {
