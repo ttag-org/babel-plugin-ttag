@@ -2,7 +2,7 @@ SHELL := /bin/bash
 export PATH := $(PWD)/node_modules/.bin:$(PATH)
 export NODE_PATH = ./
 
-MOCHA_CMD = mocha --compilers js:@babel/register
+MOCHA_CMD = mocha --require @babel/register
 
 test_extract_gettext:
 	$(MOCHA_CMD) ./tests/functional/test_extract_gettext_simple.js
