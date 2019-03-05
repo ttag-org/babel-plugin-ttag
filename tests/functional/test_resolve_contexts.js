@@ -34,6 +34,16 @@ describe('Context resolve', () => {
         expect(result).to.contain('test email context');
     });
 
+    it('should not remove wrapper function', () => {
+        const input = `
+        import { t, c } from 'ttag';
+        make_it_work(c('email').t\`test\`)
+        `;
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain('make_it_work');
+        expect(result).to.contain('test email context');
+    });
+
     it('should resolve ngettext', () => {
         const input = 'import { ngettext, msgid, c } from "ttag";\n' +
         'const a = 2;\n' +
