@@ -29,6 +29,7 @@ export default function () {
             const node = nodePath.node;
             if (isContextTagCall(node, context) && isValidTagContext(nodePath)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.tag.object.arguments[0].value;
+                nodePath._ORIGINAL_NODE = node;
                 nodePath.node = bt.taggedTemplateExpression(node.tag.property, node.quasi);
                 nodePath.node.loc = node.loc;
             }
@@ -41,6 +42,7 @@ export default function () {
             const node = nodePath.node;
             if (isContextFnCall(node, context) && isValidFnCallContext(nodePath)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.callee.object.arguments[0].value;
+                nodePath._ORIGINAL_NODE = node;
                 nodePath.node = bt.callExpression(node.callee.property, node.arguments);
                 nodePath.node.loc = node.loc;
             }

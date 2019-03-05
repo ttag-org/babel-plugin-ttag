@@ -20,10 +20,9 @@ export function resolveEntries(extractor, nodePath, context, state) {
         const resultNode = extractor.resolve(nodePath.node, translationObj, context, state);
         if (resultNode !== undefined) {
             if (gettextContext !== '') {
-                nodePath.parentPath.replaceWith(resultNode);
-            } else {
-                nodePath.replaceWith(resultNode);
+                nodePath.node = nodePath._ORIGINAL_NODE;
             }
+            nodePath.replaceWith(resultNode);
         }
     } catch (err) {
         if (err instanceof NoTranslationError) {
