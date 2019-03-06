@@ -3,7 +3,7 @@ import * as babel from '@babel/core';
 import c3poPlugin from 'src/plugin';
 
 const options = {
-    plugins: [[c3poPlugin, { discover: ['ngettext'], resolve: { translations: 'default' } }]],
+    plugins: [[c3poPlugin, { discover: ['ngettext', 'c'], resolve: { translations: 'default' } }]],
 };
 
 describe('Resolve ngettext default', () => {
@@ -26,4 +26,11 @@ describe('Resolve ngettext default', () => {
         const result = babel.transform(input, options).code;
         expect(result).to.contain('_tag_ngettext(n, [`test\ntest`, `test\ntests`]);');
     });
+
+    it('should resolve original strings with context', () => {
+        const input = 'console.log(c("foo").ngettext(msgid`no translation plural`, `no translation plurals`, n));';
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain('_tag_ngettext(n, [`no translation plural`, `no translation plurals`])');
+    });
+
 });
