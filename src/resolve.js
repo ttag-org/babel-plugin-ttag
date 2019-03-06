@@ -30,6 +30,9 @@ export function resolveEntries(extractor, nodePath, context, state) {
             if (extractor.resolveDefault) {
                 const resultNode = extractor.resolveDefault(nodePath.node, context, state);
                 if (resultNode !== undefined) {
+                    if (nodePath._C3PO_GETTEXT_CONTEXT) {
+                        nodePath.node = nodePath._ORIGINAL_NODE;
+                    }
                     nodePath.replaceWith(resultNode);
                 }
             }

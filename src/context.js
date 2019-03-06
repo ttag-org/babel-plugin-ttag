@@ -183,7 +183,7 @@ class C3poContext {
     }
 
     getTranslations(gettextContext = '') {
-        return this.poData.translations[gettextContext];
+        return this.poData.translations[gettextContext] || {};
     }
 
 }
