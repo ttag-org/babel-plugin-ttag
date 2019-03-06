@@ -32,5 +32,4 @@ describe('Resolve ngettext default', () => {
         const result = babel.transform(input, options).code;
         expect(result).to.contain('_tag_ngettext(n, [`no translation plural`, `no translation plurals`])');
     });
-
 });

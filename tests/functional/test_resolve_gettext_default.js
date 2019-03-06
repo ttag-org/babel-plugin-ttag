@@ -47,5 +47,4 @@ describe('Resolve tag-gettext default', () => {
         const result = babel.transform(input, options).code;
         expect(result).to.contain('console.log("www");');
     });
-
 });

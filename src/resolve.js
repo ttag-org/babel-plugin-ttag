@@ -2,6 +2,16 @@ import { NoTranslationError } from './errors';
 import { dedentStr } from './utils';
 import { hasTranslations, isFuzzy } from './po-helpers';
 
+
+function replaceNode(nodePath, resultNode) {
+    if (resultNode !== undefined) {
+        if (nodePath._C3PO_GETTEXT_CONTEXT) {
+            nodePath.node = nodePath._ORIGINAL_NODE;
+        }
+        nodePath.replaceWith(resultNode);
+    }
+}
+
 export function resolveEntries(extractor, nodePath, context, state) {
     try {
         const gettextContext = nodePath._C3PO_GETTEXT_CONTEXT || '';
@@ -18,23 +28,13 @@ export function resolveEntries(extractor, nodePath, context, state) {
         }
 
         const resultNode = extractor.resolve(nodePath.node, translationObj, context, state);
-        if (resultNode !== undefined) {
-            if (gettextContext !== '') {
-                nodePath.node = nodePath._ORIGINAL_NODE;
-            }
-            nodePath.replaceWith(resultNode);
-        }
+        replaceNode(nodePath, resultNode);
     } catch (err) {
         if (err instanceof NoTranslationError) {
             context.noTranslationAction(err.message);
             if (extractor.resolveDefault) {
                 const resultNode = extractor.resolveDefault(nodePath.node, context, state);
-                if (resultNode !== undefined) {
-                    if (nodePath._C3PO_GETTEXT_CONTEXT) {
-                        nodePath.node = nodePath._ORIGINAL_NODE;
-                    }
-                    nodePath.replaceWith(resultNode);
-                }
+                replaceNode(nodePath, resultNode);
             }
             return;
         }
