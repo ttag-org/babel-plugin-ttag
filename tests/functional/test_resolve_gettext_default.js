@@ -6,7 +6,7 @@ import { rmDirSync } from 'src/utils';
 const options = {
     presets: ['@babel/preset-env'],
     plugins: [[c3poPlugin, {
-        discover: ['t'],
+        discover: ['t', 'c'],
         resolve: { translations: 'default' },
     }]],
 };
@@ -40,5 +40,11 @@ describe('Resolve tag-gettext default', () => {
         const input = 'console.log(t`  www`);';
         const result = babel.transform(input, options).code;
         expect(result).to.contain('console.log("  www");');
+    });
+
+    it('should not resolve with context', () => {
+        const input = 'console.log(c("foo").t`www`);';
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain('console.log("www");');
     });
 });
