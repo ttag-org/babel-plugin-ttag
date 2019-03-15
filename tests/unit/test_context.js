@@ -5,12 +5,12 @@ const DEFAULT_PO_DATA = {
     headers:
     {
         'content-type': 'text/plain; charset=UTF-8',
-        'plural-forms': 'nplurals = 2; plural = (n !== 1)',
+        'plural-forms': 'nplurals = 2; plural = (n != 1)',
     },
     translations: { '': {} },
 };
 
-const ukPluralFormula = ' (n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2)'; // eslint-disable-line
+const ukPluralFormula = ' (n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2)'; // eslint-disable-line
 const ukHeaders = {
     'content-type': 'text/plain; charset=UTF-8',
     'plural-forms': `nplurals = 3; plural =${ukPluralFormula}`,
@@ -64,7 +64,7 @@ describe('C3poContext.getPluralFormula', () => {
     it('should work with en language by default', () => {
         const config = {};
         const context = new C3poContext(config);
-        expect(context.getPluralFormula()).to.eql(' (n !== 1)');
+        expect(context.getPluralFormula()).to.eql(' (n != 1)');
     });
 
     it('should work with uk language', () => {
