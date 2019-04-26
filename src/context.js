@@ -143,6 +143,9 @@ class C3poContext {
         if (! this.isResolveMode()) {
             return;
         }
+        if (this.config.resolve && this.config.resolve.translations === 'default') {
+            return;
+        }
         logAction(message, this.config.resolve.unresolved);
     }
 
