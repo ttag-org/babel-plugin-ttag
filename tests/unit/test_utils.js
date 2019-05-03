@@ -202,7 +202,7 @@ describe('utils dedentStr', () => {
 });
 
 function getStrsExprs(node) {
-    const strs = node.quasis.map(({ value: { raw } }) => raw);
+    const strs = node.quasis.map(({ value: { cooked } }) => cooked);
     const exprs = node.expressions;
     return [strs, exprs];
 }
