@@ -86,7 +86,7 @@ export const validateAndFormatMsgid = (msgid, exprNames) => {
 };
 
 export function template2Msgid(node, context) {
-    const strs = node.quasi.quasis.map(({ value: { raw } }) => raw);
+    const strs = node.quasi.quasis.map(({ value: { cooked } }) => cooked);
     const exprs = node.quasi.expressions || [];
 
     if (exprs.length) {
@@ -94,7 +94,7 @@ export function template2Msgid(node, context) {
             getMsgidNumbered(strs, exprs) :
             getMsgid(strs, exprs);
     }
-    return node.quasi.quasis[0].value.raw;
+    return node.quasi.quasis[0].value.cooked;
 }
 
 export function isInDisabledScope(node, disabledScopes) {
