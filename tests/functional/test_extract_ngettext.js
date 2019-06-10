@@ -44,4 +44,23 @@ describe('Extract ngettext with multiple presets', () => {
         const result = fs.readFileSync(output).toString();
         expect(result).to.contain('msgid_plural "Foo ${ length }"');
     });
+    it('regression test failed msigd validation on multiple traverse without resolve and extract config', () => {
+        const options = {
+            presets: ['@babel/preset-env'],
+            plugins: [[ttagPlugin, {}]],
+        };
+        const input = `
+        import { ngettext, msgid } from 'ttag';
+
+        export function* foo(length) {
+        yield bar(ngettext(
+            msgid\`Foo \${length}\`,
+            \`Foo \${length}\`,
+            length,
+        ));
+        }
+        `;
+        const fn = () => babel.transform(input, options);
+        expect(fn).to.not.throw();
+    });
 });

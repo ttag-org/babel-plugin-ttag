@@ -78,17 +78,15 @@ export default function () {
                 }
                 throw err;
             }
-
             if (context.isExtractMode()) {
                 const poEntry = extractPoEntry(extractor, nodePath, context, state);
                 poEntry && potEntries.push(poEntry);
-                nodePath.skip();
             }
 
             if (context.isResolveMode()) {
                 resolveEntries(extractor, nodePath, context, state);
-                nodePath.skip();
             }
+            nodePath.skip();
         } catch (err) {
             // TODO: handle specific instances of errors
             throw nodePath.buildCodeFrameError(`${err.message}\n${err.stack}`);
