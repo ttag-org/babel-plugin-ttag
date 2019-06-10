@@ -51,9 +51,6 @@ export default function () {
     }
 
     function extractOrResolve(nodePath, state) {
-        if (nodePath.node._C3PO_visited) { // Should visit each node only once
-            return;
-        }
         if (isInDisabledScope(nodePath, disabledScopes)) {
             return;
         }
@@ -85,12 +82,12 @@ export default function () {
             if (context.isExtractMode()) {
                 const poEntry = extractPoEntry(extractor, nodePath, context, state);
                 poEntry && potEntries.push(poEntry);
-                nodePath.node._C3PO_visited = true;
+                nodePath.skip();
             }
 
             if (context.isResolveMode()) {
                 resolveEntries(extractor, nodePath, context, state);
-                nodePath.node._C3PO_visited = true;
+                nodePath.skip();
             }
         } catch (err) {
             // TODO: handle specific instances of errors
