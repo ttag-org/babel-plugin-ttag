@@ -1,2 +1,1 @@
-import { t } from "ttag";
 console.log(gtt`simple string literal ${a}`);

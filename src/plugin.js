@@ -176,6 +176,9 @@ export default function () {
                             context.addImport(keyName);
                         }
                     });
+                if (context.isResolveMode()) {
+                    nodePath.remove();
+                }
             },
             ImportDeclaration: (nodePath, state) => {
                 const { node } = nodePath;
@@ -196,6 +199,9 @@ export default function () {
                         context.addAlias(ALIAS_TO_FUNC_MAP[imported.name], local.name);
                         context.addImport(local.name);
                     });
+                }
+                if (isTtagImport(node) && context.isResolveMode()) {
+                    nodePath.remove();
                 }
             },
         },

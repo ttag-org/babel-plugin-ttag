@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import * as babel from '@babel/core';
-import c3poPlugin from 'src/plugin';
+import ttagPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
 const translations = 'tests/fixtures/ua.po';
 
 const options = {
     presets: ['@babel/preset-env'],
-    plugins: [[c3poPlugin, {
+    plugins: [[ttagPlugin, {
         resolve: { translations },
         discover: ['ngettext'],
     }]],
@@ -25,6 +25,34 @@ describe('Test po resolve', () => {
             'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, n));';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(expected);
+    });
+    it('should remove imports on resolve', () => {
+        const options = {
+            plugins: [[ttagPlugin, {
+                resolve: { translations },
+            }]],
+        };
+        const input = `
+        import { t } from "ttag"
+        t\`test\`
+        `
+        const result = babel.transform(input, options).code;
+        expect(result).not.to.contain('import');
+        expect(result).to.contain('test [translated]');
+    });
+    it('should remove require on resolve', () => {
+        const options = {
+            plugins: [[ttagPlugin, {
+                resolve: { translations },
+            }]],
+        };
+        const input = `
+        const { t } = require("ttag");
+        t\`test\`
+        `
+        const result = babel.transform(input, options).code;
+        expect(result).not.to.contain('require');
+        expect(result).to.contain('test [translated]');
     });
 });
 
