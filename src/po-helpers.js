@@ -102,12 +102,19 @@ export function makePotStr(data) {
     return gettextParser.po.compile(data);
 }
 
+const poDataCache = {};
+// This function must use cache, because:
+// 1. readFileSync is blocking operation (babel transforms are sync for now)
+// 2. po data parse is quite CPU intensive operation that can also block
 export function parsePoData(filepath) {
+    if (poDataCache[filepath]) return poDataCache[filepath];
     const poRaw = fs.readFileSync(filepath);
     const parsedPo = gettextParser.po.parse(poRaw.toString());
     const translations = parsedPo.translations;
     const headers = parsedPo.headers;
-    return { translations, headers };
+    const data = { translations, headers };
+    poDataCache[filepath] = data;
+    return data;
 }
 
 const pluralRegex = /\splural ?=?([\s\S]*);?/;
