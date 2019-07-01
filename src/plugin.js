@@ -86,7 +86,6 @@ export default function () {
             if (context.isResolveMode()) {
                 resolveEntries(extractor, nodePath, context, state);
             }
-            nodePath.skip();
         } catch (err) {
             // TODO: handle specific instances of errors
             throw nodePath.buildCodeFrameError(`${err.message}\n${err.stack}`);
