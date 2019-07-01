@@ -53,7 +53,8 @@ function match(node, context) {
     return (t.isCallExpression(node) &&
     t.isIdentifier(node.callee) &&
     context.hasAliasForFunc(NAME, node.callee.name) &&
-    node.arguments.length > 0);
+    node.arguments.length > 0 &&
+    t.isTaggedTemplateExpression(node.arguments[0]));
 }
 
 function extract(node, context) {
