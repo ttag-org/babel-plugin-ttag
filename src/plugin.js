@@ -19,10 +19,11 @@ export function isStarted() {
     return started;
 }
 
+const potEntries = [];
+
 export default function () {
     let context;
     let disabledScopes = new Set();
-    const potEntries = [];
 
     function tryMatchTag(cb) {
         return (nodePath, state) => {
