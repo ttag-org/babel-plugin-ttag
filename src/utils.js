@@ -10,6 +10,12 @@ import { ValidationError, NoExpressionError } from './errors';
 
 const disableRegExp = new RegExp(`\\b${DISABLE_COMMENT}\\b`);
 
+const exprReg = /\$\{\s?[\w\W]+?\s}/g;
+
+export function strHasExpr(str) {
+    return exprReg.test(str);
+}
+
 export function quasiToStr(str) {
     return str.replace(/^`|`$/g, '');
 }

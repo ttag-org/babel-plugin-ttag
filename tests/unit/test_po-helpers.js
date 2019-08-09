@@ -1,8 +1,9 @@
 import { expect } from 'chai';
 import { getNPlurals, getPluralFunc, makePluralFunc, applyReference,
-    hasUsefulInfo, buildPotData } from 'src/po-helpers';
-import { LOCATION } from 'src/defaults';
+    hasUsefulInfo, buildPotData, applyFormat } from 'src/po-helpers';
+import { PO_PRIMITIVES, LOCATION } from 'src/defaults';
 
+const { MSGID } = PO_PRIMITIVES;
 
 describe('po-helpers getNPlurals', () => {
     it('should extract number of plurals', () => {
@@ -71,6 +72,24 @@ describe('po-helpers applyReference', () => {
     it('should return no lines', () => {
         const expected = { comments: { reference: null } };
         expect(applyReference(poEntry, node, filepath, LOCATION.NEVER)).to.eql(expected);
+    });
+});
+
+describe('po-helpers applyFormat', () => {
+    it('should apply javascript format if has expressions', () => {
+        const poEntry = { [MSGID]: 'test ${ a }' };
+        const withFormat = applyFormat(poEntry);
+        expect(withFormat.comments).to.have.property('flag', 'javascript-format');
+    });
+    it('should not apply javascript format if has no expressions', () => {
+        const poEntry = { [MSGID]: 'test' };
+        const withFormat = applyFormat(poEntry);
+        expect(withFormat).to.not.have.property('comments');
+    });
+    it('should not apply javascript format to existing flags', () => {
+        const poEntry = { [MSGID]: 'test ${ a }', comments: { flag: 'fuzzy' } };
+        const withFormat = applyFormat(poEntry);
+        expect(withFormat.comments.flag).to.eql('fuzzy\njavascript-format');
     });
 });
 
