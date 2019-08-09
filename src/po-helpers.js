@@ -2,6 +2,7 @@ import * as bt from '@babel/types';
 import fs from 'fs';
 import gettextParser from 'gettext-parser';
 import { DEFAULT_HEADERS, PO_PRIMITIVES, LOCATION } from './defaults';
+import { strHasExpr } from './utils';
 import dedent from 'dedent';
 
 export function buildPotData(translations) {
@@ -96,6 +97,23 @@ export function applyExtractedComments(poEntry, nodePath, tag) {
         poEntry.comments.extracted = '';
     }
     poEntry.comments.extracted += transComments.join('\n');
+}
+
+export function applyFormat(poEntry) {
+    const msgid = poEntry[PO_PRIMITIVES.MSGID];
+    const hasExprs = strHasExpr(msgid);
+    if (!hasExprs) {
+        return poEntry;
+    }
+    if (!poEntry.comments) {
+        poEntry.comments = {};
+    }
+    if (poEntry.comments.flag) {
+        poEntry.comments.flag = `${poEntry.comments.flag}\njavascript-format`;
+    } else {
+        poEntry.comments.flag = 'javascript-format';
+    }
+    return poEntry;
 }
 
 export function makePotStr(data) {
