@@ -19,10 +19,11 @@ export function isStarted() {
     return started;
 }
 
+const potEntries = [];
+
 export default function () {
     let context;
     let disabledScopes = new Set();
-    const potEntries = [];
 
     function tryMatchTag(cb) {
         return (nodePath, state) => {
@@ -86,7 +87,6 @@ export default function () {
             if (context.isResolveMode()) {
                 resolveEntries(extractor, nodePath, context, state);
             }
-            nodePath.skip();
         } catch (err) {
             // TODO: handle specific instances of errors
             throw nodePath.buildCodeFrameError(`${err.message}\n${err.stack}`);

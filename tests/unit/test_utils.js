@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import template from '@babel/template';
 import { template2Msgid, validateAndFormatMsgid, isInDisabledScope,
     hasDisablingComment, dedentStr, getMsgid, poReferenceComparator,
-    getMembersPath, getMsgidNumbered } from 'src/utils';
+    getMembersPath, getMsgidNumbered, strHasExpr } from 'src/utils';
 import { DISABLE_COMMENT } from 'src/defaults';
 import C3poContext from 'src/context';
 
@@ -217,6 +217,17 @@ describe('utils getMsgid', () => {
         const node = template('`test`')().expression;
         const [strs, exprs] = getStrsExprs(node);
         expect(getMsgid(strs, exprs)).to.be.eql('test');
+    });
+});
+
+describe('utils strHasExpr', () => {
+    it('should return true if has expressions', () => {
+        const str = 'test match ${ a } and ${ b[0].name }';
+        expect(strHasExpr(str)).to.be.true;
+    });
+    it('should return false if has no expressions', () => {
+        const str = 'test no match';
+        expect(strHasExpr(str)).to.be.false;
     });
 });
 

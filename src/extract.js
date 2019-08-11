@@ -1,4 +1,4 @@
-import { applyReference, applyExtractedComments } from './po-helpers';
+import { applyReference, applyExtractedComments, applyFormat } from './po-helpers';
 import { dedentStr } from './utils';
 import path from 'path';
 
@@ -50,6 +50,6 @@ export const extractPoEntry = (extractor, nodePath, context, state) => {
         }
         applyExtractedComments(poEntry, nodePath, tag);
     }
-
+    applyFormat(poEntry);
     return poEntry;
 };

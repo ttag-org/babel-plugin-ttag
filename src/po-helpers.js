@@ -2,6 +2,7 @@ import * as bt from '@babel/types';
 import fs from 'fs';
 import gettextParser from 'gettext-parser';
 import { DEFAULT_HEADERS, PO_PRIMITIVES, LOCATION } from './defaults';
+import { strHasExpr } from './utils';
 import dedent from 'dedent';
 
 export function buildPotData(translations) {
@@ -98,16 +99,40 @@ export function applyExtractedComments(poEntry, nodePath, tag) {
     poEntry.comments.extracted += transComments.join('\n');
 }
 
+export function applyFormat(poEntry) {
+    const msgid = poEntry[PO_PRIMITIVES.MSGID];
+    const hasExprs = strHasExpr(msgid);
+    if (!hasExprs) {
+        return poEntry;
+    }
+    if (!poEntry.comments) {
+        poEntry.comments = {};
+    }
+    if (poEntry.comments.flag) {
+        poEntry.comments.flag = `${poEntry.comments.flag}\njavascript-format`;
+    } else {
+        poEntry.comments.flag = 'javascript-format';
+    }
+    return poEntry;
+}
+
 export function makePotStr(data) {
     return gettextParser.po.compile(data);
 }
 
+const poDataCache = {};
+// This function must use cache, because:
+// 1. readFileSync is blocking operation (babel transforms are sync for now)
+// 2. po data parse is quite CPU intensive operation that can also block
 export function parsePoData(filepath) {
+    if (poDataCache[filepath]) return poDataCache[filepath];
     const poRaw = fs.readFileSync(filepath);
     const parsedPo = gettextParser.po.parse(poRaw.toString());
     const translations = parsedPo.translations;
     const headers = parsedPo.headers;
-    return { translations, headers };
+    const data = { translations, headers };
+    poDataCache[filepath] = data;
+    return data;
 }
 
 const pluralRegex = /\splural ?=?([\s\S]*);?/;
