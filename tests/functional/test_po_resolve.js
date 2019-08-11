@@ -53,5 +53,69 @@ describe('Test po resolve', () => {
         expect(result).not.to.contain('require');
         expect(result).to.contain('test [translated]');
     });
+    it('should add stub for addLocale for require', () => {
+        const options = {
+            plugins: [[ttagPlugin, {
+                resolve: { translations },
+            }]],
+        };
+        const input = `
+        const { t, addLocale } = require("ttag");
+        addLocale('en', {});
+        t\`test\`
+        `;
+        const result = babel.transform(input, options).code;
+        expect(result).not.to.contain('require');
+        expect(result).to.contain('test [translated]');
+        expect(result).to.contain('function addLocale()');
+    });
+    it('should add stub for addLocale for require alias', () => {
+        const options = {
+            plugins: [[ttagPlugin, {
+                resolve: { translations },
+            }]],
+        };
+        const input = `
+        const { t, addLocale: addi18nLocale } = require("ttag");
+        addLocale('en', {});
+        t\`test\`
+        `;
+        const result = babel.transform(input, options).code;
+        expect(result).not.to.contain('require');
+        expect(result).to.contain('test [translated]');
+        expect(result).to.contain('function addi18nLocale()');
+    });
+    it('should add stub for addLocale fun for import', () => {
+        const options = {
+            plugins: [[ttagPlugin, {
+                resolve: { translations },
+            }]],
+        };
+        const input = `
+        import { t, addLocale } from "ttag"
+        t\`test\`
+        addLocale('en', {});
+        `;
+        const result = babel.transform(input, options).code;
+        expect(result).not.to.contain('import');
+        expect(result).to.contain('test [translated]');
+        expect(result).to.contain('function addLocale()');
+    });
+    it('should add stub for addLocale if import specifier', () => {
+        const options = {
+            plugins: [[ttagPlugin, {
+                resolve: { translations },
+            }]],
+        };
+        const input = `
+        import { t, addLocale as addi18nLocale } from "ttag"
+        t\`test\`
+        addi18nLocale('en', {});
+        `;
+        const result = babel.transform(input, options).code;
+        expect(result).not.to.contain('import');
+        expect(result).to.contain('test [translated]');
+        expect(result).to.contain('function addi18nLocale()');
+    });
 });
 
