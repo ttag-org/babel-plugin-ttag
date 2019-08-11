@@ -190,3 +190,7 @@ export function poReferenceComparator(firstPoRef, secondPoRef) {
     }
     return 0;
 }
+
+export function createFnStub(name) {
+    return tpl('function NAME(){}')({ NAME: name });
+}

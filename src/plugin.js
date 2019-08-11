@@ -7,7 +7,7 @@ import { ALIAS_TO_FUNC_MAP } from './defaults';
 import { buildPotData, makePotStr } from './po-helpers';
 import { extractPoEntry, getExtractor } from './extract';
 import { hasDisablingComment, isInDisabledScope, isTtagImport,
-    hasImportSpecifier, poReferenceComparator, isTtagRequire } from './utils';
+    hasImportSpecifier, poReferenceComparator, isTtagRequire, createFnStub } from './utils';
 import { resolveEntries } from './resolve';
 import { ValidationError } from './errors';
 import TtagContext from './context';
@@ -160,14 +160,20 @@ export default function () {
                     disabledScopes.add(nodePath.scope.uid);
                 }
             },
-            VariableDeclarator: (nodePath) => {
+            VariableDeclarator: (nodePath, state) => {
                 const { node } = nodePath;
                 if (!isTtagRequire(node)) return;
-
+                const stubs = [];
                 // require calls
                 node.id.properties
                     .map(({ key: { name: keyName }, value: { name: valueName } }) => [keyName, valueName])
-                    .filter(([keyName]) => ALIAS_TO_FUNC_MAP[keyName])
+                    .filter(([keyName, valueName]) => {
+                        const hasAlias = ALIAS_TO_FUNC_MAP[keyName];
+                        if (!hasAlias) {
+                            stubs.push(valueName);
+                        }
+                        return hasAlias;
+                    })
                     .forEach(([keyName, valueName]) => {
                         if (keyName !== valueName) { // if alias
                             context.addAlias(ALIAS_TO_FUNC_MAP[keyName], valueName);
@@ -176,26 +182,43 @@ export default function () {
                             context.addImport(keyName);
                         }
                     });
+                if (context.isResolveMode()) {
+                    stubs.forEach((stub) => {
+                        state.file.path.unshiftContainer('body', createFnStub(stub));
+                    });
+                    nodePath.remove();
+                }
             },
             ImportDeclaration: (nodePath, state) => {
                 const { node } = nodePath;
-
+                if (!isTtagImport(node)) return;
                 if (!context) {
                     context = new TtagContext(state.opts);
                 }
-                if (isTtagImport(node)) {
-                    node.specifiers
-                    .filter(({ local: { name } }) => ALIAS_TO_FUNC_MAP[name])
-                    .forEach((s) => context.addImport(s.local.name));
-                }
-                if (isTtagImport(node) && hasImportSpecifier(node)) {
+                const stubs = [];
+                if (hasImportSpecifier(node)) {
                     node.specifiers
                     .filter(bt.isImportSpecifier)
-                    .filter(({ imported: { name } }) => ALIAS_TO_FUNC_MAP[name])
+                    .filter(({ imported, local }) => {
+                        const hasAlias = ALIAS_TO_FUNC_MAP[imported.name];
+                        if (!hasAlias) {
+                            stubs.push(local.name);
+                        }
+                        return hasAlias;
+                    })
                     .forEach(({ imported, local }) => {
                         context.addAlias(ALIAS_TO_FUNC_MAP[imported.name], local.name);
                         context.addImport(local.name);
                     });
+                } else {
+                    throw new Error('You should use ttag imports in form: "import { t } from \'ttag\'"');
+                }
+
+                if (context.isResolveMode()) {
+                    stubs.forEach((stub) => {
+                        state.file.path.unshiftContainer('body', createFnStub(stub));
+                    });
+                    nodePath.remove();
                 }
             },
         },
