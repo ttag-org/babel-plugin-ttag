@@ -133,6 +133,15 @@ export default function () {
                         poData.translations[ctx] = newContext;
                     }
                 }
+                if (context.isSortedByMsgctxt()) {
+                    const unorderedTranslations = poData.translations;
+                    poData.translations = {};
+                    for (const ctx of Object.keys(unorderedTranslations).sort()) {
+                        poData.translations[ctx] = unorderedTranslations[ctx];
+                    }
+                }
+
+
                 const potStr = makePotStr(poData);
                 const filepath = context.getOutputFilepath();
                 const dirPath = path.dirname(filepath);

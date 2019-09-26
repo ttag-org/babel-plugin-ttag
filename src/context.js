@@ -176,6 +176,10 @@ class C3poContext {
         return Boolean(this.config.sortByMsgid);
     }
 
+    isSortedByMsgctxt() {
+        return Boolean(this.config.sortByMsgctxt);
+    }
+
     setPoData() {
         const poFilePath = this.getPoFilePath();
         if (!poFilePath || poFilePath === 'default') {

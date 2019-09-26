@@ -48,6 +48,7 @@ export const configSchema = {
         defaultLang: { enum: getAvailLangs() },
         addComments: { oneOf: [{ type: 'boolean' }, { type: 'string' }] },
         sortByMsgid: { type: 'boolean' },
+        sortByMsgctxt: { type: 'boolean' },
         numberedExpressions: { type: 'boolean' },
     },
     additionalProperties: false,
