@@ -1,0 +1,28 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgctxt "aa"
+msgid "aa"
+msgstr ""
+
+msgctxt "bb"
+msgid "aa"
+msgstr ""
+
+msgctxt "cc"
+msgid "aa"
+msgstr ""
+
+msgctxt "dd"
+msgid "aa"
+msgstr ""
+
+msgctxt "ee"
+msgid "aa"
+msgstr ""
+
+msgctxt "ee"
+msgid "cc"
+msgstr ""
