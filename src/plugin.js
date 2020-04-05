@@ -7,7 +7,7 @@ import { ALIAS_TO_FUNC_MAP } from './defaults';
 import { buildPotData, makePotStr } from './po-helpers';
 import { extractPoEntry, getExtractor } from './extract';
 import { hasDisablingComment, isInDisabledScope, isTtagImport,
-    hasImportSpecifier, poReferenceComparator, isTtagRequire, createFnStub } from './utils';
+    hasImportSpecifier, poReferenceComparator, isTtagRequire, createFnStub, ast2Str } from './utils';
 import { resolveEntries } from './resolve';
 import { ValidationError } from './errors';
 import TtagContext from './context';
@@ -169,12 +169,12 @@ export default function () {
                     disabledScopes.add(nodePath.scope.uid);
                 }
             },
-            VariableDeclarator: (nodePath, state) => {
-                const { node } = nodePath;
-                if (!isTtagRequire(node)) return;
-                const stubs = [];
-                // require calls
-                node.id.properties
+            VariableDeclaration: (nodePath, state) => {
+                nodePath.node.declarations.forEach((node) => {
+                    if (!isTtagRequire(node)) return;
+                    const stubs = [];
+                    // require calls
+                    node.id.properties
                     .map(({ key: { name: keyName }, value: { name: valueName } }) => [keyName, valueName])
                     .filter(([keyName, valueName]) => {
                         const hasAlias = ALIAS_TO_FUNC_MAP[keyName];
@@ -191,12 +191,13 @@ export default function () {
                             context.addImport(keyName);
                         }
                     });
-                if (context.isResolveMode()) {
-                    stubs.forEach((stub) => {
-                        state.file.path.unshiftContainer('body', createFnStub(stub));
-                    });
-                    nodePath.remove();
-                }
+                    if (context.isResolveMode()) {
+                        stubs.forEach((stub) => {
+                            state.file.path.unshiftContainer('body', createFnStub(stub));
+                        });
+                        nodePath.remove();
+                    }
+                });
             },
             ImportDeclaration: (nodePath, state) => {
                 const { node } = nodePath;
