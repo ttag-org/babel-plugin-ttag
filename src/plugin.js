@@ -7,7 +7,7 @@ import { ALIAS_TO_FUNC_MAP } from './defaults';
 import { buildPotData, makePotStr } from './po-helpers';
 import { extractPoEntry, getExtractor } from './extract';
 import { hasDisablingComment, isInDisabledScope, isTtagImport,
-    hasImportSpecifier, poReferenceComparator, isTtagRequire, createFnStub, ast2Str } from './utils';
+    hasImportSpecifier, poReferenceComparator, isTtagRequire, createFnStub } from './utils';
 import { resolveEntries } from './resolve';
 import { ValidationError } from './errors';
 import TtagContext from './context';
