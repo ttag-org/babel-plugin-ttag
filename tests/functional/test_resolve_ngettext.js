@@ -74,7 +74,7 @@ describe('Resolve ngettext', () => {
 
     it('should use proper plural form', () => {
         rmDirSync('debug');
-        mkdirp('debug');
+        mkdirp.sync('debug');
         const resultPath = 'debug/ngettext_result.js';
         const input = 'const n = parseInt(process.env.TEST_N, 10);\n' +
             'process.stdout.write(ngettext(msgid`plural form with ${ n } plural`, ' +
