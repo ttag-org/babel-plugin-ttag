@@ -7,12 +7,12 @@ echo "functional tests run"
 # Runs all tests inside tests/functional
 ls tests/functional | \
  tr '\n' '\0' | \
- xargs -0 -n1 -I {} istanbul cover ./node_modules/mocha/bin/_mocha --dir coverage/fun_{} -- --compilers js:@babel/register ./tests/functional/{}
+ xargs -0 -n1 -I {} istanbul cover ./node_modules/mocha/bin/_mocha --dir coverage/fun_{} -- -r @babel/register ./tests/functional/{}
 
 echo "unit tests run"
 
 # Runs all unit tests
-istanbul cover ./node_modules/mocha/bin/_mocha --dir coverage/unit -- --compilers js:@babel/register ./tests/unit
+istanbul cover ./node_modules/mocha/bin/_mocha --dir coverage/unit -- -r @babel/register ./tests/unit
 
 # Merges report
 istanbul report
