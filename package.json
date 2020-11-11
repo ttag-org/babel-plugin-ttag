@@ -28,9 +28,9 @@
   },
   "homepage": "https://github.com/ttag-org/babel-plugin-ttag#readme",
   "dependencies": {
-    "@babel/generator": "^7.9.5",
-    "@babel/template": "^7.8.6",
-    "@babel/types": "^7.9.5",
+    "@babel/generator": "^7.12.5",
+    "@babel/template": "^7.10.4",
+    "@babel/types": "^7.12.6",
     "ajv": "6.12.3",
     "babel-plugin-macros": "^2.8.0",
     "dedent": "0.6.0",
@@ -39,12 +39,12 @@
     "plural-forms": "0.3.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/preset-env": "^7.9.5",
-    "@babel/preset-react": "^7.9.4",
-    "@babel/register": "^7.9.0",
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.12.5",
+    "@babel/register": "^7.12.1",
     "@evo/eslint-config-uaprom": "1.0.7",
     "chai": "3.5.0",
     "eslint": "4.18.2",
@@ -52,6 +52,6 @@
     "eslint-plugin-jsx-a11y": "1.5.5",
     "eslint-plugin-react": "5.2.2",
     "istanbul": "1.1.0-alpha.1",
-    "mocha": "^7.1.1"
+    "mocha": "^7.2.0"
   }
 }
