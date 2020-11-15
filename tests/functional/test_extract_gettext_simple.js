@@ -5,7 +5,6 @@ import fs from 'fs';
 import ttagPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
-
 describe('Extract tag-gettext', () => {
     beforeEach(() => {
         rmDirSync('debug');

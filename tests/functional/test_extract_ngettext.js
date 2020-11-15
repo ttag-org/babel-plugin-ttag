@@ -4,7 +4,6 @@ import fs from 'fs';
 import ttagPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
-
 describe('Extract ngettext with multiple presets', () => {
     before(() => {
         rmDirSync('debug');
@@ -20,7 +19,8 @@ describe('Extract ngettext with multiple presets', () => {
         babel.transform(input, options);
         const result = fs.readFileSync(output).toString();
         expect(result).to.contain(
-            `msgid "test"\nmsgid_plural "test"\nmsgstr[0] ""\nmsgstr[1] ""`);
+            'msgid "test"\nmsgid_plural "test"\nmsgstr[0] ""\nmsgstr[1] ""',
+        );
     });
 
     it('regression test failed msigd validation on multiple traverse', () => {

@@ -3,7 +3,8 @@
   "globals": {
     "_": true
   },
-  "extends": "@evo/eslint-config-uaprom",
+  "extends": "airbnb",
+  "parser": "babel-eslint",
   "rules": {
     "no-unused-expressions": "off",
     "no-unused-vars": ["error", { "varsIgnorePattern": "^_$" }],
@@ -12,6 +13,17 @@
       "_C3PO_visited",
       "_C3PO_GETTEXT_CONTEXT",
       "_ORIGINAL_NODE"
-    ]}]
+    ]}],
+    "indent": [2, 4, {"SwitchCase": 1}],
+    "import/no-unresolved": 0,
+    "no-template-curly-in-string": 0,
+    "class-methods-use-this": 0,
+    "no-plusplus": 0,
+    "no-param-reassign": 0,
+    "max-classes-per-file": 0,
+    "no-restricted-syntax": 0,
+    "no-useless-escape": 0,
+    "no-continue": 0,
+    "import/prefer-default-export": 0
   }
 }

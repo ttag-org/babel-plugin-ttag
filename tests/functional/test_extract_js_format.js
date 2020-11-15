@@ -4,7 +4,6 @@ import fs from 'fs';
 import ttagPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
-
 describe('javascript-format extract', () => {
     before(() => {
         rmDirSync('debug');

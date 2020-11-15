@@ -5,7 +5,6 @@ import path from 'path';
 import c3poPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
-
 describe('Extract comments', () => {
     before(() => {
         rmDirSync('debug');

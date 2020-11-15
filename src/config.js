@@ -1,10 +1,9 @@
-import { UNRESOLVED_ACTION, LOCATION } from './defaults';
 import Ajv from 'ajv';
 import { getAvailLangs } from 'plural-forms';
+import { UNRESOLVED_ACTION, LOCATION } from './defaults';
 
 const { FAIL, WARN, SKIP } = UNRESOLVED_ACTION;
 const { FULL, FILE, NEVER } = LOCATION;
-
 
 const extractConfigSchema = {
     type: ['object', 'null'],

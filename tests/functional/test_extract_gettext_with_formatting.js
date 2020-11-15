@@ -30,4 +30,3 @@ describe('Extract tag-gettext', () => {
         expect(fn).to.throw('You can not use BinaryExpression \'${n + 1}\' in localized strings');
     });
 });
-

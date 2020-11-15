@@ -17,7 +17,7 @@ describe('Resolve ngettext default', () => {
         const input = 'console.log(ngettext(msgid`no translation plural ${n}`, `no translation plurals ${n}`, n));';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(
-            '_tag_ngettext(n, [`no translation plural ${n}`, `no translation plurals ${n}`])'
+            '_tag_ngettext(n, [`no translation plural ${n}`, `no translation plurals ${n}`])',
         );
     });
 

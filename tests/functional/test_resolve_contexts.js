@@ -45,9 +45,9 @@ describe('Context resolve', () => {
     });
 
     it('should resolve ngettext', () => {
-        const input = 'import { ngettext, msgid, c } from "ttag";\n' +
-        'const a = 2;\n' +
-        'c("email").ngettext(msgid`${ a } banana`, `${ a } bananas`, a);\n';
+        const input = 'import { ngettext, msgid, c } from "ttag";\n'
+        + 'const a = 2;\n'
+        + 'c("email").ngettext(msgid`${ a } banana`, `${ a } bananas`, a);\n';
 
         const result = babel.transform(input, options).code;
         expect(result).to.contain('${a} banana email context');

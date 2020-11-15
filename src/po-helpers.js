@@ -1,9 +1,9 @@
 import * as bt from '@babel/types';
 import fs from 'fs';
 import gettextParser from 'gettext-parser';
+import dedent from 'dedent';
 import { DEFAULT_HEADERS, PO_PRIMITIVES, LOCATION } from './defaults';
 import { strHasExpr } from './utils';
-import dedent from 'dedent';
 
 export function buildPotData(translations) {
     const data = {
@@ -29,16 +29,15 @@ export function buildPotData(translations) {
         const oldTrans = data.translations[ctx][trans.msgid];
 
         // merge references
-        if (oldTrans.comments && oldTrans.comments.reference &&
-            trans.comments && trans.comments.reference &&
-            !oldTrans.comments.reference.includes(trans.comments.reference)) {
+        if (oldTrans.comments && oldTrans.comments.reference
+            && trans.comments && trans.comments.reference
+            && !oldTrans.comments.reference.includes(trans.comments.reference)) {
             oldTrans.comments.reference = `${oldTrans.comments.reference}\n${trans.comments.reference}`;
         }
     }
 
     return data;
 }
-
 
 export function applyReference(poEntry, node, filepath, location) {
     if (!poEntry.comments) {
@@ -66,11 +65,11 @@ export function applyExtractedComments(poEntry, nodePath, tag) {
         poEntry.comments = {};
     }
 
-    const node = nodePath.node;
+    const { node } = nodePath;
 
     if (!(
-        bt.isStatement(node) ||
-        bt.isDeclaration(node)
+        bt.isStatement(node)
+        || bt.isDeclaration(node)
     )) {
         // Collect parents' comments
         //
@@ -128,8 +127,8 @@ export function parsePoData(filepath) {
     if (poDataCache[filepath]) return poDataCache[filepath];
     const poRaw = fs.readFileSync(filepath);
     const parsedPo = gettextParser.po.parse(poRaw.toString());
-    const translations = parsedPo.translations;
-    const headers = parsedPo.headers;
+    const { translations } = parsedPo;
+    const { headers } = parsedPo;
     const data = { translations, headers };
     poDataCache[filepath] = data;
     return data;
@@ -159,8 +158,8 @@ export function hasTranslations(translationObj) {
 
 export function isFuzzy(translationObj) {
     return (
-        translationObj && translationObj.comments &&
-        translationObj.comments.flag === 'fuzzy');
+        translationObj && translationObj.comments
+        && translationObj.comments.flag === 'fuzzy');
 }
 
 export function pluralFnBody(pluralStr) {

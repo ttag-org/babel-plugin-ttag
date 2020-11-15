@@ -55,4 +55,3 @@ describe('Resolve default', () => {
         expect(result).to.not.contain('console.log("test");');
     });
 });
-

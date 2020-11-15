@@ -1,7 +1,9 @@
 import * as t from '@babel/types';
 import tpl from '@babel/template';
-import { template2Msgid, validateAndFormatMsgid,
-    hasExpressions, ast2Str, getQuasiStr, dedentStr, strToQuasi } from '../utils';
+import {
+    template2Msgid, validateAndFormatMsgid,
+    hasExpressions, ast2Str, getQuasiStr, dedentStr, strToQuasi,
+} from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import { ValidationError } from '../errors';
 import { hasUsefulInfo } from '../po-helpers';
@@ -11,7 +13,7 @@ const NAME = 'tag-gettext';
 
 const validate = (node, context) => {
     const msgid = template2Msgid(node, context);
-    if (! hasUsefulInfo(msgid)) {
+    if (!hasUsefulInfo(msgid)) {
         throw new ValidationError(`Can not translate '${getQuasiStr(node)}'`);
     }
 };
@@ -45,4 +47,6 @@ function resolve(node, translation, context) {
     return t.stringLiteral(transStr);
 }
 
-export default { match, resolve, resolveDefault, validate, name: NAME, getMsgid: template2Msgid };
+export default {
+    match, resolve, resolveDefault, validate, name: NAME, getMsgid: template2Msgid,
+};

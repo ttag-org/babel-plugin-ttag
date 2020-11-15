@@ -1,6 +1,8 @@
 import { expect } from 'chai';
-import { getNPlurals, getPluralFunc, makePluralFunc, applyReference,
-    hasUsefulInfo, buildPotData, applyFormat } from 'src/po-helpers';
+import {
+    getNPlurals, getPluralFunc, makePluralFunc, applyReference,
+    hasUsefulInfo, buildPotData, applyFormat,
+} from 'src/po-helpers';
 import { PO_PRIMITIVES, LOCATION } from 'src/defaults';
 
 const { MSGID } = PO_PRIMITIVES;

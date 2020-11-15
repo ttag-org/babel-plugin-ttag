@@ -3,6 +3,7 @@ import { ast2Str } from '../utils';
 import { ValidationError } from '../errors';
 import { PO_PRIMITIVES } from '../defaults';
 import { hasUsefulInfo } from '../po-helpers';
+
 const { MSGSTR } = PO_PRIMITIVES;
 const NAME = 'gettext';
 
@@ -24,10 +25,10 @@ const validate = (node) => {
 };
 
 function match(node, context) {
-    return (t.isCallExpression(node) &&
-        t.isIdentifier(node.callee) &&
-        context.hasAliasForFunc(NAME, node.callee.name) &&
-        node.arguments.length > 0);
+    return (t.isCallExpression(node)
+        && t.isIdentifier(node.callee)
+        && context.hasAliasForFunc(NAME, node.callee.name)
+        && node.arguments.length > 0);
 }
 
 function resolveDefault(node) {
@@ -39,4 +40,6 @@ function resolve(node, translation) {
     return t.stringLiteral(transStr);
 }
 
-export default { match, resolve, resolveDefault, validate, name: NAME, getMsgid };
+export default {
+    match, resolve, resolveDefault, validate, name: NAME, getMsgid,
+};

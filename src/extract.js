@@ -1,8 +1,9 @@
+import path from 'path';
 import { applyReference, applyExtractedComments, applyFormat } from './po-helpers';
 import { dedentStr } from './utils';
-import path from 'path';
 
 import { PO_PRIMITIVES } from './defaults';
+
 const { MSGID, MSGSTR, MSGCTXT } = PO_PRIMITIVES;
 
 function defaultExtract(msgid) {
@@ -19,15 +20,15 @@ export function getExtractor(nodePath, context) {
 
 export const extractPoEntry = (extractor, nodePath, context, state) => {
     const { node } = nodePath;
-    const filename = state.file.opts.filename;
+    const { filename } = state.file.opts;
     let poEntry;
 
     if (extractor.extract) {
         poEntry = extractor.extract(nodePath.node, context);
     } else {
-        const msgid = context.isDedent() ?
-            dedentStr(extractor.getMsgid(nodePath.node, context)) :
-            extractor.getMsgid(nodePath.node, context);
+        const msgid = context.isDedent()
+            ? dedentStr(extractor.getMsgid(nodePath.node, context))
+            : extractor.getMsgid(nodePath.node, context);
         poEntry = defaultExtract(msgid);
     }
 

@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import { configSchema, validateConfig } from 'src/config';
 
-
 describe('config validateConfig', () => {
     it('should be valid', () => {
         const config = {

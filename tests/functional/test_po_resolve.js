@@ -18,10 +18,10 @@ describe('Test po resolve', () => {
                 discover: ['ngettext'],
             }]],
         };
-        const expected = 'n % 10 == 1 && n % 100 != 11 ? 0 : ' +
-            'n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2';
-        const input = 'const n = 1; ' +
-            'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, n));';
+        const expected = 'n % 10 == 1 && n % 100 != 11 ? 0 : '
+            + 'n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2';
+        const input = 'const n = 1; '
+            + 'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, n));';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(expected);
     });
@@ -118,4 +118,3 @@ describe('Test po resolve', () => {
         expect(result).to.contain('function addi18nLocale()');
     });
 });
-
