@@ -4,9 +4,10 @@ import dedent from 'dedent';
 import generate from '@babel/generator';
 import tpl from '@babel/template';
 
-import { DISABLE_COMMENT, TTAGID, TTAG_MACRO_ID, INTERNAL_TTAG_MACRO_ID } from './defaults';
+import {
+    DISABLE_COMMENT, TTAGID, TTAG_MACRO_ID, INTERNAL_TTAG_MACRO_ID,
+} from './defaults';
 import { ValidationError, NoExpressionError } from './errors';
-
 
 const disableRegExp = new RegExp(`\\b${DISABLE_COMMENT}\\b`);
 
@@ -71,7 +72,6 @@ export const getMsgid = (str, exprs) => str.reduce((s, l, i) => {
     return (expr === undefined) ? s + l : `${s}${l}\${ ${expr2str(expr)} }`;
 }, '');
 
-
 export const getMsgidNumbered = (str, exprs) => str.reduce((s, l, i) => {
     const expr = exprs[i];
     return (expr === undefined) ? s + l : `${s}${l}\${ ${i} }`;
@@ -96,15 +96,15 @@ export function template2Msgid(node, context) {
     const exprs = node.quasi.expressions || [];
 
     if (exprs.length) {
-        return context.isNumberedExpressions() ?
-            getMsgidNumbered(strs, exprs) :
-            getMsgid(strs, exprs);
+        return context.isNumberedExpressions()
+            ? getMsgidNumbered(strs, exprs)
+            : getMsgid(strs, exprs);
     }
     return node.quasi.quasis[0].value.cooked;
 }
 
 export function isInDisabledScope(node, disabledScopes) {
-    let scope = node.scope;
+    let { scope } = node;
     while (scope) {
         if (disabledScopes.has(scope.uid)) {
             return true;
@@ -132,19 +132,19 @@ export function hasDisablingComment(node) {
 }
 
 export function isTtagImport(node) {
-    return node.source.value === TTAGID ||
-        node.source.value === TTAG_MACRO_ID ||
-        node.source.value === INTERNAL_TTAG_MACRO_ID;
+    return node.source.value === TTAGID
+        || node.source.value === TTAG_MACRO_ID
+        || node.source.value === INTERNAL_TTAG_MACRO_ID;
 }
 
 export function isTtagRequire(node) {
-    return bt.isCallExpression(node.init) &&
-        node.init.callee.name === 'require' &&
-        bt.isObjectPattern(node.id) &&
-        node.init.arguments.length === 1 &&
-        (node.init.arguments[0].value === TTAGID ||
-            node.init.arguments[0].value === TTAG_MACRO_ID ||
-            node.init.arguments[0].value === INTERNAL_TTAG_MACRO_ID);
+    return bt.isCallExpression(node.init)
+        && node.init.callee.name === 'require'
+        && bt.isObjectPattern(node.id)
+        && node.init.arguments.length === 1
+        && (node.init.arguments[0].value === TTAGID
+            || node.init.arguments[0].value === TTAG_MACRO_ID
+            || node.init.arguments[0].value === INTERNAL_TTAG_MACRO_ID);
 }
 
 export function hasImportSpecifier(node) {
@@ -176,7 +176,7 @@ export function poReferenceComparator(firstPoRef, secondPoRef) {
         // else
         if (firstLineNum < secondLineNum) {
             return -1;
-        } else if (firstLineNum > secondLineNum) {
+        } if (firstLineNum > secondLineNum) {
             return 1;
         }
         return 0;
@@ -185,7 +185,7 @@ export function poReferenceComparator(firstPoRef, secondPoRef) {
     // reference has a form path/to/file.js
     if (firstPoRef < secondPoRef) {
         return -1;
-    } else if (firstPoRef > secondPoRef) {
+    } if (firstPoRef > secondPoRef) {
         return 1;
     }
     return 0;

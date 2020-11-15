@@ -6,13 +6,17 @@ import path from 'path';
 import { ALIAS_TO_FUNC_MAP } from './defaults';
 import { buildPotData, makePotStr } from './po-helpers';
 import { extractPoEntry, getExtractor } from './extract';
-import { hasDisablingComment, isInDisabledScope, isTtagImport,
-    hasImportSpecifier, poReferenceComparator, isTtagRequire, createFnStub } from './utils';
+import {
+    hasDisablingComment, isInDisabledScope, isTtagImport,
+    hasImportSpecifier, poReferenceComparator, isTtagRequire, createFnStub,
+} from './utils';
 import { resolveEntries } from './resolve';
 import { ValidationError } from './errors';
 import TtagContext from './context';
-import { isContextTagCall, isValidTagContext, isContextFnCall,
-    isValidFnCallContext } from './gettext-context';
+import {
+    isContextTagCall, isValidTagContext, isContextFnCall,
+    isValidFnCallContext,
+} from './gettext-context';
 
 let started = false;
 export function isStarted() {
@@ -21,13 +25,13 @@ export function isStarted() {
 
 const potEntries = [];
 
-export default function () {
+export default function ttagPlugin() {
     let context;
     let disabledScopes = new Set();
 
     function tryMatchTag(cb) {
         return (nodePath, state) => {
-            const node = nodePath.node;
+            const { node } = nodePath;
             if (isContextTagCall(node, context) && isValidTagContext(nodePath)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.tag.object.arguments[0].value;
                 nodePath._ORIGINAL_NODE = node;
@@ -40,7 +44,7 @@ export default function () {
 
     function tryMatchCall(cb) {
         return (nodePath, state) => {
-            const node = nodePath.node;
+            const { node } = nodePath;
             if (isContextFnCall(node, context) && isValidFnCallContext(nodePath)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.callee.object.arguments[0].value;
                 nodePath._ORIGINAL_NODE = node;
@@ -112,7 +116,7 @@ export default function () {
                         //     msgid: 'message identifier',
                         //     msgstr: 'translation string',
                         //     comments: {
-                        //         reference: 'path/to/file.js:line_number\npath/to/other/file.js:line_number'
+                        //         reference: 'path/to/file.js:line_num\npath/file.js:line_num'
                         //     }
                         // }
                         if (poEntry.comments && poEntry.comments.reference) {
@@ -140,7 +144,6 @@ export default function () {
                         poData.translations[ctx] = unorderedTranslations[ctx];
                     }
                 }
-
 
                 const potStr = makePotStr(poData);
                 const filepath = context.getOutputFilepath();
@@ -175,22 +178,25 @@ export default function () {
                     const stubs = [];
                     // require calls
                     node.id.properties
-                    .map(({ key: { name: keyName }, value: { name: valueName } }) => [keyName, valueName])
-                    .filter(([keyName, valueName]) => {
-                        const hasAlias = ALIAS_TO_FUNC_MAP[keyName];
-                        if (!hasAlias) {
-                            stubs.push(valueName);
-                        }
-                        return hasAlias;
-                    })
-                    .forEach(([keyName, valueName]) => {
-                        if (keyName !== valueName) { // if alias
-                            context.addAlias(ALIAS_TO_FUNC_MAP[keyName], valueName);
-                            context.addImport(valueName);
-                        } else {
-                            context.addImport(keyName);
-                        }
-                    });
+                        .map(({
+                            key: { name: keyName },
+                            value: { name: valueName },
+                        }) => [keyName, valueName])
+                        .filter(([keyName, valueName]) => {
+                            const hasAlias = ALIAS_TO_FUNC_MAP[keyName];
+                            if (!hasAlias) {
+                                stubs.push(valueName);
+                            }
+                            return hasAlias;
+                        })
+                        .forEach(([keyName, valueName]) => {
+                            if (keyName !== valueName) { // if alias
+                                context.addAlias(ALIAS_TO_FUNC_MAP[keyName], valueName);
+                                context.addImport(valueName);
+                            } else {
+                                context.addImport(keyName);
+                            }
+                        });
                     if (context.isResolveMode()) {
                         stubs.forEach((stub) => {
                             state.file.path.unshiftContainer('body', createFnStub(stub));
@@ -208,18 +214,18 @@ export default function () {
                 const stubs = [];
                 if (hasImportSpecifier(node)) {
                     node.specifiers
-                    .filter(bt.isImportSpecifier)
-                    .filter(({ imported, local }) => {
-                        const hasAlias = ALIAS_TO_FUNC_MAP[imported.name];
-                        if (!hasAlias) {
-                            stubs.push(local.name);
-                        }
-                        return hasAlias;
-                    })
-                    .forEach(({ imported, local }) => {
-                        context.addAlias(ALIAS_TO_FUNC_MAP[imported.name], local.name);
-                        context.addImport(local.name);
-                    });
+                        .filter(bt.isImportSpecifier)
+                        .filter(({ imported, local }) => {
+                            const hasAlias = ALIAS_TO_FUNC_MAP[imported.name];
+                            if (!hasAlias) {
+                                stubs.push(local.name);
+                            }
+                            return hasAlias;
+                        })
+                        .forEach(({ imported, local }) => {
+                            context.addAlias(ALIAS_TO_FUNC_MAP[imported.name], local.name);
+                            context.addImport(local.name);
+                        });
                 } else {
                     throw new Error('You should use ttag imports in form: "import { t } from \'ttag\'"');
                 }

@@ -16,8 +16,8 @@ describe('Resolve default', () => {
     });
     it('should not resolve if no extractors match', () => {
         const expectedPath = 'tests/fixtures/expected_resolve_if_no_extractor_match.js.src';
-        const input = 'import { t } from "ttag";\n' +
-            'console.log(gtt`simple string literal ${a}`);';
+        const input = 'import { t } from "ttag";\n'
+            + 'console.log(gtt`simple string literal ${a}`);';
         const result = babel.transform(input, options).code;
         const expected = fs.readFileSync(expectedPath).toString();
         expect(result).to.eql(expected);

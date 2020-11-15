@@ -10,7 +10,6 @@ export function ValidationError(message) {
 ValidationError.prototype = Object.create(Error.prototype);
 ValidationError.prototype.constructor = ValidationError;
 
-
 export function NoTranslationError(message) {
     this.name = 'NoTranslationError';
     this.message = message;
@@ -19,7 +18,6 @@ export function NoTranslationError(message) {
 
 NoTranslationError.prototype = Object.create(Error.prototype);
 NoTranslationError.prototype.constructor = NoTranslationError;
-
 
 export function NoExpressionError(message) {
     this.name = 'NoExpressionError';

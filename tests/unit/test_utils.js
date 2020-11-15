@@ -1,8 +1,10 @@
 import { expect } from 'chai';
 import template from '@babel/template';
-import { template2Msgid, validateAndFormatMsgid, isInDisabledScope,
+import {
+    template2Msgid, validateAndFormatMsgid, isInDisabledScope,
     hasDisablingComment, dedentStr, getMsgid, poReferenceComparator,
-    getMembersPath, getMsgidNumbered, strHasExpr } from 'src/utils';
+    getMembersPath, getMsgidNumbered, strHasExpr,
+} from 'src/utils';
 import { DISABLE_COMMENT } from 'src/defaults';
 import C3poContext from 'src/context';
 
@@ -102,8 +104,8 @@ describe('utils validateAndFormatMsgid', () => {
         const input = '${count} apples (translated)';
         const func = () => validateAndFormatMsgid(input, ['appleCount']);
         expect(func).to.throw(
-            'NoExpressionError: Expression \'appleCount\' is not found in the localized string ' +
-            '\'${count} apples (translated)\'.'
+            'NoExpressionError: Expression \'appleCount\' is not found in the localized string '
+            + '\'${count} apples (translated)\'.',
         );
     });
 
@@ -129,8 +131,8 @@ describe('utils validateAndFormatMsgid', () => {
         const input = '${ fooxbar } apples (translated)';
         const func = () => validateAndFormatMsgid(input, ['foo.bar']);
         expect(func).to.throw(
-            'NoExpressionError: Expression \'foo.bar\' is not found in the localized string ' +
-            '\'${ fooxbar } apples (translated)\'.'
+            'NoExpressionError: Expression \'foo.bar\' is not found in the localized string '
+            + '\'${ fooxbar } apples (translated)\'.',
         );
     });
 
@@ -192,7 +194,7 @@ describe('utils dedentStr', () => {
     it('should remove indentation when has \\n symbol', () => {
         const input = `   some
                       string`;
-        const expected = `some\nstring`;
+        const expected = 'some\nstring';
         expect(dedentStr(input)).to.eql(expected);
     });
     it('should not remove indentation when has no \\n symbol', () => {
@@ -248,42 +250,42 @@ describe('utils poReferenceComparator', () => {
     it('# path/a.js should be less than # path/b.js', () => {
         expect(poReferenceComparator(
             '# path/a.js',
-            '# path/b.js'
+            '# path/b.js',
         )).to.be.eql(-1);
     });
 
     it('# path/b.js should be less than # path/a.js', () => {
         expect(poReferenceComparator(
             '# path/b.js',
-            '# path/a.js'
+            '# path/a.js',
         )).to.be.eql(1);
     });
 
     it('# path/a.js should be equal to # path/a.js', () => {
         expect(poReferenceComparator(
             '# path/a.js',
-            '# path/a.js'
+            '# path/a.js',
         )).to.be.eql(0);
     });
 
     it('# path/a.js:5 should be less than # path/a.js:10', () => {
         expect(poReferenceComparator(
             '# path/a.js:5',
-            '# path/a.js:10'
+            '# path/a.js:10',
         )).to.be.eql(-1);
     });
 
     it('# path/a.js:10 should be less than # path/a.js:5', () => {
         expect(poReferenceComparator(
             '# path/a.js:10',
-            '# path/a.js:5'
+            '# path/a.js:5',
         )).to.be.eql(1);
     });
 
     it('# path/a.js:10 should be less than # path/a.js:10', () => {
         expect(poReferenceComparator(
             '# path/a.js:10',
-            '# path/a.js:10'
+            '# path/a.js:10',
         )).to.be.eql(0);
     });
 });

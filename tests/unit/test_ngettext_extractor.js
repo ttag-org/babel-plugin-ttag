@@ -3,6 +3,7 @@ import ngettext from 'src/extractors/ngettext';
 import Context from 'src/context';
 import { expect } from 'chai';
 import { PO_PRIMITIVES } from 'src/defaults';
+
 const { MSGID, MSGSTR, MSGID_PLURAL } = PO_PRIMITIVES;
 
 const enConfig = new Context();
@@ -15,15 +16,13 @@ describe('ngettext extract', () => {
     });
 
     it('should extract proper msgid1 for member expressions', () => {
-        const node = template('ngettext(msgid`${ state.n } banana`, `${ state.n } bananas`, state.n)'
-        )().expression;
+        const node = template('ngettext(msgid`${ state.n } banana`, `${ state.n } bananas`, state.n)')().expression;
         const result = ngettext.extract(node, enConfig);
         expect(result[MSGID]).to.eql('${ state.n } banana');
     });
 
     it('should extract proper msgid1 for member expressions with this', () => {
-        const node = template('ngettext(msgid`${ this.state.n } banana`, `${ this.state.n } bananas`, this.state.n)'
-        )().expression;
+        const node = template('ngettext(msgid`${ this.state.n } banana`, `${ this.state.n } bananas`, this.state.n)')().expression;
         const result = ngettext.extract(node, enConfig);
         expect(result[MSGID]).to.eql('${ this.state.n } banana');
     });

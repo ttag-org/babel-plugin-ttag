@@ -1,14 +1,19 @@
-import { FUNC_TO_ALIAS_MAP, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS,
-    UNRESOLVED_ACTION, LOCATION } from './defaults';
-const { FAIL, WARN, SKIP } = UNRESOLVED_ACTION;
+import { getNPlurals as getPluralsNumForLang, getPluralFormsHeader, getFormula } from 'plural-forms';
+import {
+    FUNC_TO_ALIAS_MAP, DEFAULT_POT_OUTPUT, DEFAULT_HEADERS,
+    UNRESOLVED_ACTION, LOCATION,
+} from './defaults';
 import tagGettext from './extractors/tag-gettext';
 import jsxtagGettext from './extractors/jsxtag-gettext';
 import gettext from './extractors/gettext';
 import ngettext from './extractors/ngettext';
-import { parsePoData, getDefaultPoData, getNPlurals, getPluralFunc } from './po-helpers';
+import {
+    parsePoData, getDefaultPoData, getNPlurals, getPluralFunc,
+} from './po-helpers';
 import { ConfigValidationError, ConfigError } from './errors';
 import { validateConfig, configSchema } from './config';
-import { getNPlurals as getPluralsNumForLang, getPluralFormsHeader, getFormula } from 'plural-forms';
+
+const { FAIL, WARN, SKIP } = UNRESOLVED_ACTION;
 
 const DEFAULT_EXTRACTORS = [tagGettext, jsxtagGettext, gettext, ngettext];
 
@@ -140,7 +145,7 @@ class C3poContext {
     }
 
     noTranslationAction(message) {
-        if (! this.isResolveMode()) {
+        if (!this.isResolveMode()) {
             return;
         }
         if (this.config.resolve && this.config.resolve.translations === 'default') {
@@ -151,9 +156,9 @@ class C3poContext {
 
     validationFailureAction(funcName, message) {
         const level = (
-            this.config.extractors &&
-            this.config.extractors[funcName] &&
-            this.config.extractors[funcName].invalidFormat) || FAIL;
+            this.config.extractors
+            && this.config.extractors[funcName]
+            && this.config.extractors[funcName].invalidFormat) || FAIL;
         logAction(message, level);
     }
 
@@ -192,7 +197,6 @@ class C3poContext {
     getTranslations(gettextContext = '') {
         return this.poData.translations[gettextContext] || {};
     }
-
 }
 
 export default C3poContext;

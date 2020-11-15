@@ -5,7 +5,6 @@ import path from 'path';
 import c3po from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
-
 describe('Contexts extract', () => {
     before(() => {
         rmDirSync('debug');
@@ -20,6 +19,7 @@ describe('Contexts extract', () => {
         babel.transformFileSync(path.join(process.cwd(), inputFile), options);
         const result = fs.readFileSync(output).toString();
         expect(result).to.contain(
-            '#: tests/fixtures/test_context.js:2\nmsgctxt "test ctx"\nmsgid "test"\nmsgstr ""');
+            '#: tests/fixtures/test_context.js:2\nmsgctxt "test ctx"\nmsgid "test"\nmsgstr ""',
+        );
     });
 });

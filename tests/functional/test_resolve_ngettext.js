@@ -21,28 +21,27 @@ describe('Resolve ngettext', () => {
     });
 
     it('should resolve proper plural form of n', () => {
-        const expected =
-        '_tag_ngettext(n, [`plural form with ${n} plural [translated]`, `plural form with ${n} plurals [translated]`])';
-        const input = 'const n = 1; ' +
-            'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, n));';
+        const expected = '_tag_ngettext(n, [`plural form with ${n} plural [translated]`, `plural form with ${n} plurals [translated]`])';
+        const input = 'const n = 1; '
+            + 'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, n));';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(expected);
     });
 
     it('should resolve proper plural form for member expression', () => {
-        const expected = '_tag_ngettext(item.n, [`plural form with ${item.n} plural [translated]`,' +
-        ' `plural form with ${item.n} plurals [translated]`])';
-        const input = 'const n = 1; ' +
-            'console.log(ngettext(msgid`plural form with ${item.n} plural`, ' +
-            '`plural form with ${item.n} plurals`, item.n));';
+        const expected = '_tag_ngettext(item.n, [`plural form with ${item.n} plural [translated]`,'
+        + ' `plural form with ${item.n} plurals [translated]`])';
+        const input = 'const n = 1; '
+            + 'console.log(ngettext(msgid`plural form with ${item.n} plural`, '
+            + '`plural form with ${item.n} plurals`, item.n));';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(expected);
     });
 
     it('should not include ngettext function multiple times', () => {
-        const input = 'const n = 1;\n' +
-            'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, n));\n' +
-            'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, n));';
+        const input = 'const n = 1;\n'
+            + 'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, n));\n'
+            + 'console.log(ngettext(msgid`plural form with ${n} plural`, `plural form with ${n} plurals`, n));';
         const result = babel.transform(input, options).code;
         expect(result.match(/_tag_ngettext/g).length).to.eql(3);
     });
@@ -54,8 +53,8 @@ describe('Resolve ngettext', () => {
         expect(result).to.contain(expected);
 
         const expected2 = 'plurals [translated]';
-        const input2 = 'console.log(ngettext(msgid`plural form with ${n} plural`, ' +
-            '`plural form with ${n} plurals`, 2));';
+        const input2 = 'console.log(ngettext(msgid`plural form with ${n} plural`, '
+            + '`plural form with ${n} plurals`, 2));';
         const result2 = babel.transform(input2, options).code;
         expect(result2).to.contain(expected2);
     });
@@ -76,9 +75,9 @@ describe('Resolve ngettext', () => {
         rmDirSync('debug');
         mkdirp.sync('debug');
         const resultPath = 'debug/ngettext_result.js';
-        const input = 'const n = parseInt(process.env.TEST_N, 10);\n' +
-            'process.stdout.write(ngettext(msgid`plural form with ${ n } plural`, ' +
-            '`plural form with ${ n } plurals`, n));';
+        const input = 'const n = parseInt(process.env.TEST_N, 10);\n'
+            + 'process.stdout.write(ngettext(msgid`plural form with ${ n } plural`, '
+            + '`plural form with ${ n } plurals`, n));';
         const result = babel.transform(input, options).code;
         fs.writeFileSync(resultPath, result, { mode: 0o777 });
 
@@ -105,8 +104,8 @@ describe('Resolve ngettext', () => {
         const input = 'console.log(ngettext(msgid`${ appleCount } apple`, `${ appleCount } apples`, appleCount));';
         const func = () => babel.transform(input, options).code;
         expect(func).to.throw(
-            'Expression \'appleCount\' is not found in the localized string \'${ count }' +
-            ' apples (translated)\'.'
+            'Expression \'appleCount\' is not found in the localized string \'${ count }'
+            + ' apples (translated)\'.',
         );
     });
 });

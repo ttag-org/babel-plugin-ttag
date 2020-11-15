@@ -32,8 +32,9 @@ describe('Alias resolve', () => {
         `;
         const result = babel.transform(input, options).code;
         expect(result).to.contain(
-            '_tag_ngettext(n, [`plural form with ${n} plural [translated]`, ' +
-            '`plural form with ${n} plurals [translated]`])');
+            '_tag_ngettext(n, [`plural form with ${n} plural [translated]`, '
+            + '`plural form with ${n} plurals [translated]`])',
+        );
     });
 
     it('should be able to create alias on import for gettext', () => {

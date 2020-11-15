@@ -28,4 +28,3 @@ describe('Empty config', () => {
         expect(fn).to.throw('You can not use CallExpression \'${a()}\' in localized strings');
     });
 });
-

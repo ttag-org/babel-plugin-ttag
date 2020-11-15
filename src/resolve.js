@@ -2,7 +2,6 @@ import { NoTranslationError } from './errors';
 import { dedentStr } from './utils';
 import { hasTranslations, isFuzzy } from './po-helpers';
 
-
 function replaceNode(nodePath, resultNode) {
     if (resultNode !== undefined) {
         if (nodePath._C3PO_GETTEXT_CONTEXT) {
@@ -16,8 +15,8 @@ export function resolveEntries(extractor, nodePath, context, state) {
     try {
         const gettextContext = nodePath._C3PO_GETTEXT_CONTEXT || '';
         const translations = context.getTranslations(gettextContext);
-        const msgid = context.isDedent() ? dedentStr(extractor.getMsgid(nodePath.node, context)) :
-            extractor.getMsgid(nodePath.node, context);
+        const msgid = context.isDedent() ? dedentStr(extractor.getMsgid(nodePath.node, context))
+            : extractor.getMsgid(nodePath.node, context);
         const translationObj = translations[msgid];
         if (!translationObj) {
             throw new NoTranslationError(`No "${msgid}" in "${context.getPoFilePath()}" file`);

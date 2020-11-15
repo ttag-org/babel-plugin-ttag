@@ -28,7 +28,8 @@ describe('Resolve jsxtag-gettext', () => {
         const input = 'console.log(jt`${ a } simple string ${ b } literal with formatting`);';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(
-            'console.log([a, " simple string ", b, " literal with formatting [translated]"]);');
+            'console.log([a, " simple string ", b, " literal with formatting [translated]"]);',
+        );
     });
 
     it('should resolve original string if no translation is found', () => {

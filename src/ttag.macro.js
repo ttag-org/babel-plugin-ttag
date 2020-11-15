@@ -1,8 +1,10 @@
 import { createMacro, MacroError } from 'babel-plugin-macros';
 import { FUNC_TO_ALIAS_MAP, ALIAS_TO_FUNC_MAP } from './defaults';
-import { default as plugin, isStarted } from './plugin';
+import { default as plugin, isStarted } from './plugin'; // eslint-disable-line
 
-function ttagMacro({ references, state, babel: { types: t }, config = {} }) {
+function ttagMacro({
+    references, state, babel: { types: t }, config = {},
+}) {
     const babelPluginTtag = plugin();
     if (isStarted()) {
         return { keepImports: true };
@@ -22,12 +24,12 @@ function ttagMacro({ references, state, babel: { types: t }, config = {} }) {
                 const funcName = FUNC_TO_ALIAS_MAP[k];
 
                 return Array.isArray(funcName)
-                ? funcName.join(', ')
-                : funcName;
+                    ? funcName.join(', ')
+                    : funcName;
             });
             throw new MacroError(
                 `Invalid import: ${refName}. You can only import ${
-                    allowedMethods.join(', ')} from 'babel-plugin-ttag/dist/ttag.macro'.`
+                    allowedMethods.join(', ')} from 'babel-plugin-ttag/dist/ttag.macro'.`,
             );
         }
 

@@ -6,7 +6,6 @@ import path from 'path';
 import c3po from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
-
 const output = 'debug/translations.pot';
 const options = {
     plugins: [[c3po, { extract: { output }, addComments: true }]],

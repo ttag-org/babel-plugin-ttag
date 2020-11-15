@@ -28,7 +28,8 @@ describe('Resolve tag-gettext', () => {
         const input = 'console.log(t`${ a } simple string ${ b } literal with formatting`);';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(
-            'console.log("".concat(a, " simple string ").concat(b, " literal with formatting [translated]"))');
+            'console.log("".concat(a, " simple string ").concat(b, " literal with formatting [translated]"))',
+        );
     });
 
     it('should work with upper case characters as variables (regression)', () => {
@@ -36,19 +37,19 @@ describe('Resolve tag-gettext', () => {
         const input = 't`test test ${MAX_AMOUNT}`';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(
-            '"test test ".concat(MAX_AMOUNT, " translate");'
+            '"test test ".concat(MAX_AMOUNT, " translate");',
         );
     });
 
     it('should resolve gettext literal (with formatting) for member expressions', () => {
         const input = (
-            'console.log(t`${ item.name.value } simple string ' +
-            '${ item.age.value } literal with formatting`);'
+            'console.log(t`${ item.name.value } simple string '
+            + '${ item.age.value } literal with formatting`);'
         );
         const result = babel.transform(input, options).code;
         expect(result).to.contain(
-            'console.log("".concat(item.name.value, " simple string ").concat(item.age.value, " ' +
-            'literal with formatting [translated]"));'
+            'console.log("".concat(item.name.value, " simple string ").concat(item.age.value, " '
+            + 'literal with formatting [translated]"));',
         );
     });
 
@@ -68,7 +69,7 @@ describe('Resolve tag-gettext', () => {
         const input = 'console.log(t`simple string literal without translation ${a}`);';
         const result = babel.transform(input, options).code;
         expect(result).to.contain(
-            'console.log("simple string literal without translation ".concat(a));'
+            'console.log("simple string literal without translation ".concat(a));',
         );
     });
 
@@ -103,7 +104,7 @@ describe('Resolve tag-gettext', () => {
         const input = 'console.log(t`Typo test ${ mississipi }`);';
         const func = () => babel.transform(input, options).code;
         expect(func).to.throw(
-            'Expression \'mississipi\' is not found in the localized string \'Typo test ${ missingpi }\'.'
+            'Expression \'mississipi\' is not found in the localized string \'Typo test ${ missingpi }\'.',
         );
     });
     it('should resolve computed properties', () => {

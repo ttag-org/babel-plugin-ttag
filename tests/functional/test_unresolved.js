@@ -37,8 +37,7 @@ describe('Unresolved', () => {
     });
     it('should not fail if resolve: "default"', () => {
         const input = 'console.log(t`some random string`);';
-        const code = babel.transform(input, optionsResolveDefault).code;
+        const { code } = babel.transform(input, optionsResolveDefault);
         expect(code).to.equal('console.log("some random string");');
     });
 });
-
