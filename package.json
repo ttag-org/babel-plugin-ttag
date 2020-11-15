@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-ttag",
-  "version": "1.7.27",
+  "version": "1.7.28",
   "description": "",
   "main": "dist/plugin.js",
   "keywords": [
