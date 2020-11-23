@@ -36,7 +36,7 @@
     "dedent": "0.6.0",
     "gettext-parser": "4.0.0-alpha.0",
     "mkdirp": "^1.0.4",
-    "plural-forms": "0.3.3"
+    "plural-forms": "0.5.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
