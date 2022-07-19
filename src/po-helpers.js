@@ -137,7 +137,8 @@ export function parsePoData(filepath) {
 const pluralRegex = /\splural ?=?([\s\S]*);?/;
 export function getPluralFunc(headers) {
     try {
-        let pluralFn = pluralRegex.exec(headers['plural-forms'])[1];
+        const pluralHeader = headers['plural-forms'] || headers['Plural-Forms'];
+        let pluralFn = pluralRegex.exec(pluralHeader)[1];
         if (pluralFn[pluralFn.length - 1] === ';') {
             pluralFn = pluralFn.slice(0, -1);
         }
@@ -148,7 +149,8 @@ export function getPluralFunc(headers) {
 }
 
 export function getNPlurals(headers) {
-    const nplurals = /nplurals ?= ?(\d)/.exec(headers['plural-forms'])[1];
+    const pluralHeader = headers['plural-forms'] || headers['Plural-Forms'];
+    const nplurals = /nplurals ?= ?(\d)/.exec(pluralHeader)[1];
     return parseInt(nplurals, 10);
 }
 
