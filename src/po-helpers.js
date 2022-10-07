@@ -59,6 +59,34 @@ export function applyReference(poEntry, node, filepath, location) {
     return poEntry;
 }
 
+/**
+ *  Find comments linked to a translation string
+ *  Some comments are hidden inside expressions, ex: when you put a comment before
+ *  the string inside JSX.
+ *  <p>
+ *      { 
+ *          // translator: message
+ *          c('helle').t`world`
+ *      }
+ *  </p>
+ *  So we need to look for the parent container of the current TaggedTemplateExpression
+ *  to find the comments
+ *  @param Object NodePath current processing AST node
+ *  @param Array comments current comments found via NodePath.node.leadingComments
+ *  @returns Array comments
+*/
+const extractComment = (nodePath, comments = []) => {
+    if (comments.length) {
+        return comments
+    }
+    
+    if (nodePath.parent?.type === "JSXExpressionContainer") {
+        return nodePath.parent.expression.leadingComments || []
+    }
+    
+    return []
+}
+
 const tagRegex = {};
 export function applyExtractedComments(poEntry, nodePath, tag) {
     if (!poEntry.comments) {
@@ -76,7 +104,7 @@ export function applyExtractedComments(poEntry, nodePath, tag) {
         applyExtractedComments(poEntry, nodePath.parentPath, tag);
     }
 
-    const comments = node.leadingComments;
+    const comments = extractComment(nodePath, node.leadingComments);
     let transComments = comments ? comments.map((c) => c.value) : [];
     if (tag) {
         if (!tagRegex[tag]) {
