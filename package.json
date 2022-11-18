@@ -34,7 +34,7 @@
     "ajv": "6.12.3",
     "babel-plugin-macros": "^2.8.0",
     "dedent": "0.6.0",
-    "gettext-parser": "^5.1.2",
+    "gettext-parser": "6.0.0",
     "mkdirp": "^1.0.4",
     "plural-forms": "^0.5.3"
   },

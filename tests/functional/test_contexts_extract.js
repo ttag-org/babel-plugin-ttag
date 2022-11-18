@@ -33,7 +33,8 @@ msgstr ""
 
 msgctxt "email"
 msgid "test2"
-msgstr ""`;
+msgstr ""
+`;
 
 describe('Contexts extract', () => {
     before(() => {

@@ -19,7 +19,8 @@ msgid "test"
 msgstr ""
 
 msgid "test2"
-msgstr ""`;
+msgstr ""
+`;
 
 describe('Macro extract', () => {
     before(() => {
