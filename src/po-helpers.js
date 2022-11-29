@@ -76,7 +76,6 @@ export function applyReference(poEntry, node, filepath, location) {
  *  @returns Array comments
 */
 const extractComment = (nodePath, comments = []) => {
-    
     // Can be null cf https://github.com/babel/babel/blob/main/packages/babel-types/scripts/generators/typescript-legacy.js#L39
     if (comments?.length) {
         return comments;
