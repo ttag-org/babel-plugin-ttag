@@ -7,7 +7,7 @@ import dedent from 'dedent';
 
 const output = 'debug/translations.pot';
 const options = {
-    presets: ['@babel/preset-env', "@babel/preset-react"],
+    presets: ['@babel/preset-env', '@babel/preset-react'],
     plugins: [[ttag, { extract: { output }, addComments: 'translator:' }]],
 };
 
@@ -83,13 +83,13 @@ describe('Extract developer comments by tag', () => {
         expect(result).to.contain('#. this comment is for you AND IT WILL WORK');
         expect(result).not.to.contain('#. this comment is NOT for you');
 
-        const entries = result.split('\n\n')
+        const entries = result.split('\n\n');
 
-        const validComment1 = entries.find((text) => text.includes('valid-comment-1'))
-        const noComment = entries.find((text) => text.includes('no-comment'))
-        const invalidComment = entries.find((text) => text.includes('invalid-comment'))
-        expect(noComment).not.to.contain('#.')
-        expect(invalidComment).not.to.contain('#.')
+        const validComment1 = entries.find((text) => text.includes('valid-comment-1'));
+        const noComment = entries.find((text) => text.includes('no-comment'));
+        const invalidComment = entries.find((text) => text.includes('invalid-comment'));
+        expect(noComment).not.to.contain('#.');
+        expect(invalidComment).not.to.contain('#.');
         expect(validComment1).to.contain('#. this comment is for you AND IT WILL WORK');
     });
 });

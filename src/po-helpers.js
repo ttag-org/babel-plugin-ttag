@@ -64,7 +64,7 @@ export function applyReference(poEntry, node, filepath, location) {
  *  Some comments are hidden inside expressions, ex: when you put a comment before
  *  the string inside JSX.
  *  <p>
- *      { 
+ *      {
  *          // translator: message
  *          c('helle').t`world`
  *      }
@@ -77,15 +77,15 @@ export function applyReference(poEntry, node, filepath, location) {
 */
 const extractComment = (nodePath, comments = []) => {
     if (comments.length) {
-        return comments
+        return comments;
     }
-    
-    if (nodePath.parent?.type === "JSXExpressionContainer") {
-        return nodePath.parent.expression.leadingComments || []
+
+    if (nodePath.parent?.type === 'JSXExpressionContainer') {
+        return nodePath.parent.expression.leadingComments || [];
     }
-    
-    return []
-}
+
+    return [];
+};
 
 const tagRegex = {};
 export function applyExtractedComments(poEntry, nodePath, tag) {
