@@ -14,7 +14,7 @@
     "lint": "eslint ./src ./tests",
     "fix": "eslint --fix ./src ./tests",
     "build": "babel src --out-dir dist",
-    "preversion": "npm run lint && make test",
+    "preversion": "npm run lint && npm run build && make test",
     "prepublish": "npm run build"
   },
   "repository": {
