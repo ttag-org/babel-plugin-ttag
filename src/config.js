@@ -49,6 +49,7 @@ export const configSchema = {
         sortByMsgid: { type: 'boolean' },
         sortByMsgctxt: { type: 'boolean' },
         numberedExpressions: { type: 'boolean' },
+        allowFuzzy: { type: 'boolean' },
     },
     additionalProperties: false,
 };

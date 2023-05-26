@@ -185,6 +185,10 @@ class C3poContext {
         return Boolean(this.config.sortByMsgctxt);
     }
 
+    isAllowFuzzy() {
+        return Boolean(this.config.allowFuzzy);
+    }
+
     setPoData() {
         const poFilePath = this.getPoFilePath();
         if (!poFilePath || poFilePath === 'default') {
