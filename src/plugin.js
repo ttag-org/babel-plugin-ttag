@@ -160,7 +160,6 @@ export default function ttagPlugin() {
                 enter: (nodePath, state) => {
                     started = true;
                     if (!context) {
-                        console.log(state.opts);
                         context = new TtagContext(state.opts);
                     } else {
                         context.clear();
