@@ -3,15 +3,15 @@ import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
 
-import { ALIAS_TO_FUNC_MAP } from './defaults';
-import { buildPotData, makePotStr } from './po-helpers';
-import { extractPoEntry, getExtractor } from './extract';
+import {ALIAS_TO_FUNC_MAP} from './defaults';
+import {buildPotData, makePotStr} from './po-helpers';
+import {extractPoEntry, getExtractor} from './extract';
 import {
     hasDisablingComment, isInDisabledScope, isTtagImport,
     hasImportSpecifier, poReferenceComparator, isTtagRequire, createFnStub,
 } from './utils';
-import { resolveEntries } from './resolve';
-import { ValidationError } from './errors';
+import {resolveEntries} from './resolve';
+import {ValidationError} from './errors';
 import TtagContext from './context';
 import {
     isContextTagCall, isValidTagContext, isContextFnCall,
@@ -19,6 +19,7 @@ import {
 } from './gettext-context';
 
 let started = false;
+
 export function isStarted() {
     return started;
 }
@@ -31,7 +32,7 @@ export default function ttagPlugin() {
 
     function tryMatchTag(cb) {
         return (nodePath, state) => {
-            const { node } = nodePath;
+            const {node} = nodePath;
             if (isContextTagCall(node, context) && isValidTagContext(nodePath)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.tag.object.arguments[0].value;
                 nodePath._ORIGINAL_NODE = node;
@@ -44,7 +45,7 @@ export default function ttagPlugin() {
 
     function tryMatchCall(cb) {
         return (nodePath, state) => {
-            const { node } = nodePath;
+            const {node} = nodePath;
             if (isContextFnCall(node, context) && isValidFnCallContext(nodePath)) {
                 nodePath._C3PO_GETTEXT_CONTEXT = node.callee.object.arguments[0].value;
                 nodePath._ORIGINAL_NODE = node;
@@ -152,19 +153,28 @@ export default function ttagPlugin() {
                 fs.writeFileSync(filepath, potStr);
             }
         },
+        // pre: (state) => {
+        //     console.log(state.opts);
+        //     if (!context) {
+        //         context = new TtagContext(state.opts);
+        //     }
+        // },
         visitor: {
             TaggedTemplateExpression: tryMatchTag(extractOrResolve),
             CallExpression: tryMatchCall(extractOrResolve),
-            Program: (nodePath, state) => {
-                started = true;
-                if (!context) {
-                    context = new TtagContext(state.opts);
-                } else {
-                    context.clear();
-                }
-                disabledScopes = new Set();
-                if (hasDisablingComment(nodePath.node)) {
-                    disabledScopes.add(nodePath.scope.uid);
+            Program: {
+                enter: (nodePath, state) => {
+                    started = true;
+                    if (!context) {
+                        console.log(state.opts);
+                        context = new TtagContext(state.opts);
+                    } else {
+                        context.clear();
+                    }
+                    disabledScopes = new Set();
+                    if (hasDisablingComment(nodePath.node)) {
+                        disabledScopes.add(nodePath.scope.uid);
+                    }
                 }
             },
             BlockStatement: (nodePath) => {
@@ -179,9 +189,9 @@ export default function ttagPlugin() {
                     // require calls
                     node.id.properties
                         .map(({
-                            key: { name: keyName },
-                            value: { name: valueName },
-                        }) => [keyName, valueName])
+                                  key: {name: keyName},
+                                  value: {name: valueName},
+                              }) => [keyName, valueName])
                         .filter(([keyName, valueName]) => {
                             const hasAlias = ALIAS_TO_FUNC_MAP[keyName];
                             if (!hasAlias) {
@@ -206,7 +216,7 @@ export default function ttagPlugin() {
                 });
             },
             ImportDeclaration: (nodePath, state) => {
-                const { node } = nodePath;
+                const {node} = nodePath;
                 if (!isTtagImport(node)) return;
                 if (!context) {
                     context = new TtagContext(state.opts);
@@ -215,14 +225,14 @@ export default function ttagPlugin() {
                 if (hasImportSpecifier(node)) {
                     node.specifiers
                         .filter(bt.isImportSpecifier)
-                        .filter(({ imported, local }) => {
+                        .filter(({imported, local}) => {
                             const hasAlias = ALIAS_TO_FUNC_MAP[imported.name];
                             if (!hasAlias) {
                                 stubs.push(local.name);
                             }
                             return hasAlias;
                         })
-                        .forEach(({ imported, local }) => {
+                        .forEach(({imported, local}) => {
                             context.addAlias(ALIAS_TO_FUNC_MAP[imported.name], local.name);
                             context.addImport(local.name);
                         });
