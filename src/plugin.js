@@ -201,10 +201,10 @@ export default function ttagPlugin() {
                             }
                         });
                     if (context.isResolveMode()) {
+                        nodePath.remove();
                         stubs.forEach((stub) => {
                             state.file.path.unshiftContainer('body', createFnStub(stub));
                         });
-                        nodePath.remove();
                     }
                 });
             },
@@ -234,10 +234,10 @@ export default function ttagPlugin() {
                 }
 
                 if (context.isResolveMode()) {
+                    nodePath.remove();
                     stubs.forEach((stub) => {
                         state.file.path.unshiftContainer('body', createFnStub(stub));
                     });
-                    nodePath.remove();
                 }
             },
         },

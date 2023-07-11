@@ -39,12 +39,12 @@
     "plural-forms": "^0.5.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.1",
-    "@babel/core": "^7.12.3",
+    "@babel/cli": "7.22.6",
+    "@babel/core": "7.22.8",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-env": "7.22.7",
     "@babel/preset-react": "^7.12.5",
-    "@babel/register": "^7.12.1",
+    "@babel/register": "7.22.5",
     "babel-eslint": "^10.1.0",
     "chai": "3.5.0",
     "eslint": "^7.2.0",
