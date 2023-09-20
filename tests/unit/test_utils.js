@@ -224,8 +224,10 @@ describe('utils getMsgid', () => {
 
 describe('utils strHasExpr', () => {
     it('should return true if has expressions', () => {
-        const str = 'test match ${ a } and ${ b[0].name }';
-        expect(strHasExpr(str)).to.be.true;
+        const str1 = 'test match ${ a } and ${ b[0].name }';
+        expect(strHasExpr(str1)).to.be.true;
+        const str2 = 'test match 2 ${ a }';
+        expect(strHasExpr(str2)).to.be.true;
     });
     it('should return false if has no expressions', () => {
         const str = 'test no match';
