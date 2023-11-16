@@ -25,6 +25,9 @@ function match(node, context) {
 function resolveDefault(node, context) {
     const transStr = context.isDedent() ? dedentStr(getQuasiStr(node)) : getQuasiStr(node);
     if (hasExpressions(node)) {
+        if (context.isDedent()) {
+            return tpl.ast(dedentStr(ast2Str(node.quasi))).expression;
+        }
         return node.quasi;
     }
     return t.stringLiteral(transStr);
@@ -37,7 +40,7 @@ function resolve(node, translation, context) {
         const transExpr = tpl.ast(strToQuasi(transStr));
         if (context.isNumberedExpressions()) {
             const exprs = transExpr.expression.expressions
-                .map(({ value }) => value)
+                .map(({value}) => value)
                 .map((i) => node.quasi.expressions[i]);
             return t.templateLiteral(transExpr.expression.quasis, exprs);
         }
