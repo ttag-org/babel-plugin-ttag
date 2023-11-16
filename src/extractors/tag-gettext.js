@@ -40,7 +40,7 @@ function resolve(node, translation, context) {
         const transExpr = tpl.ast(strToQuasi(transStr));
         if (context.isNumberedExpressions()) {
             const exprs = transExpr.expression.expressions
-                .map(({value}) => value)
+                .map(({ value }) => value)
                 .map((i) => node.quasi.expressions[i]);
             return t.templateLiteral(transExpr.expression.quasis, exprs);
         }
