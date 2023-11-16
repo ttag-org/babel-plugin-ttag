@@ -33,7 +33,7 @@
     "@babel/types": "^7.12.6",
     "ajv": "6.12.3",
     "babel-plugin-macros": "^2.8.0",
-    "dedent": "0.6.0",
+    "dedent": "1.5.1",
     "gettext-parser": "6.0.0",
     "mkdirp": "^1.0.4",
     "plural-forms": "^0.5.3"

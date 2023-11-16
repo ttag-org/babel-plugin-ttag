@@ -192,7 +192,7 @@ describe('utils hasDisablingComment', () => {
 
 describe('utils dedentStr', () => {
     it('should remove indentation when has \\n symbol', () => {
-        const input = `   some
+        const input = `some
                       string`;
         const expected = 'some\nstring';
         expect(dedentStr(input)).to.eql(expected);
