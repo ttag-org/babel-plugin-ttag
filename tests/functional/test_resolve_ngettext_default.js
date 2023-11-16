@@ -27,6 +27,12 @@ describe('Resolve ngettext default', () => {
         expect(result).to.contain('_tag_ngettext(n, [`test\ntest`, `test\ntests`]);');
     });
 
+    it('should resolve default strings with indent with expressions', () => {
+        const input = 'ngettext(msgid`    test test \n   ${name} line `, `  test tests`, n)';
+        const result = babel.transform(input, options).code;
+        expect(result).to.contain('_tag_ngettext(n, [`test test \n${name} line`, `  test tests`]);');
+    });
+
     it('should resolve original strings with context', () => {
         const input = 'console.log(c("foo").ngettext(msgid`no translation plural`, `no translation plurals`, n));';
         const result = babel.transform(input, options).code;
