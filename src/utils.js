@@ -9,7 +9,7 @@ import {
 } from './defaults';
 import { ValidationError, NoExpressionError } from './errors';
 
-const disableRegExp = new RegExp(`\\b${DISABLE_COMMENT}\\b`);
+const disableRegExp = new RegExp(`\\s${DISABLE_COMMENT}\\s`);
 
 const exprReg = /\$\{\s?[\w\W]+?\s}/;
 
