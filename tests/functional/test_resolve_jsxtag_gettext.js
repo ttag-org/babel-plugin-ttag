@@ -55,13 +55,4 @@ describe('Resolve jsxtag-gettext', () => {
         const result = babel.transform(input, options).code;
         expect(result).to.contain('console.log(["some random string"]);');
     });
-
-    it('should strip indents when has expressions', () => {
-        const input = `console.log(jt\`
-            no
-            translator \${name}
-            notes\`);`;
-        const result = babel.transform(input, options).code;
-        expect(result).to.contain('console.log(["\\nno\\ntranslator ", name, "\\nnotes"]);');
-    });
 });

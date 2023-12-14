@@ -2,7 +2,7 @@ import * as t from '@babel/types';
 import tpl from '@babel/template';
 import {
     template2Msgid, validateAndFormatMsgid,
-    hasExpressions, ast2Str, getQuasiStr, dedentStr, strToQuasi,
+    hasExpressions, ast2Str, getQuasiStr, strToQuasi,
 } from '../utils';
 import { PO_PRIMITIVES } from '../defaults';
 import { ValidationError } from '../errors';
@@ -22,12 +22,9 @@ function match(node, context) {
     return t.isTaggedTemplateExpression(node) && context.hasAliasForFunc(NAME, node.tag.name);
 }
 
-function resolveDefault(node, context) {
-    const transStr = context.isDedent() ? dedentStr(getQuasiStr(node)) : getQuasiStr(node);
+function resolveDefault(node) {
+    const transStr = getQuasiStr(node);
     if (hasExpressions(node)) {
-        if (context.isDedent()) {
-            return tpl.ast(dedentStr(ast2Str(node.quasi))).expression;
-        }
         return node.quasi;
     }
     return t.stringLiteral(transStr);

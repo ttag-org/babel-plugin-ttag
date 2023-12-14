@@ -27,24 +27,6 @@ describe('Resolve tag-gettext default', () => {
         expect(result).to.contain('console.log("simple string literal without translation ".concat(a));');
     });
 
-    it('should strip indent', () => {
-        const input = `console.log(t\`
-            no
-            translator
-            notes\`);`;
-        const result = babel.transform(input, options).code;
-        expect(result).to.contain('console.log("no\\ntranslator\\nnotes");');
-    });
-
-    it('should strip indents when has expressions', () => {
-        const input = `console.log(t\`
-            no
-            translator \${name}
-            notes\`);`;
-        const result = babel.transform(input, options).code;
-        expect(result).to.contain('console.log("\\nno\\ntranslator ".concat(name, "\\nnotes"));');
-    });
-
     it('should not strip indent if has no \\n', () => {
         const input = 'console.log(t`  www`);';
         const result = babel.transform(input, options).code;
