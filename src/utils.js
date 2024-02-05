@@ -132,9 +132,13 @@ export function hasDisablingComment(node) {
 }
 
 export function isTtagImport(node) {
-    return node.source.value === TTAGID
-        || node.source.value === TTAG_MACRO_ID
-        || node.source.value === INTERNAL_TTAG_MACRO_ID;
+    const { value } = node.source;
+    return value === TTAGID
+        || value.startsWith(`npm:${TTAGID}`)
+        || value === TTAG_MACRO_ID
+        || value.startsWith(`npm:${TTAG_MACRO_ID}`)
+        || value === INTERNAL_TTAG_MACRO_ID
+        || value.startsWith(`npm:${INTERNAL_TTAG_MACRO_ID}`);
 }
 
 export function isTtagRequire(node) {
