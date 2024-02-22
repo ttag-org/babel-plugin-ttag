@@ -22,8 +22,12 @@ export function resolveEntries(extractor, nodePath, context, state) {
             throw new NoTranslationError(`No "${msgid}" in "${context.getPoFilePath()}" file`);
         }
 
-        if (!hasTranslations(translationObj) || isFuzzy(translationObj)) {
+        if (!hasTranslations(translationObj)) {
             throw new NoTranslationError(`No translation for "${msgid}" in "${context.getPoFilePath()}" file`);
+        }
+
+        if (!context.isAllowFuzzy() && isFuzzy(translationObj)) {
+            throw new NoTranslationError(`Fuzzy translation for "${msgid}" in "${context.getPoFilePath()}" file`);
         }
 
         const resultNode = extractor.resolve(nodePath.node, translationObj, context, state);

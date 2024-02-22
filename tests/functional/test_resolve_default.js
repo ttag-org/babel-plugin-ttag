@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import * as babel from '@babel/core';
 import fs from 'fs';
-import c3poPlugin from 'src/plugin';
+import ttagPlugin from 'src/plugin';
 import { rmDirSync } from 'src/utils';
 
 const translations = 'tests/fixtures/resolve_simple_gettext.po';
 
 const options = {
-    plugins: [[c3poPlugin, { resolve: { translations } }]],
+    plugins: [[ttagPlugin, { resolve: { translations } }]],
 };
 
 describe('Resolve default', () => {
@@ -24,9 +24,20 @@ describe('Resolve default', () => {
     });
 
     it('should not resolve fuzzy translations', () => {
-        const input = 'console.log(t`{name} fuzzy name`);';
+        const input = 'import { t } from "ttag";console.log(t`{name} fuzzy name`);';
         const result = babel.transform(input, options).code;
         expect(result).to.not.contain('{surname} fuzzy name');
         expect(result).to.contain('{name} fuzzy name');
+    });
+
+    it('should resolve fuzzy translations when allowed', () => {
+        const fuzzyOptions = {
+            plugins: [[ttagPlugin, { resolve: { translations }, allowFuzzy: true }]],
+        };
+
+        const input = 'import { t } from "ttag";console.log(t`{name} fuzzy name`);';
+        const result = babel.transform(input, fuzzyOptions).code;
+        expect(result).to.contain('{surname} fuzzy name');
+        expect(result).to.not.contain('{name} fuzzy name');
     });
 });
