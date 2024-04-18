@@ -190,7 +190,8 @@ export function hasTranslations(translationObj) {
 export function isFuzzy(translationObj) {
     return (
         translationObj && translationObj.comments
-        && translationObj.comments.flag === 'fuzzy');
+        && translationObj.comments.flag
+        && translationObj.comments.flag.includes('fuzzy'));
 }
 
 export function pluralFnBody(pluralStr) {
