@@ -1,11 +1,11 @@
-import { expect } from 'chai';
+import {expect} from 'chai';
 import {
     getNPlurals, getPluralFunc, makePluralFunc, applyReference,
-    hasUsefulInfo, buildPotData, applyFormat,
+    hasUsefulInfo, buildPotData, applyFormat, isFuzzy,
 } from 'src/po-helpers';
-import { PO_PRIMITIVES, LOCATION } from 'src/defaults';
+import {PO_PRIMITIVES, LOCATION} from 'src/defaults';
 
-const { MSGID } = PO_PRIMITIVES;
+const {MSGID} = PO_PRIMITIVES;
 
 describe('po-helpers getNPlurals', () => {
     it('should extract number of plurals', () => {
@@ -33,7 +33,7 @@ describe('po-helpers getPluralFunc', () => {
         /* eslint-disable max-len */
         const uk = 'nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);';
         const expected = '(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)';
-        const headers = { 'plural-forms': uk };
+        const headers = {'plural-forms': uk};
         expect(getPluralFunc(headers)).to.eql(expected);
     });
     it('should extract plural function without semicolon', () => {
@@ -59,37 +59,37 @@ describe('po-helpers makePluralFunc', () => {
 describe('po-helpers applyReference', () => {
     const poEntry = {};
     const filepath = 'filepath';
-    const node = { loc: { start: { line: 3 } } };
+    const node = {loc: {start: {line: 3}}};
 
     it('should return file name and line number', () => {
-        const expected = { comments: { reference: 'filepath:3' } };
+        const expected = {comments: {reference: 'filepath:3'}};
         expect(applyReference(poEntry, node, filepath, LOCATION.FULL)).to.eql(expected);
     });
 
     it('should return file name', () => {
-        const expected = { comments: { reference: 'filepath' } };
+        const expected = {comments: {reference: 'filepath'}};
         expect(applyReference(poEntry, node, filepath, LOCATION.FILE)).to.eql(expected);
     });
 
     it('should return no lines', () => {
-        const expected = { comments: { reference: null } };
+        const expected = {comments: {reference: null}};
         expect(applyReference(poEntry, node, filepath, LOCATION.NEVER)).to.eql(expected);
     });
 });
 
 describe('po-helpers applyFormat', () => {
     it('should apply javascript format if has expressions', () => {
-        const poEntry = { [MSGID]: 'test ${ a }' };
+        const poEntry = {[MSGID]: 'test ${ a }'};
         const withFormat = applyFormat(poEntry);
         expect(withFormat.comments).to.have.property('flag', 'javascript-format');
     });
     it('should not apply javascript format if has no expressions', () => {
-        const poEntry = { [MSGID]: 'test' };
+        const poEntry = {[MSGID]: 'test'};
         const withFormat = applyFormat(poEntry);
         expect(withFormat).to.not.have.property('comments');
     });
     it('should not apply javascript format to existing flags', () => {
-        const poEntry = { [MSGID]: 'test ${ a }', comments: { flag: 'fuzzy' } };
+        const poEntry = {[MSGID]: 'test ${ a }', comments: {flag: 'fuzzy'}};
         const withFormat = applyFormat(poEntry);
         expect(withFormat.comments.flag).to.eql('fuzzy\njavascript-format');
     });
@@ -122,6 +122,36 @@ describe('po-helpers hasUsefulInfo', () => {
     });
 });
 
+describe('po-helpers isFuzzy', () => {
+    it('should detect fuzzy if has fuzzy tag', () => {
+        const msg = {
+            msgid: '{name} fuzzy name',
+            comments: {
+                reference: 'tests/fixtures/fixture.js:223',
+                flag: 'fuzzy',
+            },
+            msgstr: [
+                '{surname} fuzzy name',
+            ],
+        };
+        expect(isFuzzy(msg)).to.be.true;
+    });
+
+    it('should detect fuzzy if has fuzzy and other tags', () => {
+        const msg = {
+            msgid: '{name} fuzzy name',
+            comments: {
+                reference: 'tests/fixtures/fixture.js:223',
+                flag: 'fuzzy, javascript-format',
+            },
+            msgstr: [
+                '{surname} fuzzy name',
+            ],
+        };
+        expect(isFuzzy(msg)).to.be.true;
+    });
+});
+
 describe('po-helpers buildPotData', () => {
     it('should build po data', () => {
         const msg1 = {
@@ -137,7 +167,7 @@ describe('po-helpers buildPotData', () => {
                 'content-type': 'text/plain; charset=UTF-8',
                 'plural-forms': 'nplurals=2; plural=(n!=1);',
             },
-            translations: { '': { test: msg1 } },
+            translations: {'': {test: msg1}},
         };
         const result = buildPotData([msg1]);
         expect(result).to.eql(expected);
@@ -167,7 +197,7 @@ describe('po-helpers buildPotData', () => {
                 'content-type': 'text/plain; charset=UTF-8',
                 'plural-forms': 'nplurals=2; plural=(n!=1);',
             },
-            translations: { '': { test: msg1 }, ctx2: { test2: msg2 } },
+            translations: {'': {test: msg1}, ctx2: {test2: msg2}},
         };
         const result = buildPotData([msg1, msg2]);
         expect(result).to.eql(expected);
@@ -203,7 +233,7 @@ describe('po-helpers buildPotData', () => {
                 'content-type': 'text/plain; charset=UTF-8',
                 'plural-forms': 'nplurals=2; plural=(n!=1);',
             },
-            translations: { '': { test: resultmsg } },
+            translations: {'': {test: resultmsg}},
         };
         const result = buildPotData([msg1, msg2]);
         expect(result).to.eql(expected);

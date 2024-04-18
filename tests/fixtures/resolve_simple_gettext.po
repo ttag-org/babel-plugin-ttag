@@ -104,3 +104,7 @@ msgstr "{surname} fuzzy name"
 
 msgid "test test ${ MAX_AMOUNT }"
 msgstr "test test ${ MAX_AMOUNT } translate"
+
+#, fuzzy, javascript-format
+msgid "fuzzy with multiple flags ${ MAX_AMOUNT }"
+msgstr "fuzzy with multiple flags ${ MAX_AMOUNT }"
