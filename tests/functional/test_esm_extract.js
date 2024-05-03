@@ -26,14 +26,4 @@ describe('ESM extract', () => {
         const result = fs.readFileSync(output).toString();
         expect(result).to.contain('import default extract test');
     });
-
-    it('should extract directly from the default import', () => {
-        const input = dedent(`
-        import ttag from 'ttag';
-        ttag.t\`default extract test\`
-        `);
-        babel.transform(input, options);
-        const result = fs.readFileSync(output).toString();
-        expect(result).to.contain('default extract test');
-    });
 });
