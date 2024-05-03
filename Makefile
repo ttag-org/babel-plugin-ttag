@@ -4,6 +4,9 @@ export NODE_PATH = ./
 
 MOCHA_CMD = mocha --require @babel/register
 
+test_esm_extract:
+	$(MOCHA_CMD) ./tests/functional/test_esm_extract.js
+
 test_extract_gettext:
 	$(MOCHA_CMD) ./tests/functional/test_extract_gettext_simple.js
 
@@ -121,7 +124,7 @@ test_alias_extract:
 test_extract_js_format:
 	$(MOCHA_CMD) ./tests/functional/test_extract_js_format.js
 
-
+test_fun: test_esm_extract
 test_fun: test_extract_gettext
 test_fun: test_extract_fn_gettext
 test_fun: test_extract_gettext_with_formatting
