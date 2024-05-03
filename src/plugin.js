@@ -3,7 +3,7 @@ import fs from 'fs';
 import mkdirp from 'mkdirp';
 import path from 'path';
 
-import { ALIAS_TO_FUNC_MAP } from './defaults';
+import { ALIAS_TO_FUNC_MAP, FUNC_ALIASES } from './defaults';
 import { buildPotData, makePotStr } from './po-helpers';
 import { extractPoEntry, getExtractor } from './extract';
 import {
@@ -230,7 +230,9 @@ export default function ttagPlugin() {
                             context.addImport(local.name);
                         });
                 } else {
-                    throw new Error('You should use ttag imports in form: "import { t } from \'ttag\'"');
+                    FUNC_ALIASES().forEach((value) => {
+                        context.addImport(value);
+                    });
                 }
 
                 if (context.isResolveMode()) {
