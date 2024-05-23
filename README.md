@@ -1,3 +1,6 @@
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct.svg)](https://stand-with-ukraine.pp.ua)
+
+
 # babel-plugin-ttag
 [![travis](https://api.travis-ci.org/ttag-org/babel-plugin-ttag.svg)](https://travis-ci.org/ttag-org)
 [![codecov](https://codecov.io/gh/ttag-org/babel-plugin-ttag/branch/master/graph/badge.svg)](https://codecov.io/gh/ttag-org/babel-plugin-ttag)
