@@ -25,6 +25,8 @@ export const ALIAS_TO_FUNC_MAP = Object.keys(FUNC_TO_ALIAS_MAP).reduce((obj, key
     return obj;
 }, {});
 
+export const FUNC_ALIASES = () => Object.values(FUNC_TO_ALIAS_MAP).flat();
+
 export const PO_PRIMITIVES = {
     MSGSTR: 'msgstr',
     MSGID: 'msgid',
